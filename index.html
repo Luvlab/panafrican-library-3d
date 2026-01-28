@@ -904,8 +904,8 @@
         <h1>The Panafrican Library Will Not Be Colonized</h1>
         <h2>Reading Room • Interactive 3D</h2>
         <p>A curatorial Reading Room conceived as a living archive of panafrican and diasporic publishing. A space to read, listen, and slow down.</p>
-        <button class="room-btn" onclick="focusRoom('room5202')">Room 5202 — Special Special</button>
-        <button class="room-btn" onclick="focusRoom('room5203')">Room 5203 — Reading Room</button>
+        <button class="room-btn" onclick="focusRoom('roomS202')">Room S202 — Special Special</button>
+        <button class="room-btn" onclick="focusRoom('roomS203')">Room S203 — Reading Room</button>
     </div>
 
     <div id="controls-panel">
@@ -915,19 +915,19 @@
             <button class="control-btn" onclick="setView('floorPlan')"><span class="icon">📐</span>Floor Plan View</button>
         </div>
         <div class="control-section">
-            <div class="section-title">Room 5202 - Special Special</div>
-            <button class="control-btn" onclick="setView('room5202Entry')"><span class="icon">🚪</span>Entry Vestibule</button>
-            <button class="control-btn" onclick="setView('room5202Inside')"><span class="icon">🔊</span>Inside View</button>
-            <button class="control-btn" onclick="setView('room5202Windows')"><span class="icon">🪟</span>Window Wall</button>
-            <button class="control-btn" onclick="setView('room5202Table')"><span class="icon">📚</span>Display Table</button>
+            <div class="section-title">Room S202 - Special Special</div>
+            <button class="control-btn" onclick="setView('roomS202Entry')"><span class="icon">🚪</span>Entry Vestibule</button>
+            <button class="control-btn" onclick="setView('roomS202Inside')"><span class="icon">🔊</span>Inside View</button>
+            <button class="control-btn" onclick="setView('roomS202Windows')"><span class="icon">🪟</span>Window Wall</button>
+            <button class="control-btn" onclick="setView('roomS202Table')"><span class="icon">📚</span>Display Table</button>
         </div>
         <div class="control-section">
-            <div class="section-title">Room 5203 - Reading Room</div>
-            <button class="control-btn" onclick="setView('room5203Entry')"><span class="icon">🚪</span>Entry (from door)</button>
-            <button class="control-btn" onclick="setView('room5203Inside')"><span class="icon">📖</span>Inside View</button>
-            <button class="control-btn" onclick="setView('room5203Windows')"><span class="icon">🪟</span>Arched Windows</button>
-            <button class="control-btn" onclick="setView('room5203Seating')"><span class="icon">🛋️</span>Seating Area</button>
-            <button class="control-btn" onclick="setView('room5203Shelves')"><span class="icon">📚</span>Book Displays</button>
+            <div class="section-title">Room S203 - Reading Room</div>
+            <button class="control-btn" onclick="setView('roomS203Entry')"><span class="icon">🚪</span>Entry (from door)</button>
+            <button class="control-btn" onclick="setView('roomS203Inside')"><span class="icon">📖</span>Inside View</button>
+            <button class="control-btn" onclick="setView('roomS203Windows')"><span class="icon">🪟</span>Arched Windows</button>
+            <button class="control-btn" onclick="setView('roomS203Seating')"><span class="icon">🛋️</span>Seating Area</button>
+            <button class="control-btn" onclick="setView('roomS203Shelves')"><span class="icon">📚</span>Book Displays</button>
         </div>
         <div class="control-section">
             <button class="control-btn" onclick="startTour()"><span class="icon">🎬</span>Auto Tour</button>
@@ -937,19 +937,19 @@
     <div id="dimensions-panel">
         <h3>Room Dimensions (from floor plan)</h3>
         <div class="dim-row">
-            <span class="dim-label">Room 5202 (Special Special)</span>
+            <span class="dim-label">Room S202 (Special Special)</span>
             <span class="dim-value">11'-5⅝" × 25'-3¾" | 3.49m × 7.71m</span>
         </div>
         <div class="dim-row">
-            <span class="dim-label">Room 5202 Area</span>
+            <span class="dim-label">Room S202 Area</span>
             <span class="dim-value">289.4 sq ft | 26.9 m²</span>
         </div>
         <div class="dim-row">
-            <span class="dim-label">Room 5203 (Reading Room)</span>
+            <span class="dim-label">Room S203 (Reading Room)</span>
             <span class="dim-value">14'-7¾" × 25'-3¾" | 4.46m × 7.71m</span>
         </div>
         <div class="dim-row">
-            <span class="dim-label">Room 5203 Area</span>
+            <span class="dim-label">Room S203 Area</span>
             <span class="dim-value">369.5 sq ft | 34.3 m²</span>
         </div>
         <div class="dim-row">
@@ -1576,20 +1576,20 @@
         // ============================================================
         // EXACT DIMENSIONS FROM FLOOR PLAN (converted to meters)
         // CORRECTED LAYOUT: Windows on FRONT (south), Doors on BACK (north)
-        // Room 5202 "Special Special" is LEFT, Room 5203 "Reading Room" is RIGHT
-        // Room 5202 has an entry vestibule/corridor before main space
+        // Room S202 "Special Special" is LEFT, Room S203 "Reading Room" is RIGHT
+        // Room S202 has an entry vestibule/corridor before main space
         // ============================================================
-        const ROOM_5202_WIDTH = 3.496;  // 11'-5⅝" (X direction)
-        const ROOM_5202_DEPTH = 7.715;  // 25'-3¾" (Z direction)
-        const ROOM_5203_WIDTH = 4.465;  // 14'-7¾"
-        const ROOM_5203_DEPTH = 7.715;  // 25'-3¾"
+        const ROOM_S202_WIDTH = 3.496;  // 11'-5⅝" (X direction)
+        const ROOM_S202_DEPTH = 7.715;  // 25'-3¾" (Z direction)
+        const ROOM_S203_WIDTH = 4.465;  // 14'-7¾"
+        const ROOM_S203_DEPTH = 7.715;  // 25'-3¾"
         const CEILING_HEIGHT = 3.66;   // 12' ceiling
         const WALL_THICKNESS = 0.152;  // 6"
         const DOOR_WIDTH = 1.044;      // 3'-5⅛"
         const DOOR_HEIGHT = 2.134;     // 7'-0"
 
-        // Entry vestibule dimensions for Room 5202 (estimated from plan)
-        const VESTIBULE_WIDTH = ROOM_5202_WIDTH;  // Same width as room
+        // Entry vestibule dimensions for Room S202 (estimated from plan)
+        const VESTIBULE_WIDTH = ROOM_S202_WIDTH;  // Same width as room
         const VESTIBULE_DEPTH = 1.5;  // ~5' deep vestibule/corridor
 
         // Window dimensions (from reference photos - MoMA PS1 industrial windows)
@@ -1614,16 +1614,16 @@
         const labelsGroup = new THREE.Group();
         const ceilingsGroup = new THREE.Group();
         const wallsGroup = new THREE.Group();
-        const room5202Walls = { front: null, back: null, left: null, right: null, vestibuleLeft: null, vestibuleRight: null };
-        const room5203Walls = { front: null, back: null, left: null, right: null };
+        const roomS202Walls = { front: null, back: null, left: null, right: null, vestibuleLeft: null, vestibuleRight: null };
+        const roomS203Walls = { front: null, back: null, left: null, right: null };
 
         const gridHelper = new THREE.GridHelper(20, 40, 0x444444, 0x333333);
         scene.add(gridHelper);
 
-        // Position rooms side by side (Room 5202 LEFT, Room 5203 RIGHT)
-        const TOTAL_WIDTH = ROOM_5202_WIDTH + WALL_THICKNESS + ROOM_5203_WIDTH;
-        const ROOM_5202_X = -TOTAL_WIDTH / 2 + ROOM_5202_WIDTH / 2;
-        const ROOM_5203_X = TOTAL_WIDTH / 2 - ROOM_5203_WIDTH / 2;
+        // Position rooms side by side (Room S202 LEFT, Room S203 RIGHT)
+        const TOTAL_WIDTH = ROOM_S202_WIDTH + WALL_THICKNESS + ROOM_S203_WIDTH;
+        const ROOM_S202_X = -TOTAL_WIDTH / 2 + ROOM_S202_WIDTH / 2;
+        const ROOM_S203_X = TOTAL_WIDTH / 2 - ROOM_S203_WIDTH / 2;
 
         // ============ HELPER FUNCTIONS ============
 
@@ -1910,10 +1910,10 @@
             return group;
         }
 
-        // ============ ROOM 5202 - SPECIAL SPECIAL ============
-        // LAYOUT: Windows on FRONT (+Z), Door to corridor on BACK (-Z) via VESTIBULE, Door to 5203 on RIGHT (+X)
+        // ============ ROOM S202 - SPECIAL SPECIAL ============
+        // LAYOUT: Windows on FRONT (+Z), Door to corridor on BACK (-Z) via VESTIBULE, Door to S203 on RIGHT (+X)
         // Has an entry vestibule/corridor - a narrow enclosed passage before the main room
-        function createRoom5202() {
+        function createRoomS202() {
             const group = new THREE.Group();
 
             // Vestibule corridor dimensions - enclosed passage with side walls
@@ -1921,30 +1921,30 @@
             const CORRIDOR_OFFSET_X = 0;  // Corridor centered on door
 
             // ========== FLOOR (entire room) ==========
-            const floor = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_5202_WIDTH, ROOM_5202_DEPTH), floorMaterial);
+            const floor = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_S202_WIDTH, ROOM_S202_DEPTH), floorMaterial);
             floor.rotation.x = -Math.PI / 2;
             floor.position.set(0, 0.01, 0);
             group.add(floor);
 
             // Dark blue carpet in main area (not in vestibule)
-            const carpet = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_5202_WIDTH - 0.5, ROOM_5202_DEPTH - VESTIBULE_DEPTH - 0.5), new THREE.MeshLambertMaterial({ color: 0x1a3a5c }));
+            const carpet = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_S202_WIDTH - 0.5, ROOM_S202_DEPTH - VESTIBULE_DEPTH - 0.5), new THREE.MeshLambertMaterial({ color: 0x1a3a5c }));
             carpet.rotation.x = -Math.PI / 2;
             carpet.position.set(0, 0.02, VESTIBULE_DEPTH / 2);
             group.add(carpet);
 
             // ========== BACK WALL (-Z) - Door to corridor/STUDIO ==========
             const backWallGroup = new THREE.Group();
-            const backWall1 = new THREE.Mesh(new THREE.BoxGeometry((ROOM_5202_WIDTH - DOOR_WIDTH) / 2, CEILING_HEIGHT, WALL_THICKNESS), wallMaterial);
-            backWall1.position.set(-ROOM_5202_WIDTH / 4 - DOOR_WIDTH / 4, CEILING_HEIGHT / 2, -ROOM_5202_DEPTH / 2);
+            const backWall1 = new THREE.Mesh(new THREE.BoxGeometry((ROOM_S202_WIDTH - DOOR_WIDTH) / 2, CEILING_HEIGHT, WALL_THICKNESS), wallMaterial);
+            backWall1.position.set(-ROOM_S202_WIDTH / 4 - DOOR_WIDTH / 4, CEILING_HEIGHT / 2, -ROOM_S202_DEPTH / 2);
             backWallGroup.add(backWall1);
-            const backWall2 = new THREE.Mesh(new THREE.BoxGeometry((ROOM_5202_WIDTH - DOOR_WIDTH) / 2, CEILING_HEIGHT, WALL_THICKNESS), wallMaterial);
-            backWall2.position.set(ROOM_5202_WIDTH / 4 + DOOR_WIDTH / 4, CEILING_HEIGHT / 2, -ROOM_5202_DEPTH / 2);
+            const backWall2 = new THREE.Mesh(new THREE.BoxGeometry((ROOM_S202_WIDTH - DOOR_WIDTH) / 2, CEILING_HEIGHT, WALL_THICKNESS), wallMaterial);
+            backWall2.position.set(ROOM_S202_WIDTH / 4 + DOOR_WIDTH / 4, CEILING_HEIGHT / 2, -ROOM_S202_DEPTH / 2);
             backWallGroup.add(backWall2);
             const backDoorHeader = new THREE.Mesh(new THREE.BoxGeometry(DOOR_WIDTH, CEILING_HEIGHT - DOOR_HEIGHT, WALL_THICKNESS), wallMaterial);
-            backDoorHeader.position.set(0, DOOR_HEIGHT + (CEILING_HEIGHT - DOOR_HEIGHT) / 2, -ROOM_5202_DEPTH / 2);
+            backDoorHeader.position.set(0, DOOR_HEIGHT + (CEILING_HEIGHT - DOOR_HEIGHT) / 2, -ROOM_S202_DEPTH / 2);
             backWallGroup.add(backDoorHeader);
             group.add(backWallGroup);
-            room5202Walls.back = backWallGroup;
+            roomS202Walls.back = backWallGroup;
 
             // ========== VESTIBULE CORRIDOR WALLS ==========
             // The vestibule is an enclosed corridor with:
@@ -1960,7 +1960,7 @@
             vestibuleLeftSide.position.set(
                 CORRIDOR_OFFSET_X - CORRIDOR_WIDTH / 2,
                 CEILING_HEIGHT / 2,
-                -ROOM_5202_DEPTH / 2 + VESTIBULE_DEPTH / 2
+                -ROOM_S202_DEPTH / 2 + VESTIBULE_DEPTH / 2
             );
             vestibuleGroup.add(vestibuleLeftSide);
 
@@ -1972,37 +1972,37 @@
             vestibuleRightSide.position.set(
                 CORRIDOR_OFFSET_X + CORRIDOR_WIDTH / 2,
                 CEILING_HEIGHT / 2,
-                -ROOM_5202_DEPTH / 2 + VESTIBULE_DEPTH / 2
+                -ROOM_S202_DEPTH / 2 + VESTIBULE_DEPTH / 2
             );
             vestibuleGroup.add(vestibuleRightSide);
 
             // FRONT partition wall of vestibule (with door opening to main room)
             // Left section of front partition
-            const partitionLeftWidth = (ROOM_5202_WIDTH / 2) - (CORRIDOR_WIDTH / 2) - CORRIDOR_OFFSET_X;
+            const partitionLeftWidth = (ROOM_S202_WIDTH / 2) - (CORRIDOR_WIDTH / 2) - CORRIDOR_OFFSET_X;
             if (partitionLeftWidth > 0) {
                 const partitionLeft = new THREE.Mesh(
                     new THREE.BoxGeometry(partitionLeftWidth, CEILING_HEIGHT, WALL_THICKNESS),
                     wallMaterial
                 );
                 partitionLeft.position.set(
-                    -ROOM_5202_WIDTH / 2 + partitionLeftWidth / 2,
+                    -ROOM_S202_WIDTH / 2 + partitionLeftWidth / 2,
                     CEILING_HEIGHT / 2,
-                    -ROOM_5202_DEPTH / 2 + VESTIBULE_DEPTH
+                    -ROOM_S202_DEPTH / 2 + VESTIBULE_DEPTH
                 );
                 vestibuleGroup.add(partitionLeft);
             }
 
             // Right section of front partition
-            const partitionRightWidth = (ROOM_5202_WIDTH / 2) - (CORRIDOR_WIDTH / 2) + CORRIDOR_OFFSET_X;
+            const partitionRightWidth = (ROOM_S202_WIDTH / 2) - (CORRIDOR_WIDTH / 2) + CORRIDOR_OFFSET_X;
             if (partitionRightWidth > 0) {
                 const partitionRight = new THREE.Mesh(
                     new THREE.BoxGeometry(partitionRightWidth, CEILING_HEIGHT, WALL_THICKNESS),
                     wallMaterial
                 );
                 partitionRight.position.set(
-                    ROOM_5202_WIDTH / 2 - partitionRightWidth / 2,
+                    ROOM_S202_WIDTH / 2 - partitionRightWidth / 2,
                     CEILING_HEIGHT / 2,
-                    -ROOM_5202_DEPTH / 2 + VESTIBULE_DEPTH
+                    -ROOM_S202_DEPTH / 2 + VESTIBULE_DEPTH
                 );
                 vestibuleGroup.add(partitionRight);
             }
@@ -2015,74 +2015,74 @@
             vestibuleDoorHeader.position.set(
                 CORRIDOR_OFFSET_X,
                 DOOR_HEIGHT + (CEILING_HEIGHT - DOOR_HEIGHT) / 2,
-                -ROOM_5202_DEPTH / 2 + VESTIBULE_DEPTH
+                -ROOM_S202_DEPTH / 2 + VESTIBULE_DEPTH
             );
             vestibuleGroup.add(vestibuleDoorHeader);
 
             group.add(vestibuleGroup);
-            room5202Walls.vestibuleLeft = vestibuleLeftSide;
-            room5202Walls.vestibuleRight = vestibuleRightSide;
-            room5202Walls.vestibuleGroup = vestibuleGroup;  // Store entire vestibule for hiding
+            roomS202Walls.vestibuleLeft = vestibuleLeftSide;
+            roomS202Walls.vestibuleRight = vestibuleRightSide;
+            roomS202Walls.vestibuleGroup = vestibuleGroup;  // Store entire vestibule for hiding
 
             // ========== FRONT WALL (+Z) - PS1 Industrial Windows ==========
             const frontWallGroup = new THREE.Group();
 
             // Wall below windows (sill area)
             const frontWallBase = new THREE.Mesh(
-                new THREE.BoxGeometry(ROOM_5202_WIDTH, PS1_WINDOW_SILL, WALL_THICKNESS),
+                new THREE.BoxGeometry(ROOM_S202_WIDTH, PS1_WINDOW_SILL, WALL_THICKNESS),
                 wallMaterial
             );
-            frontWallBase.position.set(0, PS1_WINDOW_SILL / 2, ROOM_5202_DEPTH / 2);
+            frontWallBase.position.set(0, PS1_WINDOW_SILL / 2, ROOM_S202_DEPTH / 2);
             frontWallGroup.add(frontWallBase);
 
             // Wall above windows
             const topWallHeight = CEILING_HEIGHT - PS1_WINDOW_SILL - PS1_WINDOW_HEIGHT;
             const frontWallTop = new THREE.Mesh(
-                new THREE.BoxGeometry(ROOM_5202_WIDTH, topWallHeight, WALL_THICKNESS),
+                new THREE.BoxGeometry(ROOM_S202_WIDTH, topWallHeight, WALL_THICKNESS),
                 wallMaterial
             );
-            frontWallTop.position.set(0, PS1_WINDOW_SILL + PS1_WINDOW_HEIGHT + topWallHeight / 2, ROOM_5202_DEPTH / 2);
+            frontWallTop.position.set(0, PS1_WINDOW_SILL + PS1_WINDOW_HEIGHT + topWallHeight / 2, ROOM_S202_DEPTH / 2);
             frontWallGroup.add(frontWallTop);
 
             // Two windows with fluted column between them
-            const windowSpacing = (ROOM_5202_WIDTH - PS1_COLUMN_WIDTH) / 2;
+            const windowSpacing = (ROOM_S202_WIDTH - PS1_COLUMN_WIDTH) / 2;
             const windowCenterY = PS1_WINDOW_SILL + PS1_WINDOW_HEIGHT / 2;
 
             // Left window
             const win1 = createPS1Window(PS1_WINDOW_WIDTH, PS1_WINDOW_HEIGHT);
-            win1.position.set(-windowSpacing / 2, windowCenterY, ROOM_5202_DEPTH / 2 - 0.02);
+            win1.position.set(-windowSpacing / 2, windowCenterY, ROOM_S202_DEPTH / 2 - 0.02);
             frontWallGroup.add(win1);
 
             // Right window
             const win2 = createPS1Window(PS1_WINDOW_WIDTH, PS1_WINDOW_HEIGHT);
-            win2.position.set(windowSpacing / 2, windowCenterY, ROOM_5202_DEPTH / 2 - 0.02);
+            win2.position.set(windowSpacing / 2, windowCenterY, ROOM_S202_DEPTH / 2 - 0.02);
             frontWallGroup.add(win2);
 
             // Fluted column between windows
-            const column5202 = createFlutedColumn(PS1_WINDOW_HEIGHT);
-            column5202.position.set(0, PS1_WINDOW_SILL, ROOM_5202_DEPTH / 2 - 0.02);
-            frontWallGroup.add(column5202);
+            const columnS202 = createFlutedColumn(PS1_WINDOW_HEIGHT);
+            columnS202.position.set(0, PS1_WINDOW_SILL, ROOM_S202_DEPTH / 2 - 0.02);
+            frontWallGroup.add(columnS202);
 
             // Wall sections on either side of windows
-            const sideWallWidth = (ROOM_5202_WIDTH - windowSpacing * 2 - PS1_WINDOW_WIDTH * 2) / 2 + 0.3;
+            const sideWallWidth = (ROOM_S202_WIDTH - windowSpacing * 2 - PS1_WINDOW_WIDTH * 2) / 2 + 0.3;
             if (sideWallWidth > 0.1) {
                 const leftSide = new THREE.Mesh(
                     new THREE.BoxGeometry(sideWallWidth, PS1_WINDOW_HEIGHT, WALL_THICKNESS),
                     wallMaterial
                 );
-                leftSide.position.set(-ROOM_5202_WIDTH / 2 + sideWallWidth / 2, windowCenterY, ROOM_5202_DEPTH / 2);
+                leftSide.position.set(-ROOM_S202_WIDTH / 2 + sideWallWidth / 2, windowCenterY, ROOM_S202_DEPTH / 2);
                 frontWallGroup.add(leftSide);
 
                 const rightSide = new THREE.Mesh(
                     new THREE.BoxGeometry(sideWallWidth, PS1_WINDOW_HEIGHT, WALL_THICKNESS),
                     wallMaterial
                 );
-                rightSide.position.set(ROOM_5202_WIDTH / 2 - sideWallWidth / 2, windowCenterY, ROOM_5202_DEPTH / 2);
+                rightSide.position.set(ROOM_S202_WIDTH / 2 - sideWallWidth / 2, windowCenterY, ROOM_S202_DEPTH / 2);
                 frontWallGroup.add(rightSide);
             }
 
             group.add(frontWallGroup);
-            room5202Walls.front = frontWallGroup;
+            roomS202Walls.front = frontWallGroup;
 
             // ========== LEFT WALL (-X) - Wall with CLOSED DOOR to Three Star room ==========
             // From floor plan: Three Star door is near the SOUTH (window) end of the west wall
@@ -2090,11 +2090,11 @@
             const leftWallGroup = new THREE.Group();
 
             // Wall X position (west wall of room) - flush with room boundary
-            const leftWallX = -ROOM_5202_WIDTH / 2;
+            const leftWallX = -ROOM_S202_WIDTH / 2;
 
             // Room Z boundaries
-            const roomSouthZ = ROOM_5202_DEPTH / 2;    // South - windows (+Z)
-            const roomNorthZ = -ROOM_5202_DEPTH / 2;   // North - corridor entry (-Z)
+            const roomSouthZ = ROOM_S202_DEPTH / 2;    // South - windows (+Z)
+            const roomNorthZ = -ROOM_S202_DEPTH / 2;   // North - corridor entry (-Z)
 
             // Three Star door position - near the SOUTH (window) end
             // From floor plan, door appears about 1.5m from the south wall
@@ -2148,127 +2148,143 @@
             leftWallGroup.add(doorHandle);
 
             group.add(leftWallGroup);
-            room5202Walls.left = leftWallGroup;
+            roomS202Walls.left = leftWallGroup;
 
-            // ========== RIGHT WALL (+X) - OPEN PASSAGE to Room 5203 (NO DOOR) ==========
-            // This is an open archway/passage between the two rooms - no wall here except header
-            const rightWallGroup = new THREE.Group();
-
-            // Only a header above the open passage (if ceiling is higher than passage)
-            // The passage is full height so no header needed, but we add small wall sections at front and back
-            const passageWidth = 2.0;  // Wide open passage between rooms
-            const passageZ = 0;  // Centered
-
-            // Small wall section at the BACK (near vestibule area)
-            const rightWallBack = new THREE.Mesh(
-                new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, ROOM_5202_DEPTH / 2 - passageWidth / 2),
+            // ========== RIGHT WALL (+X) - SOLID WALL shared with Room S203 ==========
+            // NO door or passage between rooms - just a solid shared wall
+            const rightWall = new THREE.Mesh(
+                new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, ROOM_S202_DEPTH),
                 wallMaterial
             );
-            rightWallBack.position.set(ROOM_5202_WIDTH / 2, CEILING_HEIGHT / 2, -ROOM_5202_DEPTH / 4 - passageWidth / 4);
-            rightWallGroup.add(rightWallBack);
-
-            // Small wall section at the FRONT (near windows)
-            const rightWallFront = new THREE.Mesh(
-                new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, ROOM_5202_DEPTH / 2 - passageWidth / 2),
-                wallMaterial
-            );
-            rightWallFront.position.set(ROOM_5202_WIDTH / 2, CEILING_HEIGHT / 2, ROOM_5202_DEPTH / 4 + passageWidth / 4);
-            rightWallGroup.add(rightWallFront);
-
-            group.add(rightWallGroup);
-            room5202Walls.right = rightWallGroup;
+            rightWall.position.set(ROOM_S202_WIDTH / 2, CEILING_HEIGHT / 2, 0);
+            group.add(rightWall);
+            roomS202Walls.right = rightWall;
 
             // ========== CEILING ==========
-            const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_5202_WIDTH, ROOM_5202_DEPTH), wallMaterial);
-            ceiling.rotation.x = Math.PI / 2;
-            ceiling.position.set(0, CEILING_HEIGHT, 0);
-            ceiling.userData.isCeiling = true;
-            ceilingsGroup.add(ceiling);
-            group.add(ceilingsGroup);
+            const ceilingS202 = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_S202_WIDTH, ROOM_S202_DEPTH), wallMaterial);
+            ceilingS202.rotation.x = Math.PI / 2;
+            ceilingS202.position.set(0, CEILING_HEIGHT, 0);
+            ceilingS202.userData.isCeiling = true;
+            group.add(ceilingS202);
 
-            // ========== FURNITURE ==========
-            // Display table with colorful cloth (in main room area, past the vestibule)
+            // ========== PANAFRICAN-INSPIRED FURNITURE ==========
             const mainRoomZ = VESTIBULE_DEPTH / 2 + 0.5;
-            const tableCloth = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.02, 0.9), new THREE.MeshLambertMaterial({ color: 0xffd93d }));
-            tableCloth.position.set(0, 0.74, mainRoomZ);
-            group.add(tableCloth);
+
+            // Display table with TIE-DYE CLOTH (from reference images)
+            const tieDyeCloth = createTieDyeCloth();
+            tieDyeCloth.position.set(0, 0, mainRoomZ);
+            group.add(tieDyeCloth);
             const displayTable = new THREE.Mesh(new THREE.BoxGeometry(2, 0.72, 0.8), woodMaterial);
             displayTable.position.set(0, 0.36, mainRoomZ);
             group.add(displayTable);
 
-            // Books on table
-            const bookColors = [0x4ecdc4, 0xff6b6b, 0xffd93d, 0x45b7d1, 0x96ceb4, 0xdfe6e9, 0x74b9ff, 0xe17055];
-            for (let i = 0; i < 10; i++) {
-                const book = new THREE.Mesh(new THREE.BoxGeometry(0.12 + Math.random() * 0.08, 0.015, 0.16 + Math.random() * 0.06), new THREE.MeshLambertMaterial({ color: bookColors[i % bookColors.length] }));
-                book.position.set(-0.7 + (i % 5) * 0.3 + (Math.random() - 0.5) * 0.1, 0.76 + Math.floor(i / 5) * 0.02, mainRoomZ + (Math.random() - 0.5) * 0.3);
-                book.rotation.y = Math.random() * 0.5 - 0.25;
-                group.add(book);
-            }
+            // Books and magazines on table
+            const bookStack1 = createBookStack();
+            bookStack1.position.set(-0.5, 0.74, mainRoomZ);
+            group.add(bookStack1);
+            const bookStack2 = createBookStack();
+            bookStack2.position.set(0.4, 0.74, mainRoomZ + 0.1);
+            group.add(bookStack2);
+            const magRack = createMagazineRack();
+            magRack.position.set(0, 0.74, mainRoomZ - 0.2);
+            group.add(magRack);
 
-            // Floor cushions (near window wall for listening)
-            const cushion1 = createFloorCushion(0xfd7e14, 0.6);
-            cushion1.position.set(-0.8, 0.03, ROOM_5202_DEPTH / 3);
-            group.add(cushion1);
-            const cushion2 = createFloorCushion(0x20c997, 0.55);
-            cushion2.position.set(0.3, 0.03, ROOM_5202_DEPTH / 3 + 0.3);
-            group.add(cushion2);
-            const cushion3 = createFloorCushion(0xd63384, 0.5);
-            cushion3.position.set(-0.2, 0.03, ROOM_5202_DEPTH / 3 - 0.3);
-            group.add(cushion3);
+            // LAYERED RUGS (Persian + Kilim style from references)
+            const persianRug = createLayeredRug(2.8, 2.0, 0xb71c1c);
+            persianRug.position.set(0, 0, ROOM_S202_DEPTH / 3);
+            group.add(persianRug);
+            const kilimRug = createKilimRug();
+            kilimRug.position.set(-0.3, 0.025, ROOM_S202_DEPTH / 3 + 0.2);
+            kilimRug.rotation.y = 0.1;
+            group.add(kilimRug);
 
-            // Bookshelf against left wall in main room area (past the vestibule)
-            const smallShelf = createWoodenBookshelf(1.2, 1.6, 3);
-            smallShelf.position.set(-ROOM_5202_WIDTH / 2 + 0.2, 0, 0.5);
-            smallShelf.rotation.y = Math.PI / 2;
-            group.add(smallShelf);
+            // TRIANGLE BEAN BAGS (cream and orange from references)
+            const beanCream = createTriangleBeanbag(0xf5f0e8);
+            beanCream.position.set(-0.9, 0, ROOM_S202_DEPTH / 3 - 0.3);
+            beanCream.rotation.y = 0.3;
+            group.add(beanCream);
+            const beanOrange = createTriangleBeanbag(0xfd7e14);
+            beanOrange.position.set(0.7, 0, ROOM_S202_DEPTH / 3 + 0.4);
+            beanOrange.rotation.y = -0.4;
+            group.add(beanOrange);
 
-            // Potted plant
-            const plant = createPottedPlant();
-            plant.position.set(ROOM_5202_WIDTH / 2 - 0.4, 0, ROOM_5202_DEPTH / 3);
-            group.add(plant);
+            // ETHNIC CUSHIONS scattered around
+            const ethnicCushion1 = createEthnicCushion([0xc41e3a, 0xfdd835]);
+            ethnicCushion1.position.set(-0.3, 0.02, ROOM_S202_DEPTH / 3);
+            group.add(ethnicCushion1);
+            const ethnicCushion2 = createEthnicCushion([0x00897b, 0xf5f0e8]);
+            ethnicCushion2.position.set(0.2, 0.02, ROOM_S202_DEPTH / 3 - 0.5);
+            group.add(ethnicCushion2);
+            const velvetCushion = createVelvetCushion(0xc2185b);
+            velvetCushion.position.set(0.5, 0.02, ROOM_S202_DEPTH / 3 - 0.2);
+            group.add(velvetCushion);
 
-            // Pendant light (in main room)
-            const pendant = createPendantLight();
-            pendant.position.set(0, CEILING_HEIGHT - 0.8, mainRoomZ);
-            group.add(pendant);
+            // BOOK CUBBY against west wall (from reference - modular wooden displays)
+            const bookCubby = createBookCubby();
+            bookCubby.position.set(-ROOM_S202_WIDTH / 2 + 0.25, 0, 0.5);
+            bookCubby.rotation.y = Math.PI / 2;
+            group.add(bookCubby);
+
+            // WOVEN BASKET and AFRICAN POTTERY
+            const basket = createWovenBasket();
+            basket.position.set(ROOM_S202_WIDTH / 2 - 0.35, 0, 0);
+            group.add(basket);
+            const pottery = createAfricanPottery();
+            pottery.position.set(-ROOM_S202_WIDTH / 2 + 0.35, 0, ROOM_S202_DEPTH / 4);
+            group.add(pottery);
+
+            // HANGING PLANT in macramé holder
+            const hangingPlant = createHangingPlant();
+            hangingPlant.position.set(ROOM_S202_WIDTH / 2 - 0.5, CEILING_HEIGHT - 0.3, ROOM_S202_DEPTH / 3);
+            group.add(hangingPlant);
+
+            // ETHIOPIAN LAMP with beaded fringe (from reference images)
+            const ethiopianLamp = createEthiopianLamp();
+            ethiopianLamp.position.set(0, CEILING_HEIGHT - 0.5, mainRoomZ);
+            group.add(ethiopianLamp);
+
+            // DISCO BALL (from reference images!)
+            const disco = createDiscoBall();
+            disco.position.set(-0.6, CEILING_HEIGHT - 0.3, ROOM_S202_DEPTH / 3);
+            group.add(disco);
 
             return group;
         }
 
-        // ============ ROOM 5203 - READING ROOM ============
-        // LAYOUT: Windows on FRONT (+Z), Door to corridor on BACK (-Z), Door to 5202 on LEFT (-X)
-        function createRoom5203() {
+        // ============ ROOM S203 - READING ROOM ============
+        // LAYOUT: Windows on FRONT (+Z), Door to corridor on BACK (-Z), Door to S202 on LEFT (-X)
+        function createRoomS203() {
             const group = new THREE.Group();
 
             // Floor
-            const floor = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_5203_WIDTH, ROOM_5203_DEPTH), floorMaterial);
+            const floor = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_S203_WIDTH, ROOM_S203_DEPTH), floorMaterial);
             floor.rotation.x = -Math.PI / 2;
             floor.position.set(0, 0.01, 0);
             group.add(floor);
 
             // BACK WALL (-Z) - Door to corridor (door is positioned toward LEFT, not centered)
-            // From floor plan: door is closer to the shared wall with 5202
+            // From floor plan: door is closer to the shared wall with S202
             const backWallGroup = new THREE.Group();
-            const doorOffsetX = -ROOM_5203_WIDTH / 4;  // Door offset toward left (shared wall side)
+            const doorOffsetX = -ROOM_S203_WIDTH / 4;  // Door offset toward left (shared wall side)
 
             // Left wall section (small, between door and left wall)
-            const leftWallWidth = ROOM_5203_WIDTH / 2 + doorOffsetX - DOOR_WIDTH / 2;
+            const leftWallWidth = ROOM_S203_WIDTH / 2 + doorOffsetX - DOOR_WIDTH / 2;
             if (leftWallWidth > 0.1) {
                 const backWallLeft = new THREE.Mesh(
                     new THREE.BoxGeometry(leftWallWidth, CEILING_HEIGHT, WALL_THICKNESS),
                     brickMaterial
                 );
-                backWallLeft.position.set(-ROOM_5203_WIDTH / 2 + leftWallWidth / 2, CEILING_HEIGHT / 2, -ROOM_5203_DEPTH / 2);
+                backWallLeft.position.set(-ROOM_S203_WIDTH / 2 + leftWallWidth / 2, CEILING_HEIGHT / 2, -ROOM_S203_DEPTH / 2);
                 backWallGroup.add(backWallLeft);
             }
 
             // Right wall section (larger, most of the poster wall)
-            const rightWallWidth = ROOM_5203_WIDTH / 2 - doorOffsetX - DOOR_WIDTH / 2;
+            const rightWallWidth = ROOM_S203_WIDTH / 2 - doorOffsetX - DOOR_WIDTH / 2;
             const backWallRight = new THREE.Mesh(
                 new THREE.BoxGeometry(rightWallWidth, CEILING_HEIGHT, WALL_THICKNESS),
                 brickMaterial
             );
-            backWallRight.position.set(ROOM_5203_WIDTH / 2 - rightWallWidth / 2, CEILING_HEIGHT / 2, -ROOM_5203_DEPTH / 2);
+            backWallRight.position.set(ROOM_S203_WIDTH / 2 - rightWallWidth / 2, CEILING_HEIGHT / 2, -ROOM_S203_DEPTH / 2);
             backWallGroup.add(backWallRight);
 
             // Door header
@@ -2276,188 +2292,246 @@
                 new THREE.BoxGeometry(DOOR_WIDTH, CEILING_HEIGHT - DOOR_HEIGHT, WALL_THICKNESS),
                 brickMaterial
             );
-            backDoorHeader.position.set(doorOffsetX, DOOR_HEIGHT + (CEILING_HEIGHT - DOOR_HEIGHT) / 2, -ROOM_5203_DEPTH / 2);
+            backDoorHeader.position.set(doorOffsetX, DOOR_HEIGHT + (CEILING_HEIGHT - DOOR_HEIGHT) / 2, -ROOM_S203_DEPTH / 2);
             backWallGroup.add(backDoorHeader);
 
             // Poster wall on right section (main poster wall area)
             const posterWall = createPosterWall(rightWallWidth - 0.2, CEILING_HEIGHT - 0.3);
-            posterWall.position.set(ROOM_5203_WIDTH / 2 - rightWallWidth / 2, CEILING_HEIGHT / 2, -ROOM_5203_DEPTH / 2 + WALL_THICKNESS / 2 + 0.02);
+            posterWall.position.set(ROOM_S203_WIDTH / 2 - rightWallWidth / 2, CEILING_HEIGHT / 2, -ROOM_S203_DEPTH / 2 + WALL_THICKNESS / 2 + 0.02);
             backWallGroup.add(posterWall);
 
             group.add(backWallGroup);
-            room5203Walls.back = backWallGroup;
+            roomS203Walls.back = backWallGroup;
 
-            // FRONT WALL (+Z) - PS1 Industrial Windows (same style as 5202)
+            // FRONT WALL (+Z) - PS1 Industrial Windows (same style as S202)
             const frontWallGroup = new THREE.Group();
 
             // Wall below windows
             const frontWallBase = new THREE.Mesh(
-                new THREE.BoxGeometry(ROOM_5203_WIDTH, PS1_WINDOW_SILL, WALL_THICKNESS),
+                new THREE.BoxGeometry(ROOM_S203_WIDTH, PS1_WINDOW_SILL, WALL_THICKNESS),
                 brickMaterial
             );
-            frontWallBase.position.set(0, PS1_WINDOW_SILL / 2, ROOM_5203_DEPTH / 2);
+            frontWallBase.position.set(0, PS1_WINDOW_SILL / 2, ROOM_S203_DEPTH / 2);
             frontWallGroup.add(frontWallBase);
 
             // Wall above windows
-            const topWallHeight5203 = CEILING_HEIGHT - PS1_WINDOW_SILL - PS1_WINDOW_HEIGHT;
+            const topWallHeightS203 = CEILING_HEIGHT - PS1_WINDOW_SILL - PS1_WINDOW_HEIGHT;
             const frontWallTop = new THREE.Mesh(
-                new THREE.BoxGeometry(ROOM_5203_WIDTH, topWallHeight5203, WALL_THICKNESS),
+                new THREE.BoxGeometry(ROOM_S203_WIDTH, topWallHeightS203, WALL_THICKNESS),
                 brickMaterial
             );
-            frontWallTop.position.set(0, PS1_WINDOW_SILL + PS1_WINDOW_HEIGHT + topWallHeight5203 / 2, ROOM_5203_DEPTH / 2);
+            frontWallTop.position.set(0, PS1_WINDOW_SILL + PS1_WINDOW_HEIGHT + topWallHeightS203 / 2, ROOM_S203_DEPTH / 2);
             frontWallGroup.add(frontWallTop);
 
-            // Room 5203 is wider, so it can have 3 windows with 2 columns
-            const windowCenterY5203 = PS1_WINDOW_SILL + PS1_WINDOW_HEIGHT / 2;
-            const totalWindowArea = ROOM_5203_WIDTH - 0.4;  // Leave some wall on sides
+            // Room S203 is wider, so it can have 3 windows with 2 columns
+            const windowCenterYS203 = PS1_WINDOW_SILL + PS1_WINDOW_HEIGHT / 2;
+            const totalWindowArea = ROOM_S203_WIDTH - 0.4;  // Leave some wall on sides
             const numWindows = 3;
             const numColumns = 2;
-            const windowWidth5203 = (totalWindowArea - numColumns * PS1_COLUMN_WIDTH) / numWindows;
-            const windowSpacing5203 = windowWidth5203 + PS1_COLUMN_WIDTH;
+            const windowWidthS203 = (totalWindowArea - numColumns * PS1_COLUMN_WIDTH) / numWindows;
+            const windowSpacingS203 = windowWidthS203 + PS1_COLUMN_WIDTH;
 
             // Create 3 windows with columns between
             for (let i = 0; i < numWindows; i++) {
-                const xPos = -totalWindowArea / 2 + windowWidth5203 / 2 + i * windowSpacing5203;
-                const win = createPS1Window(windowWidth5203 * 0.9, PS1_WINDOW_HEIGHT);
-                win.position.set(xPos, windowCenterY5203, ROOM_5203_DEPTH / 2 - 0.02);
+                const xPos = -totalWindowArea / 2 + windowWidthS203 / 2 + i * windowSpacingS203;
+                const win = createPS1Window(windowWidthS203 * 0.9, PS1_WINDOW_HEIGHT);
+                win.position.set(xPos, windowCenterYS203, ROOM_S203_DEPTH / 2 - 0.02);
                 frontWallGroup.add(win);
 
                 // Add column after each window except the last
                 if (i < numWindows - 1) {
                     const col = createFlutedColumn(PS1_WINDOW_HEIGHT);
-                    col.position.set(xPos + windowSpacing5203 / 2, PS1_WINDOW_SILL, ROOM_5203_DEPTH / 2 - 0.02);
+                    col.position.set(xPos + windowSpacingS203 / 2, PS1_WINDOW_SILL, ROOM_S203_DEPTH / 2 - 0.02);
                     frontWallGroup.add(col);
                 }
             }
 
             // Side wall sections
-            const sideWidth5203 = 0.2;
-            const leftSide5203 = new THREE.Mesh(
-                new THREE.BoxGeometry(sideWidth5203, PS1_WINDOW_HEIGHT, WALL_THICKNESS),
+            const sideWidthS203 = 0.2;
+            const leftSideS203 = new THREE.Mesh(
+                new THREE.BoxGeometry(sideWidthS203, PS1_WINDOW_HEIGHT, WALL_THICKNESS),
                 brickMaterial
             );
-            leftSide5203.position.set(-ROOM_5203_WIDTH / 2 + sideWidth5203 / 2, windowCenterY5203, ROOM_5203_DEPTH / 2);
-            frontWallGroup.add(leftSide5203);
+            leftSideS203.position.set(-ROOM_S203_WIDTH / 2 + sideWidthS203 / 2, windowCenterYS203, ROOM_S203_DEPTH / 2);
+            frontWallGroup.add(leftSideS203);
 
-            const rightSide5203 = new THREE.Mesh(
-                new THREE.BoxGeometry(sideWidth5203, PS1_WINDOW_HEIGHT, WALL_THICKNESS),
+            const rightSideS203 = new THREE.Mesh(
+                new THREE.BoxGeometry(sideWidthS203, PS1_WINDOW_HEIGHT, WALL_THICKNESS),
                 brickMaterial
             );
-            rightSide5203.position.set(ROOM_5203_WIDTH / 2 - sideWidth5203 / 2, windowCenterY5203, ROOM_5203_DEPTH / 2);
-            frontWallGroup.add(rightSide5203);
+            rightSideS203.position.set(ROOM_S203_WIDTH / 2 - sideWidthS203 / 2, windowCenterYS203, ROOM_S203_DEPTH / 2);
+            frontWallGroup.add(rightSideS203);
 
             group.add(frontWallGroup);
-            room5203Walls.front = frontWallGroup;
+            roomS203Walls.front = frontWallGroup;
 
-            // LEFT WALL (-X) - OPEN PASSAGE to Room 5202 (NO DOOR - open archway)
-            const leftWallGroup = new THREE.Group();
-            const passageWidth5203 = 2.0;  // Same wide open passage
-
-            // Small wall section at the BACK (near corridor door)
-            const leftWall1 = new THREE.Mesh(
-                new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, ROOM_5203_DEPTH / 2 - passageWidth5203 / 2),
+            // LEFT WALL (-X) - SOLID WALL shared with Room S202
+            // NO door or passage between rooms - just a solid shared wall
+            const leftWall = new THREE.Mesh(
+                new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, ROOM_S203_DEPTH),
                 brickMaterial
             );
-            leftWall1.position.set(-ROOM_5203_WIDTH / 2, CEILING_HEIGHT / 2, -ROOM_5203_DEPTH / 4 - passageWidth5203 / 4);
-            leftWallGroup.add(leftWall1);
-
-            // Small wall section at the FRONT (near windows)
-            const leftWall2 = new THREE.Mesh(
-                new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, ROOM_5203_DEPTH / 2 - passageWidth5203 / 2),
-                brickMaterial
-            );
-            leftWall2.position.set(-ROOM_5203_WIDTH / 2, CEILING_HEIGHT / 2, ROOM_5203_DEPTH / 4 + passageWidth5203 / 4);
-            leftWallGroup.add(leftWall2);
-
-            // No door header - it's a full-height open passage
-            group.add(leftWallGroup);
-            room5203Walls.left = leftWallGroup;
+            leftWall.position.set(-ROOM_S203_WIDTH / 2, CEILING_HEIGHT / 2, 0);
+            group.add(leftWall);
+            roomS203Walls.left = leftWall;
 
             // RIGHT WALL (+X) - Solid exterior wall
-            const rightWall = new THREE.Mesh(new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, ROOM_5203_DEPTH), brickMaterial);
-            rightWall.position.set(ROOM_5203_WIDTH / 2, CEILING_HEIGHT / 2, 0);
+            const rightWall = new THREE.Mesh(new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, ROOM_S203_DEPTH), brickMaterial);
+            rightWall.position.set(ROOM_S203_WIDTH / 2, CEILING_HEIGHT / 2, 0);
             group.add(rightWall);
-            room5203Walls.right = rightWall;
+            roomS203Walls.right = rightWall;
 
             // Ceiling
-            const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_5203_WIDTH, ROOM_5203_DEPTH), wallMaterial);
-            ceiling.rotation.x = Math.PI / 2;
-            ceiling.position.set(0, CEILING_HEIGHT, 0);
-            ceiling.userData.isCeiling = true;
-            ceilingsGroup.add(ceiling);
-            group.add(ceilingsGroup);
+            const ceilingS203 = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_S203_WIDTH, ROOM_S203_DEPTH), wallMaterial);
+            ceilingS203.rotation.x = Math.PI / 2;
+            ceilingS203.position.set(0, CEILING_HEIGHT, 0);
+            ceilingS203.userData.isCeiling = true;
+            group.add(ceilingS203);
 
-            // FURNITURE - Reading area
+            // ========== PANAFRICAN-INSPIRED FURNITURE - READING ROOM ==========
 
-            // Layered rugs
-            const mainRug = createLayeredRug(3.5, 2.5, 0x8b2942);
-            mainRug.position.set(0, 0, 0);
-            group.add(mainRug);
-            const rug2 = createLayeredRug(2.2, 1.8, 0x2d5a5a);
-            rug2.position.set(-0.6, 0.02, -0.3);
-            rug2.rotation.y = -0.15;
-            group.add(rug2);
+            // LAYERED RUGS - Persian, Kilim, Checkered (from reference images)
+            const mainRug203 = createLayeredRug(3.8, 2.8, 0xb71c1c);  // Deep red Persian
+            mainRug203.position.set(0, 0, 0.3);
+            group.add(mainRug203);
+            const kilimRug203 = createKilimRug();
+            kilimRug203.position.set(-0.5, 0.025, 0);
+            kilimRug203.rotation.y = -0.1;
+            group.add(kilimRug203);
+            const checkeredRug = createCheckeredRug(0xe91e63, 0xf8bbd0);  // Pink checkered
+            checkeredRug.position.set(0.8, 0.03, 0.8);
+            checkeredRug.rotation.y = 0.2;
+            group.add(checkeredRug);
+            const waxRug = createWaxPrintRug(0xfdd835, 0xc41e3a);  // African wax pattern
+            waxRug.position.set(-0.7, 0.035, 1.2);
+            group.add(waxRug);
 
-            // Tufted floor mattress
-            const floorMattress = createTuftedFloorMattress(2.2, 1.4);
-            floorMattress.position.set(0, 0.05, 0);
-            group.add(floorMattress);
+            // OLIVE VELVET SOFA (from reference images - low tufted)
+            const oliveSofa = createOliveSofa();
+            oliveSofa.position.set(0, 0, -0.5);
+            group.add(oliveSofa);
 
-            // Floor cushions around mattress
-            const cushionColors = [0xd63384, 0xdc3545, 0x20c997, 0xfd7e14, 0xffc107, 0x6c757d];
-            const cushionPositions = [[-0.8, 0.5], [0.7, 0.3], [-0.4, 1.2], [0.9, 1.0], [-1.1, 0.8], [1.1, 0.5]];
-            cushionPositions.forEach((pos, i) => {
-                const cushion = createFloorCushion(cushionColors[i], 0.5 + Math.random() * 0.2);
-                cushion.position.set(pos[0], 0.15, pos[1]);
+            // PINK ARMCHAIR (from reference images)
+            const pinkChair = createPinkArmchair();
+            pinkChair.position.set(1.3, 0, 0.3);
+            pinkChair.rotation.y = -0.4;
+            group.add(pinkChair);
+
+            // LARGE TRIANGLE BEAN BAGS (cream, orange, magenta from references)
+            const beanCream203 = createTriangleBeanbag(0xf5f0e8);
+            beanCream203.position.set(-1.2, 0, 0.8);
+            beanCream203.rotation.y = 0.5;
+            group.add(beanCream203);
+            const beanOrange203 = createTriangleBeanbag(0xfd7e14);
+            beanOrange203.position.set(0.3, 0, 1.5);
+            beanOrange203.rotation.y = -0.3;
+            group.add(beanOrange203);
+            const beanMagenta = createTriangleBeanbag(0xc2185b);
+            beanMagenta.position.set(-0.5, 0, 1.8);
+            beanMagenta.rotation.y = 0.2;
+            group.add(beanMagenta);
+
+            // ETHNIC & VELVET CUSHIONS scattered everywhere
+            const cushionData = [
+                { pos: [-0.9, 0.4], color: [0xc41e3a, 0xfdd835], type: 'ethnic' },
+                { pos: [0.6, 0.2], color: [0x00897b, 0xf5f0e8], type: 'ethnic' },
+                { pos: [-0.2, 1.0], color: 0x9c27b0, type: 'velvet' },
+                { pos: [1.0, 1.2], color: 0xfdd835, type: 'velvet' },
+                { pos: [-1.0, 1.4], color: [0x1a3a5c, 0xffffff], type: 'ethnic' },
+                { pos: [0.2, 0.6], color: 0x6b8e23, type: 'pebble' },
+                { pos: [-0.6, 0.1], color: 0xf5f0e8, type: 'pebble' }
+            ];
+            cushionData.forEach(c => {
+                let cushion;
+                if (c.type === 'ethnic') cushion = createEthnicCushion(c.color);
+                else if (c.type === 'velvet') cushion = createVelvetCushion(c.color);
+                else cushion = createPebbleCushion(c.color);
+                cushion.position.set(c.pos[0], 0.02, c.pos[1]);
                 group.add(cushion);
             });
 
-            // Low coffee table
-            const coffeeTable = createLowCoffeeTable();
-            coffeeTable.position.set(0, 0.15, 0.8);
-            group.add(coffeeTable);
+            // BOOK CUBBIES & DISPLAYS (modular wooden from references)
+            const bookCubby203 = createBookCubby();
+            bookCubby203.position.set(-1.5, 0, -ROOM_S203_DEPTH / 2 + 0.8);
+            group.add(bookCubby203);
+            const wallBookcase = createWallBookcase();
+            wallBookcase.position.set(ROOM_S203_WIDTH / 2 - 0.2, 0, -0.5);
+            wallBookcase.rotation.y = -Math.PI / 2;
+            group.add(wallBookcase);
+            const leaningShelf = createLeaningShelf();
+            leaningShelf.position.set(1.5, 0, -ROOM_S203_DEPTH / 2 + 1);
+            group.add(leaningShelf);
 
-            // Book displays near back wall
-            const bookDisplay1 = createRedBookDisplay();
-            bookDisplay1.position.set(-1.2, 0, -ROOM_5203_DEPTH / 2 + 1);
-            group.add(bookDisplay1);
-            const bookDisplay2 = createRedBookDisplay();
-            bookDisplay2.position.set(1.2, 0, -ROOM_5203_DEPTH / 2 + 1);
-            group.add(bookDisplay2);
+            // BOOK STACKS on floor
+            const stack1 = createBookStack();
+            stack1.position.set(-0.3, 0, 0.5);
+            group.add(stack1);
+            const stack2 = createBookStack();
+            stack2.position.set(0.8, 0, 0.9);
+            group.add(stack2);
 
-            // Bookshelf near side wall
-            const bookshelf = createWoodenBookshelf(2, 2.2, 4);
-            bookshelf.position.set(ROOM_5203_WIDTH / 2 - 0.3, 0, -1);
-            bookshelf.rotation.y = -Math.PI / 2;
-            group.add(bookshelf);
+            // WOVEN BASKETS & AFRICAN POTTERY
+            const basket203 = createWovenBasket();
+            basket203.position.set(-ROOM_S203_WIDTH / 2 + 0.4, 0, 1.5);
+            group.add(basket203);
+            const pottery203 = createAfricanPottery();
+            pottery203.position.set(ROOM_S203_WIDTH / 2 - 0.4, 0, 1.0);
+            group.add(pottery203);
+            const woodSculpture = createWoodSculpture();
+            woodSculpture.position.set(-ROOM_S203_WIDTH / 2 + 0.35, 0, 0);
+            group.add(woodSculpture);
 
-            // Plants
-            const plant1 = createPottedPlant();
-            plant1.position.set(ROOM_5203_WIDTH / 2 - 0.4, 0, ROOM_5203_DEPTH / 3);
-            group.add(plant1);
-            const plant2 = createPottedPlant();
-            plant2.position.set(-ROOM_5203_WIDTH / 2 + 0.4, 0, ROOM_5203_DEPTH / 3);
-            group.add(plant2);
+            // PALM PLANTS & HANGING PLANTS (from references)
+            const palm1 = createPalmPlant();
+            palm1.position.set(ROOM_S203_WIDTH / 2 - 0.4, 0, ROOM_S203_DEPTH / 3);
+            group.add(palm1);
+            const palm2 = createPalmPlant();
+            palm2.position.set(-ROOM_S203_WIDTH / 2 + 0.4, 0, ROOM_S203_DEPTH / 3);
+            group.add(palm2);
+            const hangingPlant203a = createHangingPlant();
+            hangingPlant203a.position.set(-1.0, CEILING_HEIGHT - 0.3, 0.5);
+            group.add(hangingPlant203a);
+            const hangingPlant203b = createHangingPlant();
+            hangingPlant203b.position.set(1.2, CEILING_HEIGHT - 0.25, 1.0);
+            group.add(hangingPlant203b);
+            const pothos = createPothosVine();
+            pothos.position.set(ROOM_S203_WIDTH / 2 - 0.3, 1.2, -1.5);
+            group.add(pothos);
 
-            // Pendant lights
-            const pendant1 = createPendantLight();
-            pendant1.position.set(-1, CEILING_HEIGHT - 0.8, 0);
-            group.add(pendant1);
-            const pendant2 = createPendantLight();
-            pendant2.position.set(1, CEILING_HEIGHT - 0.8, 0.5);
-            group.add(pendant2);
+            // DISCO BALL CLUSTER (from reference images!)
+            const discoBallCluster = createDiscoBallCluster();
+            discoBallCluster.position.set(0, CEILING_HEIGHT - 0.4, 0.5);
+            group.add(discoBallCluster);
+
+            // ETHIOPIAN LAMPS with beaded fringe
+            const ethLamp1 = createEthiopianLamp();
+            ethLamp1.position.set(-1.2, CEILING_HEIGHT - 0.5, 0);
+            group.add(ethLamp1);
+            const ethLamp2 = createEthiopianLamp();
+            ethLamp2.position.set(1.0, CEILING_HEIGHT - 0.55, 1.0);
+            group.add(ethLamp2);
+
+            // BEADED LAMP
+            const beadedLamp = createBeadedLamp();
+            beadedLamp.position.set(0.3, CEILING_HEIGHT - 0.45, -0.8);
+            group.add(beadedLamp);
+
+            // STRING LIGHTS near windows
+            const stringLights = createStringLights();
+            stringLights.position.set(0, CEILING_HEIGHT - 0.6, ROOM_S203_DEPTH / 2 - 0.5);
+            group.add(stringLights);
 
             return group;
         }
 
         // Create and position rooms
-        const room5202 = createRoom5202();
-        room5202.position.set(ROOM_5202_X, 0, 0);
-        scene.add(room5202);
+        const roomS202 = createRoomS202();
+        roomS202.position.set(ROOM_S202_X, 0, 0);
+        scene.add(roomS202);
 
-        const room5203 = createRoom5203();
-        room5203.position.set(ROOM_5203_X, 0, 0);
-        scene.add(room5203);
+        const roomS203 = createRoomS203();
+        roomS203.position.set(ROOM_S203_X, 0, 0);
+        scene.add(roomS203);
 
         // Room labels
         function createLabel(text, position) {
@@ -2479,8 +2553,8 @@
             return sprite;
         }
 
-        labelsGroup.add(createLabel('ROOM 5202 - SPECIAL SPECIAL', new THREE.Vector3(ROOM_5202_X, CEILING_HEIGHT + 0.5, 0)));
-        labelsGroup.add(createLabel('ROOM 5203 - READING ROOM', new THREE.Vector3(ROOM_5203_X, CEILING_HEIGHT + 0.5, 0)));
+        labelsGroup.add(createLabel('ROOM S202 - SPECIAL SPECIAL', new THREE.Vector3(ROOM_S202_X, CEILING_HEIGHT + 0.5, 0)));
+        labelsGroup.add(createLabel('ROOM S203 - READING ROOM', new THREE.Vector3(ROOM_S203_X, CEILING_HEIGHT + 0.5, 0)));
         scene.add(labelsGroup);
 
         // Lighting
@@ -2493,12 +2567,12 @@
         const fillLight = new THREE.DirectionalLight(0xffffff, 0.3);
         fillLight.position.set(-10, 10, -10);
         scene.add(fillLight);
-        const room5202Light = new THREE.PointLight(0xffffee, 0.4, 12);
-        room5202Light.position.set(ROOM_5202_X, CEILING_HEIGHT - 0.5, 0);
-        scene.add(room5202Light);
-        const room5203Light = new THREE.PointLight(0xffffee, 0.4, 12);
-        room5203Light.position.set(ROOM_5203_X, CEILING_HEIGHT - 0.5, 0);
-        scene.add(room5203Light);
+        const roomS202Light = new THREE.PointLight(0xffffee, 0.4, 12);
+        roomS202Light.position.set(ROOM_S202_X, CEILING_HEIGHT - 0.5, 0);
+        scene.add(roomS202Light);
+        const roomS203Light = new THREE.PointLight(0xffffee, 0.4, 12);
+        roomS203Light.position.set(ROOM_S203_X, CEILING_HEIGHT - 0.5, 0);
+        scene.add(roomS203Light);
 
         // Camera controls
         let isMouseDown = false;
@@ -2549,18 +2623,18 @@
         const views = {
             overview: { rotX: 0, rotY: 0.5, dist: 18, target: new THREE.Vector3(0, 2, 0) },
             floorPlan: { rotX: 0, rotY: 1.5, dist: 14, target: new THREE.Vector3(0, 0, 0) },
-            // Room 5202 views - Entry through vestibule door, looking toward windows
+            // Room S202 views - Entry through vestibule door, looking toward windows
             // rotX=Math.PI puts camera at -Z (door) looking toward +Z (windows)
-            room5202Entry: { rotX: Math.PI, rotY: 0.15, dist: 3, target: new THREE.Vector3(ROOM_5202_X, 1.5, -ROOM_5202_DEPTH / 2 + 1) },
-            room5202Inside: { rotX: Math.PI, rotY: 0.2, dist: 5, target: new THREE.Vector3(ROOM_5202_X, 1.5, 0) },
-            room5202Windows: { rotX: Math.PI, rotY: 0.15, dist: 4, target: new THREE.Vector3(ROOM_5202_X, 1.5, ROOM_5202_DEPTH / 4) },
-            room5202Table: { rotX: Math.PI * 0.8, rotY: 0.25, dist: 4, target: new THREE.Vector3(ROOM_5202_X, 0.8, 0) },
-            // Room 5203 views - Entry through corridor door, looking toward arched windows
-            room5203Entry: { rotX: Math.PI, rotY: 0.15, dist: 3, target: new THREE.Vector3(ROOM_5203_X, 1.5, -ROOM_5203_DEPTH / 2 + 1) },
-            room5203Inside: { rotX: Math.PI, rotY: 0.2, dist: 6, target: new THREE.Vector3(ROOM_5203_X, 1.5, 0) },
-            room5203Windows: { rotX: Math.PI, rotY: 0.15, dist: 4, target: new THREE.Vector3(ROOM_5203_X, 1.5, ROOM_5203_DEPTH / 4) },
-            room5203Seating: { rotX: Math.PI * 0.7, rotY: 0.2, dist: 4, target: new THREE.Vector3(ROOM_5203_X, 0.5, 0.5) },
-            room5203Shelves: { rotX: Math.PI * 1.2, rotY: 0.2, dist: 5, target: new THREE.Vector3(ROOM_5203_X, 1.2, -ROOM_5203_DEPTH / 3) }
+            roomS202Entry: { rotX: Math.PI, rotY: 0.15, dist: 3, target: new THREE.Vector3(ROOM_S202_X, 1.5, -ROOM_S202_DEPTH / 2 + 1) },
+            roomS202Inside: { rotX: Math.PI, rotY: 0.2, dist: 5, target: new THREE.Vector3(ROOM_S202_X, 1.5, 0) },
+            roomS202Windows: { rotX: Math.PI, rotY: 0.15, dist: 4, target: new THREE.Vector3(ROOM_S202_X, 1.5, ROOM_S202_DEPTH / 4) },
+            roomS202Table: { rotX: Math.PI * 0.8, rotY: 0.25, dist: 4, target: new THREE.Vector3(ROOM_S202_X, 0.8, 0) },
+            // Room S203 views - Entry through corridor door, looking toward arched windows
+            roomS203Entry: { rotX: Math.PI, rotY: 0.15, dist: 3, target: new THREE.Vector3(ROOM_S203_X, 1.5, -ROOM_S203_DEPTH / 2 + 1) },
+            roomS203Inside: { rotX: Math.PI, rotY: 0.2, dist: 6, target: new THREE.Vector3(ROOM_S203_X, 1.5, 0) },
+            roomS203Windows: { rotX: Math.PI, rotY: 0.15, dist: 4, target: new THREE.Vector3(ROOM_S203_X, 1.5, ROOM_S203_DEPTH / 4) },
+            roomS203Seating: { rotX: Math.PI * 0.7, rotY: 0.2, dist: 4, target: new THREE.Vector3(ROOM_S203_X, 0.5, 0.5) },
+            roomS203Shelves: { rotX: Math.PI * 1.2, rotY: 0.2, dist: 5, target: new THREE.Vector3(ROOM_S203_X, 1.2, -ROOM_S203_DEPTH / 3) }
         };
 
         function animateToView(view, duration = 1500) {
@@ -2586,8 +2660,8 @@
 
         window.setView = function(viewName) { const view = views[viewName]; if (view) animateToView(view); };
         window.focusRoom = function(room) {
-            if (room === 'room5202') setView('room5202Inside');
-            else if (room === 'room5203') setView('room5203Inside');
+            if (room === 'roomS202') setView('roomS202Inside');
+            else if (room === 'roomS203') setView('roomS203Inside');
         };
 
         let tourRunning = false;
@@ -2595,7 +2669,7 @@
             if (tourRunning) return;
             tourRunning = true;
             // Tour starts from entry doors, walking through each room
-            const stops = ['overview', 'room5202Entry', 'room5202Inside', 'room5202Windows', 'room5202Table', 'room5203Entry', 'room5203Inside', 'room5203Windows', 'room5203Seating', 'room5203Shelves', 'overview'];
+            const stops = ['overview', 'roomS202Entry', 'roomS202Inside', 'roomS202Windows', 'roomS202Table', 'roomS203Entry', 'roomS203Inside', 'roomS203Windows', 'roomS203Seating', 'roomS203Shelves', 'overview'];
             let i = 0;
             function next() {
                 if (i >= stops.length) { tourRunning = false; return; }
@@ -2622,8 +2696,9 @@
 
         window.toggleCeiling = function() {
             showCeiling = !showCeiling;
-            ceilingsGroup.traverse((obj) => {
-                if (obj.userData.isCeiling || obj.isMesh) obj.visible = showCeiling;
+            // Find all ceilings in the scene
+            scene.traverse((obj) => {
+                if (obj.userData.isCeiling) obj.visible = showCeiling;
             });
             document.getElementById('ceilingBtn').classList.toggle('active', showCeiling);
         };
@@ -4024,8 +4099,8 @@
         function updateWallVisibility() {
             if (!hideNearWall) {
                 // Show all walls
-                Object.values(room5202Walls).forEach(w => { if (w) w.visible = true; });
-                Object.values(room5203Walls).forEach(w => { if (w) w.visible = true; });
+                Object.values(roomS202Walls).forEach(w => { if (w) w.visible = true; });
+                Object.values(roomS203Walls).forEach(w => { if (w) w.visible = true; });
                 return;
             }
 
@@ -4033,34 +4108,34 @@
             const camX = camera.position.x;
             const camZ = camera.position.z;
 
-            // Room 5202 walls
+            // Room S202 walls
             // FRONT wall (windows) - hide when camera is in front (positive Z)
-            if (room5202Walls.front) room5202Walls.front.visible = camZ < ROOM_5202_DEPTH / 4;
+            if (roomS202Walls.front) roomS202Walls.front.visible = camZ < ROOM_S202_DEPTH / 4;
 
             // BACK wall (corridor entry) - hide when camera is behind (negative Z)
             // Also hide entire vestibule (all corridor walls) when hiding back area
-            const hideBackArea = camZ < -ROOM_5202_DEPTH / 4;
-            if (room5202Walls.back) room5202Walls.back.visible = !hideBackArea;
-            if (room5202Walls.vestibuleGroup) room5202Walls.vestibuleGroup.visible = !hideBackArea;
+            const hideBackArea = camZ < -ROOM_S202_DEPTH / 4;
+            if (roomS202Walls.back) roomS202Walls.back.visible = !hideBackArea;
+            if (roomS202Walls.vestibuleGroup) roomS202Walls.vestibuleGroup.visible = !hideBackArea;
 
             // LEFT wall (Three Star door) - hide when camera is to the left
-            if (room5202Walls.left) room5202Walls.left.visible = camX > ROOM_5202_X - ROOM_5202_WIDTH / 2;
+            if (roomS202Walls.left) roomS202Walls.left.visible = camX > ROOM_S202_X - ROOM_S202_WIDTH / 2;
 
-            // RIGHT wall (open passage to 5203) - hide when camera is between rooms
-            if (room5202Walls.right) room5202Walls.right.visible = camX < ROOM_5202_X + ROOM_5202_WIDTH / 4;
+            // RIGHT wall (solid shared wall with S203) - hide when camera is to the right
+            if (roomS202Walls.right) roomS202Walls.right.visible = camX < ROOM_S202_X + ROOM_S202_WIDTH / 2;
 
-            // Room 5203 walls
+            // Room S203 walls
             // FRONT wall (windows) - hide when camera is in front
-            if (room5203Walls.front) room5203Walls.front.visible = camZ < ROOM_5203_DEPTH / 4;
+            if (roomS203Walls.front) roomS203Walls.front.visible = camZ < ROOM_S203_DEPTH / 4;
 
             // BACK wall (corridor entry + poster wall) - hide when camera is behind
-            if (room5203Walls.back) room5203Walls.back.visible = camZ > -ROOM_5203_DEPTH / 4;
+            if (roomS203Walls.back) roomS203Walls.back.visible = camZ > -ROOM_S203_DEPTH / 4;
 
-            // LEFT wall (open passage to 5202) - hide when camera is between rooms
-            if (room5203Walls.left) room5203Walls.left.visible = camX > ROOM_5203_X - ROOM_5203_WIDTH / 4;
+            // LEFT wall (solid shared wall with S202) - hide when camera is to the left
+            if (roomS203Walls.left) roomS203Walls.left.visible = camX > ROOM_S203_X - ROOM_S203_WIDTH / 2;
 
             // RIGHT wall (solid exterior) - hide when camera is to the right
-            if (room5203Walls.right) room5203Walls.right.visible = camX < ROOM_5203_X + ROOM_5203_WIDTH / 2;
+            if (roomS203Walls.right) roomS203Walls.right.visible = camX < ROOM_S203_X + ROOM_S203_WIDTH / 2;
         }
 
         // Auto ceiling visibility based on camera height
@@ -4070,8 +4145,8 @@
 
             if (showCeiling) {
                 // Auto-hide ceiling when viewing from above
-                ceilingsGroup.traverse((obj) => {
-                    if (obj.userData.isCeiling || obj.isMesh) {
+                scene.traverse((obj) => {
+                    if (obj.userData.isCeiling) {
                         obj.visible = !isAbove;
                     }
                 });
