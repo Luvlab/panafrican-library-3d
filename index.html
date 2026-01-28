@@ -1612,6 +1612,7 @@
 
         // Materials
         const wallMaterial = new THREE.MeshLambertMaterial({ color: 0xf8f8f5, side: THREE.DoubleSide });
+        const ceilingMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff, side: THREE.DoubleSide }); // Pure white ceiling
         const brickMaterial = new THREE.MeshLambertMaterial({ color: 0xf0ebe5, side: THREE.DoubleSide });
         const floorMaterial = new THREE.MeshLambertMaterial({ color: 0xd4c8b8 });
         const darkBlueMaterial = new THREE.MeshLambertMaterial({ color: 0x2c3e5c });
@@ -2172,7 +2173,7 @@
             roomS202Walls.right = rightWall;
 
             // ========== CEILING ==========
-            const ceilingS202 = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_S202_WIDTH, ROOM_S202_DEPTH), wallMaterial);
+            const ceilingS202 = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_S202_WIDTH, ROOM_S202_DEPTH), ceilingMaterial);
             ceilingS202.rotation.x = Math.PI / 2;
             ceilingS202.position.set(0, CEILING_HEIGHT, 0);
             ceilingS202.userData.isCeiling = true;
@@ -2398,7 +2399,7 @@
             roomS203Walls.right = rightWall;
 
             // Ceiling
-            const ceilingS203 = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_S203_WIDTH, ROOM_S203_DEPTH), wallMaterial);
+            const ceilingS203 = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_S203_WIDTH, ROOM_S203_DEPTH), ceilingMaterial);
             ceilingS203.rotation.x = Math.PI / 2;
             ceilingS203.position.set(0, CEILING_HEIGHT, 0);
             ceilingS203.userData.isCeiling = true;
