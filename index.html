@@ -2197,7 +2197,7 @@
             mainRug.position.set(0, 0, windowZ);
             group.add(mainRug);
             const kilimRug = createKilimRug();
-            kilimRug.position.set(-0.2, 0.02, windowZ + 0.3);
+            kilimRug.position.set(-0.2, 0.02, windowZ - 0.5);  // Moved back to stay inside room
             kilimRug.rotation.y = 0.1;
             group.add(kilimRug);
 
@@ -2207,7 +2207,7 @@
             beanCream.rotation.y = 0.4;
             group.add(beanCream);
             const beanOrange = createTriangleBeanbag(0xfd7e14);
-            beanOrange.position.set(0.5, 0, windowZ + 0.3);
+            beanOrange.position.set(0.5, 0, windowZ - 0.5);  // Moved inside room
             beanOrange.rotation.y = -0.3;
             group.add(beanOrange);
 
@@ -2216,10 +2216,10 @@
             cushion1.position.set(-0.1, 0, windowZ);
             group.add(cushion1);
             const cushion2 = createVelvetCushion(0x00897b);
-            cushion2.position.set(0.2, 0, windowZ + 0.5);
+            cushion2.position.set(0.2, 0, windowZ - 0.3);  // Moved inside room
             group.add(cushion2);
             const cushion3 = createPebbleCushion(0xc2185b);
-            cushion3.position.set(-0.4, 0, windowZ + 0.4);
+            cushion3.position.set(-0.4, 0, windowZ - 0.4);  // Moved inside room
             group.add(cushion3);
 
             // === WEST WALL (-X): Book display near Three Star door ===
@@ -2235,7 +2235,7 @@
             group.add(basket);
             // African pottery near window
             const pottery = createAfricanPottery();
-            pottery.position.set(-ROOM_S202_WIDTH / 2 + 0.35, 0, windowZ + 0.5);
+            pottery.position.set(-ROOM_S202_WIDTH / 2 + 0.35, 0, windowZ - 0.3);  // Moved inside room
             group.add(pottery);
 
             // === PLANTS ===

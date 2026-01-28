@@ -1,6 +1,7 @@
 {
   "name": "panafrican-library-3d",
   "version": "1.0.0",
+  "type": "module",
   "description": "The Panafrican Library Will Not Be Colonized - Interactive 3D Reading Room",
   "scripts": {
     "start": "npx serve .",
