@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Panafrican Library Will Not Be Colonized | Reading Room 3D</title>
+    <meta name="description" content="A curatorial Reading Room conceived as a living archive of panafrican and diasporic publishing. Interactive 3D simulation.">
+    <meta property="og:title" content="The Panafrican Library Will Not Be Colonized">
+    <meta property="og:description" content="Interactive 3D Reading Room - A living archive of panafrican and diasporic publishing">
+    <meta property="og:type" content="website">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            overflow: hidden;
+            background: #0a0a0a;
+            color: #fff;
+        }
+
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a0a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease;
+        }
+
+        #loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-title {
+            font-size: 24px;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .loading-subtitle {
+            font-size: 12px;
+            color: #666;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+        }
+
+        .loading-bar {
+            width: 200px;
+            height: 2px;
+            background: #222;
+            border-radius: 1px;
+            overflow: hidden;
+        }
+
+        .loading-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #4488ff, #88aaff);
+            width: 0%;
+            animation: loading 2s ease-in-out infinite;
+        }
+
+        @keyframes loading {
+            0% { width: 0%; margin-left: 0; }
+            50% { width: 60%; margin-left: 20%; }
+            100% { width: 0%; margin-left: 100%; }
+        }
+
+        #canvas-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        #info-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: #fff;
+            padding: 24px;
+            border-radius: 12px;
+            max-width: 340px;
+            z-index: 100;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        #info-panel h1 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #fff;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        #info-panel h2 {
+            font-size: 11px;
+            font-weight: 400;
+            color: #666;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        #info-panel p {
+            font-size: 13px;
+            line-height: 1.7;
+            color: #999;
+            margin-bottom: 20px;
+        }
+
+        .room-badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .room-indicator {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .room-202 {
+            background: rgba(68, 136, 255, 0.15);
+            color: #88bbff;
+            border: 1px solid rgba(68, 136, 255, 0.3);
+        }
+
+        .room-203 {
+            background: rgba(255, 136, 68, 0.15);
+            color: #ffaa88;
+            border: 1px solid rgba(255, 136, 68, 0.3);
+        }
+
+        #controls-panel {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: #fff;
+            padding: 14px 24px;
+            border-radius: 12px;
+            z-index: 100;
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        #controls-panel button {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #aaa;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 500;
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+        }
+
+        #controls-panel button:hover {
+            background: rgba(255,255,255,0.12);
+            border-color: rgba(255,255,255,0.25);
+            color: #fff;
+        }
+
+        #controls-panel button.active {
+            background: rgba(68, 136, 255, 0.2);
+            border-color: rgba(68, 136, 255, 0.4);
+            color: #88bbff;
+        }
+
+        #controls-panel span {
+            font-size: 11px;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        #controls-panel span::before {
+            content: '';
+            width: 4px;
+            height: 4px;
+            background: #333;
+            border-radius: 50%;
+        }
+
+        #view-buttons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            z-index: 100;
+        }
+
+        #view-buttons button {
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #888;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 11px;
+            text-align: left;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 180px;
+        }
+
+        #view-buttons button:hover {
+            background: rgba(20, 20, 20, 0.95);
+            border-color: rgba(255,255,255,0.2);
+            color: #fff;
+            transform: translateX(-4px);
+        }
+
+        #view-buttons button .icon {
+            font-size: 14px;
+        }
+
+        #screenshot-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #888;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 11px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        #screenshot-btn:hover {
+            background: rgba(68, 136, 255, 0.2);
+            border-color: rgba(68, 136, 255, 0.4);
+            color: #88bbff;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            #info-panel {
+                top: 10px;
+                left: 10px;
+                right: 10px;
+                max-width: none;
+                padding: 16px;
+            }
+
+            #info-panel h1 {
+                font-size: 13px;
+            }
+
+            #info-panel p {
+                font-size: 12px;
+                display: none;
+            }
+
+            #view-buttons {
+                top: auto;
+                bottom: 80px;
+                right: 10px;
+            }
+
+            #view-buttons button {
+                min-width: auto;
+                padding: 10px 12px;
+            }
+
+            #view-buttons button span {
+                display: none;
+            }
+
+            #controls-panel {
+                bottom: 10px;
+                padding: 10px 16px;
+                gap: 12px;
+            }
+
+            #controls-panel span {
+                display: none;
+            }
+
+            #screenshot-btn {
+                bottom: 80px;
+                right: auto;
+                left: 10px;
+            }
+        }
+
+        /* Touch hint for mobile */
+        #touch-hint {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: #666;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 11px;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        #touch-hint.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading-screen">
+        <div class="loading-title">The Panafrican Library</div>
+        <div class="loading-subtitle">Loading 3D Environment</div>
+        <div class="loading-bar">
+            <div class="loading-progress"></div>
+        </div>
+    </div>
+
+    <div id="canvas-container"></div>
+
+    <div id="info-panel">
+        <h1>The Panafrican Library Will Not Be Colonized</h1>
+        <h2>Reading Room • Interactive 3D</h2>
+        <p>A curatorial Reading Room conceived as a living archive of panafrican and diasporic publishing. A space to read, listen, and slow down.</p>
+        <div class="room-badges">
+            <span class="room-indicator room-202">Room 202 — Sound Library</span>
+            <span class="room-indicator room-203">Room 203 — Library Space</span>
+        </div>
+    </div>
+
+    <div id="view-buttons">
+        <button onclick="setView('overview')">
+            <span class="icon">📐</span>
+            <span>Overview</span>
+        </button>
+        <button onclick="setView('room202')">
+            <span class="icon">🎧</span>
+            <span>Sound Library</span>
+        </button>
+        <button onclick="setView('room203')">
+            <span class="icon">📚</span>
+            <span>Library Space</span>
+        </button>
+        <button onclick="setView('soundwall')">
+            <span class="icon">🔊</span>
+            <span>Sound Wall</span>
+        </button>
+        <button onclick="setView('reading')">
+            <span class="icon">📖</span>
+            <span>Reading Area</span>
+        </button>
+        <button onclick="setView('walkthrough')">
+            <span class="icon">🎬</span>
+            <span>Auto Tour</span>
+        </button>
+    </div>
+
+    <div id="controls-panel">
+        <span>Drag to rotate</span>
+        <span>Scroll to zoom</span>
+        <span>WASD to move</span>
+        <button id="toggleGrid" onclick="toggleGrid()">Grid</button>
+        <button id="toggleLabels" onclick="toggleLabels()">Labels</button>
+    </div>
+
+    <button id="screenshot-btn" onclick="takeScreenshot()">
+        <span>📷</span>
+        <span>Capture</span>
+    </button>
+
+    <div id="touch-hint">Touch and drag to explore</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Scene setup
+        let scene, camera, renderer;
+        let gridHelper, labels = [];
+        let isWalkthroughActive = false;
+        let walkthroughTime = 0;
+
+        // Room dimensions (in meters)
+        const ROOM_WIDTH = 8;
+        const ROOM_DEPTH = 6;
+        const ROOM_HEIGHT = 3.5;
+
+        function init() {
+            // Scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0a0a);
+
+            // Add fog for depth
+            scene.fog = new THREE.Fog(0x0a0a0a, 20, 60);
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(15, 10, 18);
+            camera.lookAt(0, 0, 0);
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({
+                antialias: true,
+                preserveDrawingBuffer: true,
+                powerPreference: "high-performance"
+            });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.2;
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            // Lighting
+            setupLighting();
+
+            // Create rooms
+            createRoom202();
+            createRoom203();
+            createConnectingPassage();
+
+            // Grid helper
+            gridHelper = new THREE.GridHelper(30, 30, 0x222222, 0x181818);
+            gridHelper.position.y = 0.01;
+            scene.add(gridHelper);
+
+            // Controls
+            setupControls();
+
+            // Hide loading screen
+            setTimeout(() => {
+                document.getElementById('loading-screen').classList.add('hidden');
+
+                // Show touch hint on mobile
+                if ('ontouchstart' in window) {
+                    const hint = document.getElementById('touch-hint');
+                    hint.classList.add('show');
+                    setTimeout(() => hint.classList.remove('show'), 3000);
+                }
+            }, 1500);
+
+            // Animation loop
+            animate();
+        }
+
+        function setupLighting() {
+            // Ambient light
+            const ambient = new THREE.AmbientLight(0xffffff, 0.35);
+            scene.add(ambient);
+
+            // Main directional light
+            const mainLight = new THREE.DirectionalLight(0xffffff, 0.9);
+            mainLight.position.set(10, 15, 10);
+            mainLight.castShadow = true;
+            mainLight.shadow.mapSize.width = 2048;
+            mainLight.shadow.mapSize.height = 2048;
+            mainLight.shadow.camera.near = 0.5;
+            mainLight.shadow.camera.far = 50;
+            mainLight.shadow.camera.left = -20;
+            mainLight.shadow.camera.right = 20;
+            mainLight.shadow.camera.top = 20;
+            mainLight.shadow.camera.bottom = -20;
+            mainLight.shadow.bias = -0.0001;
+            scene.add(mainLight);
+
+            // Fill light (warm)
+            const fillLight = new THREE.DirectionalLight(0xffeedd, 0.25);
+            fillLight.position.set(-8, 8, -5);
+            scene.add(fillLight);
+
+            // Room 202 accent (blue for sound space)
+            const room202Light = new THREE.PointLight(0x4488ff, 0.6, 12);
+            room202Light.position.set(-ROOM_WIDTH/2 - 0.5, 2.5, 0);
+            scene.add(room202Light);
+
+            // Room 203 accent (warm for reading)
+            const room203Light = new THREE.PointLight(0xffaa66, 0.5, 12);
+            room203Light.position.set(ROOM_WIDTH/2 + 0.5, 2.5, 0);
+            scene.add(room203Light);
+
+            // Rim light for depth
+            const rimLight = new THREE.DirectionalLight(0x8888ff, 0.15);
+            rimLight.position.set(-10, 5, -10);
+            scene.add(rimLight);
+        }
+
+        function createRoom202() {
+            const roomGroup = new THREE.Group();
+            roomGroup.position.x = -ROOM_WIDTH/2 - 0.5;
+
+            // Floor
+            const floorGeo = new THREE.PlaneGeometry(ROOM_WIDTH, ROOM_DEPTH);
+            const floorMat = new THREE.MeshStandardMaterial({
+                color: 0xd4c4a8,
+                roughness: 0.85,
+                metalness: 0.05
+            });
+            const floor = new THREE.Mesh(floorGeo, floorMat);
+            floor.rotation.x = -Math.PI / 2;
+            floor.receiveShadow = true;
+            roomGroup.add(floor);
+
+            // Checkered rug
+            const rugGeo = new THREE.PlaneGeometry(4, 3);
+            const rugCanvas = createCheckerPattern();
+            const rugTexture = new THREE.CanvasTexture(rugCanvas);
+            rugTexture.wrapS = THREE.RepeatWrapping;
+            rugTexture.wrapT = THREE.RepeatWrapping;
+            rugTexture.repeat.set(8, 6);
+            const rugMat = new THREE.MeshStandardMaterial({
+                map: rugTexture,
+                roughness: 0.95
+            });
+            const rug = new THREE.Mesh(rugGeo, rugMat);
+            rug.rotation.x = -Math.PI / 2;
+            rug.position.y = 0.02;
+            roomGroup.add(rug);
+
+            // Walls
+            createWalls(roomGroup, 0xf0f0f0);
+
+            // Sound Wall
+            createSoundWall(roomGroup);
+
+            // Photo collage wall
+            createPhotoCollageWall(roomGroup, 'left');
+
+            // Blue poufs
+            createPouf(roomGroup, -1, 0.25, 0.5, 0x1e3a5f);
+            createPouf(roomGroup, 0.5, 0.25, 1, 0x1e3a5f);
+            createPouf(roomGroup, -0.5, 0.25, -0.8, 0x1e3a5f);
+
+            // Audio station
+            createAudioStation(roomGroup);
+
+            // Label
+            createLabel(roomGroup, "ROOM 202\nSOUND LIBRARY", 0, 3.2, 0);
+
+            scene.add(roomGroup);
+        }
+
+        function createRoom203() {
+            const roomGroup = new THREE.Group();
+            roomGroup.position.x = ROOM_WIDTH/2 + 0.5;
+
+            // Floor
+            const floorGeo = new THREE.PlaneGeometry(ROOM_WIDTH, ROOM_DEPTH);
+            const floorMat = new THREE.MeshStandardMaterial({
+                color: 0xd4c4a8,
+                roughness: 0.85,
+                metalness: 0.05
+            });
+            const floor = new THREE.Mesh(floorGeo, floorMat);
+            floor.rotation.x = -Math.PI / 2;
+            floor.receiveShadow = true;
+            roomGroup.add(floor);
+
+            // Walls
+            createWalls(roomGroup, 0xfafafa);
+
+            // Poster wall
+            createPosterWall(roomGroup);
+
+            // Bookshelves
+            createBookshelf(roomGroup, 3, 0, -2.5);
+            createBookshelf(roomGroup, 3, 0, 1.5);
+
+            // Red display stands
+            createDisplayStand(roomGroup, 0, 0, 0);
+            createDisplayStand(roomGroup, -1.5, 0, 1);
+
+            // Reading area
+            createReadingArea(roomGroup);
+
+            // Video screens
+            createVideoStation(roomGroup);
+
+            // Archive vitrine
+            createArchiveVitrine(roomGroup, -2.5, 0, -1.5);
+
+            // Label
+            createLabel(roomGroup, "ROOM 203\nPANAFRICAN LIBRARY", 0, 3.2, 0);
+
+            scene.add(roomGroup);
+        }
+
+        function createConnectingPassage() {
+            const opening = new THREE.Mesh(
+                new THREE.PlaneGeometry(1.5, ROOM_HEIGHT - 0.5),
+                new THREE.MeshBasicMaterial({ color: 0x151515, side: THREE.DoubleSide })
+            );
+            opening.position.set(0, ROOM_HEIGHT/2, 0);
+            scene.add(opening);
+        }
+
+        function createWalls(group, color) {
+            const wallMat = new THREE.MeshStandardMaterial({
+                color: color,
+                roughness: 0.92,
+                side: THREE.DoubleSide
+            });
+
+            // Back wall
+            const backWall = new THREE.Mesh(
+                new THREE.PlaneGeometry(ROOM_WIDTH, ROOM_HEIGHT),
+                wallMat
+            );
+            backWall.position.set(0, ROOM_HEIGHT/2, -ROOM_DEPTH/2);
+            backWall.receiveShadow = true;
+            group.add(backWall);
+
+            // Left wall
+            const leftWall = new THREE.Mesh(
+                new THREE.PlaneGeometry(ROOM_DEPTH, ROOM_HEIGHT),
+                wallMat
+            );
+            leftWall.position.set(-ROOM_WIDTH/2, ROOM_HEIGHT/2, 0);
+            leftWall.rotation.y = Math.PI / 2;
+            leftWall.receiveShadow = true;
+            group.add(leftWall);
+
+            // Right wall
+            const rightWall = new THREE.Mesh(
+                new THREE.PlaneGeometry(ROOM_DEPTH, ROOM_HEIGHT),
+                wallMat
+            );
+            rightWall.position.set(ROOM_WIDTH/2, ROOM_HEIGHT/2, 0);
+            rightWall.rotation.y = -Math.PI / 2;
+            rightWall.receiveShadow = true;
+            group.add(rightWall);
+        }
+
+        function createSoundWall(group) {
+            const soundWallGeo = new THREE.PlaneGeometry(ROOM_WIDTH - 1, ROOM_HEIGHT - 0.5);
+
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 384;
+            const ctx = canvas.getContext('2d');
+
+            // Dark background
+            ctx.fillStyle = '#0a0a0a';
+            ctx.fillRect(0, 0, 512, 384);
+
+            // Speaker pattern
+            const speakerPositions = [
+                [128, 96], [256, 96], [384, 96],
+                [128, 192], [256, 192], [384, 192],
+                [128, 288], [256, 288], [384, 288]
+            ];
+
+            speakerPositions.forEach(([x, y]) => {
+                const gradient = ctx.createRadialGradient(x, y, 0, x, y, 55);
+                gradient.addColorStop(0, '#2a2a2a');
+                gradient.addColorStop(0.4, '#1a1a1a');
+                gradient.addColorStop(0.8, '#0f0f0f');
+                gradient.addColorStop(1, '#0a0a0a');
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(x, y, 50, 0, Math.PI * 2);
+                ctx.fill();
+
+                const innerGradient = ctx.createRadialGradient(x, y, 0, x, y, 32);
+                innerGradient.addColorStop(0, '#3a3a3a');
+                innerGradient.addColorStop(0.6, '#2a2a2a');
+                innerGradient.addColorStop(1, '#1a1a1a');
+                ctx.fillStyle = innerGradient;
+                ctx.beginPath();
+                ctx.arc(x, y, 32, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = '#444';
+                ctx.beginPath();
+                ctx.arc(x, y, 10, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            const soundTexture = new THREE.CanvasTexture(canvas);
+            const soundWallMat = new THREE.MeshStandardMaterial({
+                map: soundTexture,
+                roughness: 0.6,
+                metalness: 0.1
+            });
+
+            const soundWall = new THREE.Mesh(soundWallGeo, soundWallMat);
+            soundWall.position.set(0, ROOM_HEIGHT/2, -ROOM_DEPTH/2 + 0.05);
+            group.add(soundWall);
+
+            createLabel(group, "SOUND WALL", 0, 0.3, -ROOM_DEPTH/2 + 0.1);
+        }
+
+        function createPhotoCollageWall(group, side) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+
+            ctx.fillStyle = '#e8e8e8';
+            ctx.fillRect(0, 0, 512, 512);
+
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    const x = col * 64 + 2;
+                    const y = row * 64 + 2;
+                    const gray = Math.random() * 120 + 40;
+                    ctx.fillStyle = `rgb(${gray}, ${gray}, ${gray})`;
+                    ctx.fillRect(x, y, 60, 60);
+
+                    if (Math.random() > 0.6) {
+                        ctx.fillStyle = '#1a1a1a';
+                        ctx.fillRect(x + 8, y + 8, 44, 44);
+                    }
+                }
+            }
+
+            const collageTexture = new THREE.CanvasTexture(canvas);
+            const collageMat = new THREE.MeshStandardMaterial({
+                map: collageTexture,
+                roughness: 0.85
+            });
+
+            const collageGeo = new THREE.PlaneGeometry(ROOM_DEPTH - 1, ROOM_HEIGHT - 0.5);
+            const collage = new THREE.Mesh(collageGeo, collageMat);
+
+            if (side === 'left') {
+                collage.position.set(-ROOM_WIDTH/2 + 0.05, ROOM_HEIGHT/2, 0);
+                collage.rotation.y = Math.PI / 2;
+            }
+
+            group.add(collage);
+        }
+
+        function createPosterWall(group) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 384;
+            const ctx = canvas.getContext('2d');
+
+            ctx.fillStyle = '#f8f8f5';
+            ctx.fillRect(0, 0, 512, 384);
+
+            const colors = ['#cc3333', '#3366cc', '#33cc66', '#ffcc00', '#ff6600', '#9933cc', '#222'];
+
+            for (let i = 0; i < 28; i++) {
+                const x = Math.random() * 460;
+                const y = Math.random() * 340;
+                const w = 35 + Math.random() * 55;
+                const h = 45 + Math.random() * 70;
+
+                ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+                ctx.fillRect(x, y, w, h);
+
+                ctx.fillStyle = Math.random() > 0.5 ? '#fff' : '#000';
+                for (let j = 0; j < 3; j++) {
+                    ctx.fillRect(x + 4, y + 8 + j * 10, w - 8, 3);
+                }
+            }
+
+            const posterTexture = new THREE.CanvasTexture(canvas);
+            const posterMat = new THREE.MeshStandardMaterial({
+                map: posterTexture,
+                roughness: 0.85
+            });
+
+            const posterGeo = new THREE.PlaneGeometry(ROOM_WIDTH - 1, ROOM_HEIGHT - 0.5);
+            const posterWall = new THREE.Mesh(posterGeo, posterMat);
+            posterWall.position.set(0, ROOM_HEIGHT/2, -ROOM_DEPTH/2 + 0.05);
+            group.add(posterWall);
+        }
+
+        function createPouf(group, x, y, z, color) {
+            const poufGeo = new THREE.BoxGeometry(0.6, 0.4, 0.6);
+
+            const canvas = document.createElement('canvas');
+            canvas.width = 128;
+            canvas.height = 128;
+            const ctx = canvas.getContext('2d');
+
+            ctx.fillStyle = '#1e3a5f';
+            ctx.fillRect(0, 0, 128, 128);
+
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 2;
+
+            for (let i = 0; i < 4; i++) {
+                for (let j = 0; j < 4; j++) {
+                    const cx = i * 32 + 16;
+                    const cy = j * 32 + 16;
+                    ctx.beginPath();
+                    ctx.moveTo(cx - 8, cy - 8);
+                    ctx.lineTo(cx + 8, cy + 8);
+                    ctx.moveTo(cx + 8, cy - 8);
+                    ctx.lineTo(cx - 8, cy + 8);
+                    ctx.stroke();
+                }
+            }
+
+            const poufTexture = new THREE.CanvasTexture(canvas);
+            const poufMat = new THREE.MeshStandardMaterial({
+                map: poufTexture,
+                roughness: 0.9
+            });
+
+            const pouf = new THREE.Mesh(poufGeo, poufMat);
+            pouf.position.set(x, y, z);
+            pouf.castShadow = true;
+            pouf.receiveShadow = true;
+            group.add(pouf);
+        }
+
+        function createAudioStation(group) {
+            const standGeo = new THREE.CylinderGeometry(0.12, 0.18, 1.2, 16);
+            const standMat = new THREE.MeshStandardMaterial({
+                color: 0x1a1a1a,
+                roughness: 0.3,
+                metalness: 0.7
+            });
+            const stand = new THREE.Mesh(standGeo, standMat);
+            stand.position.set(0, 0.6, 0.5);
+            stand.castShadow = true;
+            group.add(stand);
+
+            const speakerGeo = new THREE.BoxGeometry(0.22, 0.32, 0.22);
+            const speakerMat = new THREE.MeshStandardMaterial({
+                color: 0x0a0a0a,
+                roughness: 0.4,
+                metalness: 0.3
+            });
+            const speaker = new THREE.Mesh(speakerGeo, speakerMat);
+            speaker.position.set(0, 1.35, 0.5);
+            speaker.castShadow = true;
+            group.add(speaker);
+        }
+
+        function createBookshelf(group, x, y, z) {
+            const shelfGroup = new THREE.Group();
+
+            const frameMat = new THREE.MeshStandardMaterial({
+                color: 0xffffff,
+                roughness: 0.75
+            });
+
+            const sideGeo = new THREE.BoxGeometry(0.04, 1.5, 0.38);
+            const leftSide = new THREE.Mesh(sideGeo, frameMat);
+            leftSide.position.set(-0.5, 0.75, 0);
+            leftSide.castShadow = true;
+            shelfGroup.add(leftSide);
+
+            const rightSide = new THREE.Mesh(sideGeo, frameMat);
+            rightSide.position.set(0.5, 0.75, 0);
+            rightSide.castShadow = true;
+            shelfGroup.add(rightSide);
+
+            const shelfGeo = new THREE.BoxGeometry(1, 0.025, 0.35);
+            for (let i = 0; i < 4; i++) {
+                const shelf = new THREE.Mesh(shelfGeo, frameMat);
+                shelf.position.set(0, i * 0.4 + 0.1, 0);
+                shelf.castShadow = true;
+                shelfGroup.add(shelf);
+            }
+
+            const bookColors = [0xcc3333, 0x3366cc, 0x33cc66, 0xffcc00, 0xff6600, 0x9933cc, 0x222222, 0xffffff];
+            for (let shelf = 0; shelf < 3; shelf++) {
+                let xPos = -0.4;
+                for (let book = 0; book < 8; book++) {
+                    const bookWidth = 0.025 + Math.random() * 0.04;
+                    const bookHeight = 0.18 + Math.random() * 0.14;
+                    const bookGeo = new THREE.BoxGeometry(bookWidth, bookHeight, 0.24);
+                    const bookMat = new THREE.MeshStandardMaterial({
+                        color: bookColors[Math.floor(Math.random() * bookColors.length)],
+                        roughness: 0.8
+                    });
+                    const bookMesh = new THREE.Mesh(bookGeo, bookMat);
+                    bookMesh.position.set(xPos, shelf * 0.4 + 0.22, 0);
+                    bookMesh.castShadow = true;
+                    shelfGroup.add(bookMesh);
+                    xPos += bookWidth + 0.015;
+                }
+            }
+
+            shelfGroup.position.set(x, y, z);
+            group.add(shelfGroup);
+        }
+
+        function createDisplayStand(group, x, y, z) {
+            const standGroup = new THREE.Group();
+
+            const baseMat = new THREE.MeshStandardMaterial({
+                color: 0xcc2222,
+                roughness: 0.65
+            });
+
+            const displayGeo = new THREE.BoxGeometry(0.75, 0.75, 0.04);
+            const display = new THREE.Mesh(displayGeo, baseMat);
+            display.position.set(0, 0.7, 0);
+            display.rotation.x = -0.4;
+            display.castShadow = true;
+            standGroup.add(display);
+
+            const legGeo = new THREE.BoxGeometry(0.04, 0.55, 0.04);
+            const leg1 = new THREE.Mesh(legGeo, baseMat);
+            leg1.position.set(-0.32, 0.28, 0.18);
+            leg1.castShadow = true;
+            standGroup.add(leg1);
+
+            const leg2 = new THREE.Mesh(legGeo, baseMat);
+            leg2.position.set(0.32, 0.28, 0.18);
+            leg2.castShadow = true;
+            standGroup.add(leg2);
+
+            const bookColors = [0x3366cc, 0xffffff, 0xffcc00, 0x33cc66, 0xff6600];
+            for (let i = 0; i < 5; i++) {
+                const pubGeo = new THREE.BoxGeometry(0.1, 0.14, 0.008);
+                const pubMat = new THREE.MeshStandardMaterial({
+                    color: bookColors[i],
+                    roughness: 0.8
+                });
+                const pub = new THREE.Mesh(pubGeo, pubMat);
+                pub.position.set(-0.22 + i * 0.11, 0.75, 0.025);
+                pub.rotation.x = -0.4;
+                pub.castShadow = true;
+                standGroup.add(pub);
+            }
+
+            standGroup.position.set(x, y, z);
+            group.add(standGroup);
+        }
+
+        function createReadingArea(group) {
+            const tableGeo = new THREE.BoxGeometry(2, 0.045, 1);
+            const tableMat = new THREE.MeshStandardMaterial({
+                color: 0x8b7355,
+                roughness: 0.7
+            });
+            const table = new THREE.Mesh(tableGeo, tableMat);
+            table.position.set(-1.5, 0.75, 1);
+            table.castShadow = true;
+            table.receiveShadow = true;
+            group.add(table);
+
+            const legGeo = new THREE.BoxGeometry(0.06, 0.75, 0.06);
+            const legPositions = [[-2.4, 0.375, 0.55], [-0.6, 0.375, 0.55], [-2.4, 0.375, 1.45], [-0.6, 0.375, 1.45]];
+            legPositions.forEach(pos => {
+                const leg = new THREE.Mesh(legGeo, tableMat);
+                leg.position.set(...pos);
+                leg.castShadow = true;
+                group.add(leg);
+            });
+
+            createChair(group, -2, 0, 1.8);
+            createChair(group, -1, 0, 1.8);
+            createChair(group, -2, 0, 0.2);
+            createChair(group, -1, 0, 0.2);
+        }
+
+        function createChair(group, x, y, z) {
+            const chairMat = new THREE.MeshStandardMaterial({
+                color: 0x3a3a3a,
+                roughness: 0.6
+            });
+
+            const seatGeo = new THREE.BoxGeometry(0.42, 0.04, 0.42);
+            const seat = new THREE.Mesh(seatGeo, chairMat);
+            seat.position.set(x, y + 0.45, z);
+            seat.castShadow = true;
+            group.add(seat);
+
+            const backGeo = new THREE.BoxGeometry(0.42, 0.45, 0.04);
+            const back = new THREE.Mesh(backGeo, chairMat);
+            back.position.set(x, y + 0.68, z - 0.19);
+            back.castShadow = true;
+            group.add(back);
+
+            const legGeo = new THREE.CylinderGeometry(0.015, 0.015, 0.45, 8);
+            const legPos = [[x - 0.16, y + 0.225, z - 0.16], [x + 0.16, y + 0.225, z - 0.16],
+                           [x - 0.16, y + 0.225, z + 0.16], [x + 0.16, y + 0.225, z + 0.16]];
+            legPos.forEach(pos => {
+                const leg = new THREE.Mesh(legGeo, chairMat);
+                leg.position.set(...pos);
+                leg.castShadow = true;
+                group.add(leg);
+            });
+        }
+
+        function createVideoStation(group) {
+            const screenMat = new THREE.MeshStandardMaterial({
+                color: 0x0a0a0a,
+                roughness: 0.3,
+                metalness: 0.5
+            });
+
+            const screenEmissive = new THREE.MeshStandardMaterial({
+                color: 0x556688,
+                emissive: 0x223344,
+                emissiveIntensity: 0.4
+            });
+
+            const screen1Stand = new THREE.Mesh(
+                new THREE.BoxGeometry(0.04, 1.2, 0.28),
+                screenMat
+            );
+            screen1Stand.position.set(2.5, 0.6, -1);
+            screen1Stand.castShadow = true;
+            group.add(screen1Stand);
+
+            const screen1 = new THREE.Mesh(
+                new THREE.BoxGeometry(0.75, 0.48, 0.04),
+                screenEmissive
+            );
+            screen1.position.set(2.5, 1.3, -1);
+            screen1.castShadow = true;
+            group.add(screen1);
+
+            const screen2Stand = new THREE.Mesh(
+                new THREE.BoxGeometry(0.04, 1.2, 0.28),
+                screenMat
+            );
+            screen2Stand.position.set(2.5, 0.6, 1);
+            screen2Stand.castShadow = true;
+            group.add(screen2Stand);
+
+            const screen2 = new THREE.Mesh(
+                new THREE.BoxGeometry(0.75, 0.48, 0.04),
+                screenEmissive
+            );
+            screen2.position.set(2.5, 1.3, 1);
+            screen2.castShadow = true;
+            group.add(screen2);
+
+            createHeadphoneStand(group, 2.2, 0, -1);
+            createHeadphoneStand(group, 2.2, 0, 1);
+        }
+
+        function createHeadphoneStand(group, x, y, z) {
+            const standMat = new THREE.MeshStandardMaterial({
+                color: 0x2a2a2a,
+                roughness: 0.5
+            });
+
+            const stand = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.015, 0.04, 0.38, 8),
+                standMat
+            );
+            stand.position.set(x, y + 0.19, z);
+            stand.castShadow = true;
+            group.add(stand);
+
+            const headphoneMat = new THREE.MeshStandardMaterial({
+                color: 0x1a1a1a,
+                roughness: 0.4
+            });
+
+            const band = new THREE.Mesh(
+                new THREE.TorusGeometry(0.07, 0.012, 8, 16, Math.PI),
+                headphoneMat
+            );
+            band.position.set(x, y + 0.42, z);
+            band.rotation.x = Math.PI / 2;
+            band.castShadow = true;
+            group.add(band);
+        }
+
+        function createArchiveVitrine(group, x, y, z) {
+            const glassMat = new THREE.MeshStandardMaterial({
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.25,
+                roughness: 0.05,
+                metalness: 0.1
+            });
+
+            const frameMat = new THREE.MeshStandardMaterial({
+                color: 0x2a2a2a,
+                roughness: 0.5
+            });
+
+            const base = new THREE.Mesh(
+                new THREE.BoxGeometry(1.15, 0.75, 0.55),
+                frameMat
+            );
+            base.position.set(x, y + 0.375, z);
+            base.castShadow = true;
+            group.add(base);
+
+            const glassTop = new THREE.Mesh(
+                new THREE.BoxGeometry(1.05, 0.38, 0.5),
+                glassMat
+            );
+            glassTop.position.set(x, y + 0.95, z);
+            group.add(glassTop);
+
+            for (let i = 0; i < 3; i++) {
+                const docMat = new THREE.MeshStandardMaterial({
+                    color: 0xf5f0e0,
+                    roughness: 0.9
+                });
+                const doc = new THREE.Mesh(
+                    new THREE.BoxGeometry(0.22, 0.008, 0.32),
+                    docMat
+                );
+                doc.position.set(x - 0.32 + i * 0.32, y + 0.78, z);
+                doc.castShadow = true;
+                group.add(doc);
+            }
+        }
+
+        function createCheckerPattern() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 64;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+
+            const colors = ['#8b7355', '#a08060'];
+            for (let i = 0; i < 8; i++) {
+                for (let j = 0; j < 8; j++) {
+                    ctx.fillStyle = colors[(i + j) % 2];
+                    ctx.fillRect(i * 8, j * 8, 8, 8);
+                }
+            }
+            return canvas;
+        }
+
+        function createLabel(group, text, x, y, z) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 256;
+            canvas.height = 128;
+            const ctx = canvas.getContext('2d');
+
+            ctx.fillStyle = 'rgba(10,10,10,0.85)';
+            ctx.roundRect(0, 0, 256, 128, 8);
+            ctx.fill();
+
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 18px Arial';
+            ctx.textAlign = 'center';
+
+            const lines = text.split('\n');
+            lines.forEach((line, i) => {
+                ctx.fillText(line, 128, 50 + i * 28);
+            });
+
+            const texture = new THREE.CanvasTexture(canvas);
+            const spriteMat = new THREE.SpriteMaterial({ map: texture, transparent: true });
+            const sprite = new THREE.Sprite(spriteMat);
+            sprite.position.set(x, y, z);
+            sprite.scale.set(2, 1, 1);
+            sprite.visible = true;
+            labels.push(sprite);
+            group.add(sprite);
+        }
+
+        // Camera controls
+        let isDragging = false;
+        let previousMousePosition = { x: 0, y: 0 };
+        let cameraDistance = 22;
+        let cameraAngleX = 0.5;
+        let cameraAngleY = 0.75;
+
+        function setupControls() {
+            const canvas = renderer.domElement;
+
+            // Mouse events
+            canvas.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                previousMousePosition = { x: e.clientX, y: e.clientY };
+            });
+
+            canvas.addEventListener('mousemove', (e) => {
+                if (!isDragging || isWalkthroughActive) return;
+
+                const deltaX = e.clientX - previousMousePosition.x;
+                const deltaY = e.clientY - previousMousePosition.y;
+
+                cameraAngleX += deltaX * 0.005;
+                cameraAngleY = Math.max(0.1, Math.min(Math.PI - 0.1, cameraAngleY - deltaY * 0.005));
+
+                updateCameraPosition();
+                previousMousePosition = { x: e.clientX, y: e.clientY };
+            });
+
+            canvas.addEventListener('mouseup', () => isDragging = false);
+            canvas.addEventListener('mouseleave', () => isDragging = false);
+
+            // Touch events
+            canvas.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    isDragging = true;
+                    previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                }
+            }, { passive: true });
+
+            canvas.addEventListener('touchmove', (e) => {
+                if (!isDragging || isWalkthroughActive || e.touches.length !== 1) return;
+
+                const deltaX = e.touches[0].clientX - previousMousePosition.x;
+                const deltaY = e.touches[0].clientY - previousMousePosition.y;
+
+                cameraAngleX += deltaX * 0.005;
+                cameraAngleY = Math.max(0.1, Math.min(Math.PI - 0.1, cameraAngleY - deltaY * 0.005));
+
+                updateCameraPosition();
+                previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            }, { passive: true });
+
+            canvas.addEventListener('touchend', () => isDragging = false);
+
+            // Zoom
+            canvas.addEventListener('wheel', (e) => {
+                if (isWalkthroughActive) return;
+                cameraDistance = Math.max(5, Math.min(45, cameraDistance + e.deltaY * 0.02));
+                updateCameraPosition();
+            }, { passive: true });
+
+            // Keyboard
+            document.addEventListener('keydown', (e) => {
+                if (isWalkthroughActive) return;
+                const speed = 0.5;
+                switch(e.key.toLowerCase()) {
+                    case 'w': camera.position.z -= speed; break;
+                    case 's': camera.position.z += speed; break;
+                    case 'a': camera.position.x -= speed; break;
+                    case 'd': camera.position.x += speed; break;
+                    case 'escape': isWalkthroughActive = false; break;
+                }
+            });
+        }
+
+        function updateCameraPosition() {
+            camera.position.x = Math.sin(cameraAngleX) * Math.sin(cameraAngleY) * cameraDistance;
+            camera.position.y = Math.cos(cameraAngleY) * cameraDistance;
+            camera.position.z = Math.cos(cameraAngleX) * Math.sin(cameraAngleY) * cameraDistance;
+            camera.lookAt(0, 1, 0);
+        }
+
+        function setView(viewName) {
+            isWalkthroughActive = false;
+
+            const views = {
+                overview: { pos: [15, 10, 18], target: [0, 1, 0] },
+                room202: { pos: [-8, 4, 7], target: [-4, 1, 0] },
+                room203: { pos: [11, 4, 7], target: [4, 1, 0] },
+                soundwall: { pos: [-4, 2, 1.5], target: [-4, 1.5, -3] },
+                reading: { pos: [6, 2.5, 4], target: [3, 1, 1] }
+            };
+
+            if (viewName === 'walkthrough') {
+                isWalkthroughActive = true;
+                walkthroughTime = 0;
+                return;
+            }
+
+            const view = views[viewName];
+            if (view) {
+                animateCamera(view.pos, view.target);
+            }
+        }
+
+        function animateCamera(targetPos, lookAtTarget) {
+            const startPos = camera.position.clone();
+            const startTime = Date.now();
+            const duration = 1200;
+
+            function update() {
+                const elapsed = Date.now() - startTime;
+                const t = Math.min(elapsed / duration, 1);
+                const easeT = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+                camera.position.x = startPos.x + (targetPos[0] - startPos.x) * easeT;
+                camera.position.y = startPos.y + (targetPos[1] - startPos.y) * easeT;
+                camera.position.z = startPos.z + (targetPos[2] - startPos.z) * easeT;
+                camera.lookAt(lookAtTarget[0], lookAtTarget[1], lookAtTarget[2]);
+
+                if (t < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+            update();
+        }
+
+        function toggleGrid() {
+            gridHelper.visible = !gridHelper.visible;
+            document.getElementById('toggleGrid').classList.toggle('active');
+        }
+
+        function toggleLabels() {
+            labels.forEach(label => label.visible = !label.visible);
+            document.getElementById('toggleLabels').classList.toggle('active');
+        }
+
+        function takeScreenshot() {
+            const link = document.createElement('a');
+            link.download = 'PanafricanLibrary_ReadingRoom_' + Date.now() + '.png';
+            link.href = renderer.domElement.toDataURL('image/png');
+            link.click();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if (isWalkthroughActive) {
+                walkthroughTime += 0.003;
+                const radius = 12;
+                const height = 4 + Math.sin(walkthroughTime * 0.5) * 2;
+
+                camera.position.x = Math.sin(walkthroughTime) * radius;
+                camera.position.y = height;
+                camera.position.z = Math.cos(walkthroughTime) * radius;
+                camera.lookAt(0, 1, 0);
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Initialize
+        init();
+    </script>
+</body>
+</html>
