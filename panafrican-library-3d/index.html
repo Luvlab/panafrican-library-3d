@@ -556,6 +556,345 @@
             #decorator-btn { transform: translateX(-50%); bottom: 100px; }
             #decorator-panel { width: 100%; right: -100%; }
         }
+        /* Admin Mode Styles */
+        #admin-btn {
+            position: absolute;
+            top: 20px;
+            right: 240px;
+            padding: 8px 16px;
+            background: rgba(139, 41, 66, 0.8);
+            border: 1px solid #8b2942;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            z-index: 100;
+        }
+        #admin-btn:hover { background: #8b2942; }
+        #admin-btn.logged-in { background: #20c997; border-color: #1aa87c; }
+        #render-btn {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(calc(-50% + 280px));
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            z-index: 100;
+        }
+        #render-btn:hover { opacity: 0.9; }
+        #render-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        /* Login Modal */
+        #login-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        #login-modal.visible { display: flex; }
+        .login-box {
+            background: #1a1a1a;
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+        .login-box h2 { margin-bottom: 10px; font-size: 20px; }
+        .login-box p { color: #888; margin-bottom: 25px; font-size: 13px; }
+        .login-input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        .login-input:focus { outline: none; border-color: #8b2942; }
+        .login-submit {
+            width: 100%;
+            padding: 12px;
+            background: #8b2942;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .login-submit:hover { background: #a03050; }
+        .login-cancel {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            margin-top: 10px;
+        }
+        .login-error { color: #dc3545; font-size: 12px; margin-top: 10px; }
+        /* Admin Panel */
+        #admin-panel {
+            position: fixed;
+            top: 0;
+            left: -400px;
+            width: 400px;
+            height: 100%;
+            background: rgba(20,20,20,0.98);
+            z-index: 1500;
+            transition: left 0.3s ease;
+            overflow-y: auto;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+        #admin-panel.open { left: 0; }
+        .admin-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #8b2942 0%, #5a1a2a 100%);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .admin-header h2 { font-size: 16px; margin: 0; }
+        .admin-user { font-size: 11px; color: rgba(255,255,255,0.7); }
+        .admin-close {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .admin-tabs {
+            display: flex;
+            background: rgba(0,0,0,0.3);
+        }
+        .admin-tab {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            color: #888;
+            font-size: 11px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        .admin-tab:hover { color: #fff; }
+        .admin-tab.active { color: #fff; border-bottom-color: #8b2942; }
+        .admin-content { padding: 20px; }
+        .admin-section {
+            margin-bottom: 25px;
+        }
+        .admin-section h3 {
+            font-size: 12px;
+            color: #8b2942;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+        .admin-input-group {
+            margin-bottom: 12px;
+        }
+        .admin-input-group label {
+            display: block;
+            font-size: 11px;
+            color: #888;
+            margin-bottom: 5px;
+        }
+        .admin-input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 4px;
+            color: #fff;
+            font-size: 12px;
+        }
+        .admin-input:focus { outline: none; border-color: #8b2942; }
+        .admin-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        .admin-btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        .admin-btn-primary { background: #8b2942; color: #fff; }
+        .admin-btn-secondary { background: rgba(255,255,255,0.1); color: #fff; }
+        .admin-btn-success { background: #20c997; color: #fff; }
+        .admin-btn:hover { opacity: 0.8; }
+        .saved-config-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .saved-config-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+        .saved-config-item:hover { background: rgba(255,255,255,0.1); }
+        .saved-config-name { font-size: 12px; }
+        .saved-config-meta { font-size: 10px; color: #888; }
+        .saved-config-actions { display: flex; gap: 5px; }
+        .saved-config-btn {
+            padding: 4px 8px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 3px;
+            color: #fff;
+            font-size: 10px;
+            cursor: pointer;
+        }
+        .saved-config-btn.danger { background: rgba(220,53,69,0.5); }
+        /* Render Modal */
+        #render-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        #render-modal.visible { display: flex; }
+        .render-box {
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            max-width: 900px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .render-box h2 { margin-bottom: 5px; }
+        .render-box > p { color: #888; margin-bottom: 20px; font-size: 13px; }
+        .render-preview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .render-preview-box {
+            background: rgba(0,0,0,0.5);
+            border-radius: 8px;
+            padding: 15px;
+        }
+        .render-preview-box h4 {
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .render-preview-img {
+            width: 100%;
+            aspect-ratio: 16/10;
+            background: #000;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #444;
+            font-size: 12px;
+            overflow: hidden;
+        }
+        .render-preview-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .render-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .render-style-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+        .render-style-btn {
+            padding: 10px;
+            background: rgba(255,255,255,0.08);
+            border: 2px solid transparent;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 10px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .render-style-btn:hover { background: rgba(255,255,255,0.15); }
+        .render-style-btn.active { border-color: #667eea; background: rgba(102,126,234,0.2); }
+        .render-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .render-btn-generate {
+            flex: 1;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .render-btn-generate:disabled { opacity: 0.5; cursor: not-allowed; }
+        .render-btn-close {
+            padding: 14px 24px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .render-status {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+            font-size: 13px;
+        }
+        .render-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @media (max-width: 768px) {
+            #admin-btn { right: 10px; top: auto; bottom: 140px; }
+            #render-btn { transform: translateX(-50%); bottom: 180px; }
+            #admin-panel { width: 100%; left: -100%; }
+            .render-preview { grid-template-columns: 1fr; }
+            .render-options { grid-template-columns: 1fr; }
+            .render-style-grid { grid-template-columns: repeat(2, 1fr); }
+        }
     </style>
 </head>
 <body>
@@ -565,8 +904,8 @@
         <h1>The Panafrican Library Will Not Be Colonized</h1>
         <h2>Reading Room • Interactive 3D</h2>
         <p>A curatorial Reading Room conceived as a living archive of panafrican and diasporic publishing. A space to read, listen, and slow down.</p>
-        <button class="room-btn" onclick="focusRoom('room5202')">Room 5202 — Special Special</button>
-        <button class="room-btn" onclick="focusRoom('room5203')">Room 5203 — Reading Room</button>
+        <button class="room-btn" onclick="focusRoom('roomS202')">Room S202 — Special Special</button>
+        <button class="room-btn" onclick="focusRoom('roomS203')">Room S203 — Reading Room</button>
     </div>
 
     <div id="controls-panel">
@@ -576,19 +915,19 @@
             <button class="control-btn" onclick="setView('floorPlan')"><span class="icon">📐</span>Floor Plan View</button>
         </div>
         <div class="control-section">
-            <div class="section-title">Room 5202 - Special Special</div>
-            <button class="control-btn" onclick="setView('room5202Entry')"><span class="icon">🚪</span>Entry Vestibule</button>
-            <button class="control-btn" onclick="setView('room5202Inside')"><span class="icon">🔊</span>Inside View</button>
-            <button class="control-btn" onclick="setView('room5202Windows')"><span class="icon">🪟</span>Window Wall</button>
-            <button class="control-btn" onclick="setView('room5202Table')"><span class="icon">📚</span>Display Table</button>
+            <div class="section-title">Room S202 - Special Special</div>
+            <button class="control-btn" onclick="setView('roomS202Entry')"><span class="icon">🚪</span>Entry Vestibule</button>
+            <button class="control-btn" onclick="setView('roomS202Inside')"><span class="icon">🔊</span>Inside View</button>
+            <button class="control-btn" onclick="setView('roomS202Windows')"><span class="icon">🪟</span>Window Wall</button>
+            <button class="control-btn" onclick="setView('roomS202Table')"><span class="icon">📚</span>Display Table</button>
         </div>
         <div class="control-section">
-            <div class="section-title">Room 5203 - Reading Room</div>
-            <button class="control-btn" onclick="setView('room5203Entry')"><span class="icon">🚪</span>Entry (from door)</button>
-            <button class="control-btn" onclick="setView('room5203Inside')"><span class="icon">📖</span>Inside View</button>
-            <button class="control-btn" onclick="setView('room5203Windows')"><span class="icon">🪟</span>Arched Windows</button>
-            <button class="control-btn" onclick="setView('room5203Seating')"><span class="icon">🛋️</span>Seating Area</button>
-            <button class="control-btn" onclick="setView('room5203Shelves')"><span class="icon">📚</span>Book Displays</button>
+            <div class="section-title">Room S203 - Reading Room</div>
+            <button class="control-btn" onclick="setView('roomS203Entry')"><span class="icon">🚪</span>Entry (from door)</button>
+            <button class="control-btn" onclick="setView('roomS203Inside')"><span class="icon">📖</span>Inside View</button>
+            <button class="control-btn" onclick="setView('roomS203Windows')"><span class="icon">🪟</span>Arched Windows</button>
+            <button class="control-btn" onclick="setView('roomS203Seating')"><span class="icon">🛋️</span>Seating Area</button>
+            <button class="control-btn" onclick="setView('roomS203Shelves')"><span class="icon">📚</span>Book Displays</button>
         </div>
         <div class="control-section">
             <button class="control-btn" onclick="startTour()"><span class="icon">🎬</span>Auto Tour</button>
@@ -598,19 +937,19 @@
     <div id="dimensions-panel">
         <h3>Room Dimensions (from floor plan)</h3>
         <div class="dim-row">
-            <span class="dim-label">Room 5202 (Special Special)</span>
+            <span class="dim-label">Room S202 (Special Special)</span>
             <span class="dim-value">11'-5⅝" × 25'-3¾" | 3.49m × 7.71m</span>
         </div>
         <div class="dim-row">
-            <span class="dim-label">Room 5202 Area</span>
+            <span class="dim-label">Room S202 Area</span>
             <span class="dim-value">289.4 sq ft | 26.9 m²</span>
         </div>
         <div class="dim-row">
-            <span class="dim-label">Room 5203 (Reading Room)</span>
+            <span class="dim-label">Room S203 (Reading Room)</span>
             <span class="dim-value">14'-7¾" × 25'-3¾" | 4.46m × 7.71m</span>
         </div>
         <div class="dim-row">
-            <span class="dim-label">Room 5203 Area</span>
+            <span class="dim-label">Room S203 Area</span>
             <span class="dim-value">369.5 sq ft | 34.3 m²</span>
         </div>
         <div class="dim-row">
@@ -653,49 +992,79 @@
         <div class="modal-content">
             <button class="modal-close" onclick="toggleMoodboard()">✕</button>
             <h2>Reference Images & Mood Board</h2>
-            <p>Design inspiration for The Panafrican Library Reading Room</p>
+            <p>Design inspiration for The Panafrican Library Reading Room — Afrikadaa × Coolhunt Paris</p>
             <div class="moodboard-grid">
                 <div class="moodboard-section">
-                    <h3>MoMA PS1 Reading Room</h3>
-                    <div class="image-grid">
-                        <div class="ref-image" style="background: linear-gradient(135deg, #1a3a5c 0%, #2c5282 100%);"><span>Deep Blue Carpet</span></div>
-                        <div class="ref-image" style="background: linear-gradient(135deg, #f5f0e8 0%, #e8e3db 100%);"><span>White Walls</span></div>
-                        <div class="ref-image" style="background: linear-gradient(135deg, #d4a76a 0%, #c4956a 100%);"><span>Wood Tables</span></div>
-                        <div class="ref-image" style="background: linear-gradient(135deg, #87CEEB 0%, #6bb3d9 100%);"><span>Industrial Windows</span></div>
-                    </div>
-                </div>
-                <div class="moodboard-section">
-                    <h3>Color Palette</h3>
+                    <h3>🎨 Color Palette</h3>
+                    <p style="font-size: 11px; color: #666; margin-bottom: 8px;">Based on Panafrican reference imagery</p>
                     <div class="color-palette">
-                        <div class="color-swatch" style="background: #1a3a5c;" title="Navy Blue Carpet"></div>
-                        <div class="color-swatch" style="background: #f8f8f5;" title="Off-White Walls"></div>
-                        <div class="color-swatch" style="background: #d4a76a;" title="Natural Wood"></div>
-                        <div class="color-swatch" style="background: #c41e3a;" title="Red Accents"></div>
-                        <div class="color-swatch" style="background: #ffd93d;" title="Yellow Highlights"></div>
-                        <div class="color-swatch" style="background: #4ecdc4;" title="Teal Books"></div>
-                        <div class="color-swatch" style="background: #c9a227;" title="Ochre Floor"></div>
-                        <div class="color-swatch" style="background: #8b2942;" title="Burgundy Rug"></div>
+                        <div class="color-swatch" style="background: #f5f0e8;" title="Cream/Off-White (Bean Bags, Walls)"></div>
+                        <div class="color-swatch" style="background: #fd7e14;" title="Burnt Orange (Bean Bags, Accents)"></div>
+                        <div class="color-swatch" style="background: #c41e3a;" title="Deep Red (Kilim, Posters)"></div>
+                        <div class="color-swatch" style="background: #fdd835;" title="Bright Yellow (Wax Print, Highlights)"></div>
+                        <div class="color-swatch" style="background: #c2185b;" title="Magenta/Pink (Cushions, Rugs)"></div>
+                        <div class="color-swatch" style="background: #6b8e23;" title="Olive Green (Velvet Sofa)"></div>
+                        <div class="color-swatch" style="background: #00897b;" title="Teal (Cushions, Accents)"></div>
+                        <div class="color-swatch" style="background: #1a3a5c;" title="Deep Blue (Tie-Dye, Books)"></div>
+                        <div class="color-swatch" style="background: #d4a76a;" title="Natural Wood/Rattan"></div>
+                        <div class="color-swatch" style="background: #8b4513;" title="Terracotta/Brown"></div>
+                        <div class="color-swatch" style="background: #c9a227;" title="Ochre/Gold"></div>
+                        <div class="color-swatch" style="background: #1a1a1a;" title="Black (Frames, Contrast)"></div>
                     </div>
                 </div>
                 <div class="moodboard-section">
-                    <h3>Design Elements</h3>
-                    <ul class="design-list">
-                        <li>🪟 Tall industrial windows with white frames</li>
-                        <li>🏛️ White fluted columns between windows</li>
-                        <li>📚 Colorful book displays and publications</li>
-                        <li>🛋️ Floor cushions and low seating</li>
-                        <li>🎨 Poster-covered walls with African diaspora art</li>
-                        <li>🌿 Potted plants for natural atmosphere</li>
-                        <li>💡 Pendant lighting with warm glow</li>
-                        <li>🧶 Layered rugs with African patterns</li>
+                    <h3>🌍 African Wax Patterns</h3>
+                    <div class="pattern-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                        <div class="pattern-swatch" style="background: repeating-conic-gradient(from 0deg, #fdd835 0deg 30deg, #c41e3a 30deg 60deg); width: 60px; height: 60px; border-radius: 4px;" title="Ankara Circles"></div>
+                        <div class="pattern-swatch" style="background: repeating-linear-gradient(45deg, #fd7e14 0px, #fd7e14 10px, #fdd835 10px, #fdd835 20px); width: 60px; height: 60px; border-radius: 4px;" title="Kente Stripes"></div>
+                        <div class="pattern-swatch" style="background: radial-gradient(circle at 50% 50%, #c41e3a 30%, #1a1a1a 30%, #1a1a1a 40%, #fdd835 40%); width: 60px; height: 60px; border-radius: 4px;" title="Target Circles"></div>
+                        <div class="pattern-swatch" style="background: repeating-linear-gradient(0deg, #00897b 0px, #00897b 8px, #f5f0e8 8px, #f5f0e8 16px); width: 60px; height: 60px; border-radius: 4px;" title="Horizontal Bars"></div>
+                        <div class="pattern-swatch" style="background: conic-gradient(#c2185b, #fdd835, #00897b, #c41e3a, #c2185b); width: 60px; height: 60px; border-radius: 4px;" title="Color Wheel"></div>
+                        <div class="pattern-swatch" style="background: repeating-conic-gradient(#1a1a1a 0deg 10deg, #f5f0e8 10deg 20deg); width: 60px; height: 60px; border-radius: 4px;" title="B&W Geometric"></div>
+                    </div>
+                    <p style="font-size: 10px; color: #888; margin-top: 6px;">Ankara • Kente • Adinkra • Mud Cloth</p>
+                </div>
+                <div class="moodboard-section">
+                    <h3>🛋️ Key Furniture</h3>
+                    <ul class="design-list" style="font-size: 12px;">
+                        <li>△ Large triangular bean bags (cream, orange, magenta)</li>
+                        <li>🟫 Modular wooden book cubbies & displays</li>
+                        <li>🧶 Layered Persian & kilim rugs</li>
+                        <li>💎 Colorful ethnic floor cushions</li>
+                        <li>🪑 Olive velvet low sofa with tufting</li>
+                        <li>🌸 Pink velvet armchair</li>
+                        <li>📚 Stacked books & magazine racks</li>
                     </ul>
                 </div>
                 <div class="moodboard-section">
-                    <h3>Room Layout</h3>
-                    <div class="layout-info">
-                        <p><strong>Room 5202 - Special Special:</strong> Entry vestibule, display table, listening area</p>
-                        <p><strong>Room 5203 - Reading Room:</strong> Poster wall, floor seating, book displays</p>
-                        <p><strong>Connection:</strong> Open doorway between rooms</p>
+                    <h3>💡 Lighting & Decor</h3>
+                    <ul class="design-list" style="font-size: 12px;">
+                        <li>🪔 Ethiopian hanging lamps with beaded fringe</li>
+                        <li>🪩 Disco ball clusters at varying heights</li>
+                        <li>💫 String lights with colored bulbs</li>
+                        <li>🏺 African pottery & woven baskets</li>
+                        <li>🪴 Hanging plants in macramé holders</li>
+                        <li>🖼️ Poster-covered walls (solidarity, art)</li>
+                        <li>🧣 Tie-dye tablecloths on display tables</li>
+                    </ul>
+                </div>
+                <div class="moodboard-section">
+                    <h3>🎭 Design Elements</h3>
+                    <ul class="design-list" style="font-size: 12px;">
+                        <li>🪟 Tall industrial windows with white frames</li>
+                        <li>🏛️ White fluted columns between windows</li>
+                        <li>📰 African diaspora magazines (Afrikadaa)</li>
+                        <li>✊ Pan-African solidarity posters</li>
+                        <li>🎨 Bold color mixing (no fear of clash)</li>
+                        <li>🌍 Global South aesthetic fusion</li>
+                    </ul>
+                </div>
+                <div class="moodboard-section">
+                    <h3>📍 Room Layout</h3>
+                    <div class="layout-info" style="font-size: 12px;">
+                        <p><strong>S202 - Special Special:</strong> Entry vestibule, display table with tie-dye cloth, listening corner with bean bags</p>
+                        <p><strong>S203 - Reading Room:</strong> Poster-covered walls, layered rugs, floor cushion seating, book cubbies, disco balls</p>
+                        <p><strong>Connection:</strong> Open doorway with view through both spaces</p>
                     </div>
                 </div>
             </div>
@@ -703,6 +1072,201 @@
     </div>
 
     <button id="decorator-btn" onclick="toggleDecorator()">🛋️ Decorator</button>
+    <button id="render-btn" onclick="openRenderModal()">✨ AI Render</button>
+    <button id="admin-btn" onclick="toggleAdminLogin()">🔐 Admin</button>
+
+    <!-- Login Modal -->
+    <div id="login-modal">
+        <div class="login-box">
+            <h2>🔐 Admin Login</h2>
+            <p>Enter your authorized email to access admin features</p>
+            <input type="email" id="login-email" class="login-input" placeholder="your@email.com" onkeypress="if(event.key==='Enter')attemptLogin()">
+            <button class="login-submit" onclick="attemptLogin()">Login</button>
+            <button class="login-submit login-cancel" onclick="closeLoginModal()">Cancel</button>
+            <div id="login-error" class="login-error"></div>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="admin-panel">
+        <div class="admin-header">
+            <div>
+                <h2>🛠️ Admin Panel</h2>
+                <div class="admin-user" id="admin-user-name">Logged in as: Admin</div>
+            </div>
+            <button class="admin-close" onclick="toggleAdminPanel()">✕</button>
+        </div>
+
+        <div class="admin-tabs">
+            <button class="admin-tab active" onclick="switchAdminTab('layouts')">Layouts</button>
+            <button class="admin-tab" onclick="switchAdminTab('views')">Views</button>
+            <button class="admin-tab" onclick="switchAdminTab('moodboard')">Mood Board</button>
+            <button class="admin-tab" onclick="switchAdminTab('renders')">AI Renders</button>
+        </div>
+
+        <div class="admin-content" id="admin-tab-layouts">
+            <div class="admin-section">
+                <h3>Save Current Layout</h3>
+                <div class="admin-input-group">
+                    <label>Configuration Name</label>
+                    <input type="text" class="admin-input" id="layout-name" placeholder="e.g., Opening Night Setup">
+                </div>
+                <button class="admin-btn admin-btn-primary" onclick="saveAdminLayout()">💾 Save Layout</button>
+                <button class="admin-btn admin-btn-secondary" onclick="exportLayoutFile()">📤 Export JSON</button>
+            </div>
+
+            <div class="admin-section">
+                <h3>Saved Layouts</h3>
+                <div class="saved-config-list" id="saved-layouts-list">
+                    <div style="color: #666; font-size: 12px; padding: 10px;">Loading...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-content" id="admin-tab-views" style="display:none;">
+            <div class="admin-section">
+                <h3>Save Current View</h3>
+                <div class="admin-input-group">
+                    <label>View Name</label>
+                    <input type="text" class="admin-input" id="view-name" placeholder="e.g., Window Corner">
+                </div>
+                <div class="admin-input-group">
+                    <label>Description</label>
+                    <input type="text" class="admin-input" id="view-description" placeholder="Brief description">
+                </div>
+                <button class="admin-btn admin-btn-primary" onclick="saveAdminView()">📍 Save Current View</button>
+            </div>
+
+            <div class="admin-section">
+                <h3>Saved Views</h3>
+                <div class="saved-config-list" id="saved-views-list">
+                    <div style="color: #666; font-size: 12px; padding: 10px;">Loading...</div>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <h3>Current Camera Position</h3>
+                <div id="camera-position-display" style="font-family: monospace; font-size: 11px; color: #888; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 4px;">
+                    Position: (0, 0, 0)<br>
+                    Target: (0, 0, 0)
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-content" id="admin-tab-moodboard" style="display:none;">
+            <div class="admin-section">
+                <h3>Add Mood Board Entry</h3>
+                <div class="admin-input-group">
+                    <label>Title</label>
+                    <input type="text" class="admin-input" id="mood-title" placeholder="e.g., Color Inspiration">
+                </div>
+                <div class="admin-input-group">
+                    <label>Image URL</label>
+                    <input type="text" class="admin-input" id="mood-image-url" placeholder="https://...">
+                </div>
+                <div class="admin-input-group">
+                    <label>Description</label>
+                    <textarea class="admin-input admin-textarea" id="mood-description" placeholder="Describe this reference..."></textarea>
+                </div>
+                <div class="admin-input-group">
+                    <label>Category</label>
+                    <select class="admin-input" id="mood-category">
+                        <option value="inspiration">Inspiration</option>
+                        <option value="colors">Colors</option>
+                        <option value="furniture">Furniture</option>
+                        <option value="art">Artwork</option>
+                        <option value="layout">Layout</option>
+                    </select>
+                </div>
+                <button class="admin-btn admin-btn-primary" onclick="saveMoodEntry()">➕ Add to Mood Board</button>
+            </div>
+
+            <div class="admin-section">
+                <h3>Saved Mood Board Entries</h3>
+                <div class="saved-config-list" id="saved-mood-list">
+                    <div style="color: #666; font-size: 12px; padding: 10px;">Loading...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-content" id="admin-tab-renders" style="display:none;">
+            <div class="admin-section">
+                <h3>AI Render History</h3>
+                <p style="font-size: 11px; color: #888; margin-bottom: 15px;">Generated photorealistic renders of your room designs</p>
+                <div class="saved-config-list" id="saved-renders-list">
+                    <div style="color: #666; font-size: 12px; padding: 10px;">No renders yet. Click "AI Render" to generate one.</div>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <h3>Render Settings</h3>
+                <div class="admin-input-group">
+                    <label>Default Style</label>
+                    <select class="admin-input" id="default-render-style">
+                        <option value="photorealistic">Photorealistic</option>
+                        <option value="warm-cozy">Warm & Cozy</option>
+                        <option value="editorial">Editorial Magazine</option>
+                        <option value="sketch">Architectural Sketch</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div style="padding: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <button class="admin-btn admin-btn-secondary" onclick="logoutAdmin()" style="width: 100%;">🚪 Logout</button>
+        </div>
+    </div>
+
+    <!-- Render Modal -->
+    <div id="render-modal">
+        <div class="render-box">
+            <h2>✨ AI Photorealistic Render</h2>
+            <p>Transform your 3D scene into a stunning photorealistic image using Nano Banana AI</p>
+
+            <div class="render-preview">
+                <div class="render-preview-box">
+                    <h4>Current 3D View</h4>
+                    <div class="render-preview-img" id="render-input-preview">
+                        Capture will appear here
+                    </div>
+                </div>
+                <div class="render-preview-box">
+                    <h4>AI Generated Render</h4>
+                    <div class="render-preview-img" id="render-output-preview">
+                        Generated image will appear here
+                    </div>
+                </div>
+            </div>
+
+            <div class="render-options">
+                <div>
+                    <label style="font-size: 11px; color: #888; display: block; margin-bottom: 8px;">Render Style</label>
+                    <div class="render-style-grid">
+                        <button class="render-style-btn active" onclick="selectRenderStyle('photorealistic', this)">📸 Photo</button>
+                        <button class="render-style-btn" onclick="selectRenderStyle('warm-cozy', this)">🌅 Warm</button>
+                        <button class="render-style-btn" onclick="selectRenderStyle('editorial', this)">📰 Editorial</button>
+                        <button class="render-style-btn" onclick="selectRenderStyle('sketch', this)">✏️ Sketch</button>
+                    </div>
+                </div>
+                <div>
+                    <label style="font-size: 11px; color: #888; display: block; margin-bottom: 8px;">Custom Prompt (optional)</label>
+                    <input type="text" class="admin-input" id="render-custom-prompt" placeholder="Add specific instructions...">
+                </div>
+            </div>
+
+            <div id="render-status" class="render-status" style="display: none;">
+                <span class="render-spinner"></span>
+                <span id="render-status-text">Generating render...</span>
+            </div>
+
+            <div class="render-actions">
+                <button class="render-btn-generate" id="generate-render-btn" onclick="generateRender()">
+                    🎨 Generate Photorealistic Render
+                </button>
+                <button class="render-btn-close" onclick="closeRenderModal()">Close</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Decorator Panel -->
     <div id="decorator-panel">
@@ -729,43 +1293,55 @@
         </div>
 
         <div class="decorator-category" id="cat-seating">
-            <h3 onclick="toggleCategory('cat-seating')">Seating</h3>
+            <h3 onclick="toggleCategory('cat-seating')">Seating - Bean Bags & Cushions</h3>
             <div class="item-grid">
-                <div class="item-card" onclick="selectFurniture('cushion-orange')">
-                    <div class="item-preview" style="background: linear-gradient(135deg, #fd7e14 0%, #e06b0a 100%); border-radius: 50%;">🟠</div>
-                    <div class="item-name">Orange Cushion</div>
-                </div>
-                <div class="item-card" onclick="selectFurniture('cushion-teal')">
-                    <div class="item-preview" style="background: linear-gradient(135deg, #20c997 0%, #17a085 100%); border-radius: 50%;">🩵</div>
-                    <div class="item-name">Teal Cushion</div>
-                </div>
-                <div class="item-card" onclick="selectFurniture('cushion-pink')">
-                    <div class="item-preview" style="background: linear-gradient(135deg, #d63384 0%, #b52a70 100%); border-radius: 50%;">🩷</div>
-                    <div class="item-name">Pink Cushion</div>
-                </div>
-                <div class="item-card" onclick="selectFurniture('cushion-yellow')">
-                    <div class="item-preview" style="background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%); border-radius: 50%;">🟡</div>
-                    <div class="item-name">Yellow Cushion</div>
-                </div>
-                <div class="item-card" onclick="selectFurniture('cushion-gray')">
-                    <div class="item-preview" style="background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%); border-radius: 50%;">⚪</div>
-                    <div class="item-name">Gray Cushion</div>
-                </div>
-                <div class="item-card" onclick="selectFurniture('cushion-red')">
-                    <div class="item-preview" style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); border-radius: 50%;">🔴</div>
-                    <div class="item-name">Red Cushion</div>
+                <div class="item-card" onclick="selectFurniture('beanbag-cream')">
+                    <div class="item-preview" style="background: linear-gradient(145deg, #f5f0e8 0%, #d4c8b8 100%); border-radius: 20% 60% 40% 70%;">🤍</div>
+                    <div class="item-name">Cream Bean Bag</div>
                 </div>
                 <div class="item-card" onclick="selectFurniture('beanbag-orange')">
-                    <div class="item-preview" style="background: linear-gradient(145deg, #fd7e14 0%, #c96000 100%); border-radius: 30%;">🧡</div>
-                    <div class="item-name">Bean Bag</div>
+                    <div class="item-preview" style="background: linear-gradient(145deg, #fd7e14 0%, #c96000 100%); border-radius: 20% 60% 40% 70%;">🧡</div>
+                    <div class="item-name">Orange Bean Bag</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('beanbag-magenta')">
+                    <div class="item-preview" style="background: linear-gradient(145deg, #c2185b 0%, #880e4f 100%); border-radius: 20% 60% 40% 70%;">💗</div>
+                    <div class="item-name">Magenta Bean Bag</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('beanbag-teal')">
+                    <div class="item-preview" style="background: linear-gradient(145deg, #26a69a 0%, #00796b 100%); border-radius: 20% 60% 40% 70%;">💚</div>
+                    <div class="item-name">Teal Bean Bag</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('cushion-ethnic-orange')">
+                    <div class="item-preview" style="background: repeating-linear-gradient(45deg, #fd7e14, #fd7e14 5px, #c96000 5px, #c96000 10px); border-radius: 50%;">🟠</div>
+                    <div class="item-name">Ethnic Orange</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('cushion-ethnic-burgundy')">
+                    <div class="item-preview" style="background: repeating-linear-gradient(45deg, #8b2942, #8b2942 5px, #5a1a2a 5px, #5a1a2a 10px); border-radius: 50%;">🟤</div>
+                    <div class="item-name">Ethnic Burgundy</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('cushion-velvet-teal')">
+                    <div class="item-preview" style="background: linear-gradient(135deg, #00897b 0%, #004d40 100%); border-radius: 50%;">🩵</div>
+                    <div class="item-name">Velvet Teal</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('cushion-round-green')">
+                    <div class="item-preview" style="background: linear-gradient(135deg, #7cb342 0%, #558b2f 100%); border-radius: 50%;">🟢</div>
+                    <div class="item-name">Round Green</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('cushion-pebble-gray')">
+                    <div class="item-preview" style="background: linear-gradient(135deg, #90a4ae 0%, #607d8b 100%); border-radius: 40%;">⚪</div>
+                    <div class="item-name">Pebble Gray</div>
                 </div>
                 <div class="item-card" onclick="selectFurniture('mattress-ochre')">
                     <div class="item-preview" style="background: linear-gradient(135deg, #c9a227 0%, #a88520 100%); border-radius: 8px;">🟨</div>
                     <div class="item-name">Tufted Mattress</div>
                 </div>
-                <div class="item-card" onclick="selectFurniture('sofa-gray')">
-                    <div class="item-preview" style="background: linear-gradient(135deg, #6c757d 0%, #495057 100%); border-radius: 4px;">🛋️</div>
-                    <div class="item-name">Gray Sofa</div>
+                <div class="item-card" onclick="selectFurniture('sofa-olive')">
+                    <div class="item-preview" style="background: linear-gradient(135deg, #827717 0%, #5d4037 100%); border-radius: 4px;">🛋️</div>
+                    <div class="item-name">Olive Velvet Sofa</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('armchair-pink')">
+                    <div class="item-preview" style="background: linear-gradient(135deg, #e91e63 0%, #ad1457 100%); border-radius: 8px 8px 4px 4px;">🪑</div>
+                    <div class="item-name">Pink Armchair</div>
                 </div>
             </div>
         </div>
@@ -793,81 +1369,129 @@
         </div>
 
         <div class="decorator-category" id="cat-storage">
-            <h3 onclick="toggleCategory('cat-storage')">Storage & Display</h3>
+            <h3 onclick="toggleCategory('cat-storage')">Book Displays & Storage</h3>
             <div class="item-grid">
-                <div class="item-card" onclick="selectFurniture('shelf-wood')">
-                    <div class="item-preview" style="background: linear-gradient(135deg, #e8d4b8 0%, #d4c0a8 100%);">📚</div>
-                    <div class="item-name">Bookshelf</div>
+                <div class="item-card" onclick="selectFurniture('bookcase-wall')">
+                    <div class="item-preview" style="background: linear-gradient(180deg, #efebe9 0%, #d7ccc8 100%);">📚</div>
+                    <div class="item-name">Wall Bookcase</div>
                 </div>
-                <div class="item-card" onclick="selectFurniture('display-red')">
-                    <div class="item-preview" style="background: linear-gradient(135deg, #c41e3a 0%, #a01830 100%);">📕</div>
-                    <div class="item-name">Red Display</div>
+                <div class="item-card" onclick="selectFurniture('book-cubby')">
+                    <div class="item-preview" style="background: linear-gradient(135deg, #d4a76a 0%, #a1887f 100%);">📦</div>
+                    <div class="item-name">Book Cubby</div>
                 </div>
-                <div class="item-card" onclick="selectFurniture('screen-folding')">
-                    <div class="item-preview" style="background: linear-gradient(135deg, #d4a76a 0%, #c4956a 100%);">🚪</div>
-                    <div class="item-name">Folding Screen</div>
+                <div class="item-card" onclick="selectFurniture('magazine-rack')">
+                    <div class="item-preview" style="background: linear-gradient(135deg, #ffcc80 0%, #ffb74d 100%);">📰</div>
+                    <div class="item-name">Magazine Rack</div>
                 </div>
-                <div class="item-card" onclick="selectFurniture('rack-wire')">
-                    <div class="item-preview" style="background: linear-gradient(135deg, #888 0%, #666 100%);">🗄️</div>
-                    <div class="item-name">Wire Rack</div>
+                <div class="item-card" onclick="selectFurniture('book-stack')">
+                    <div class="item-preview" style="background: linear-gradient(180deg, #e57373 0%, #1976d2 33%, #4caf50 66%, #ffc107 100%);">📚</div>
+                    <div class="item-name">Book Stack</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('display-pink')">
+                    <div class="item-preview" style="background: linear-gradient(135deg, #f8bbd0 0%, #f48fb1 100%);">📕</div>
+                    <div class="item-name">Pink Display</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('shelf-leaning')">
+                    <div class="item-preview" style="background: linear-gradient(135deg, #8d6e63 0%, #5d4037 100%);">📖</div>
+                    <div class="item-name">Leaning Shelf</div>
                 </div>
             </div>
         </div>
 
         <div class="decorator-category" id="cat-rugs">
-            <h3 onclick="toggleCategory('cat-rugs')">Rugs & Textiles</h3>
+            <h3 onclick="toggleCategory('cat-rugs')">Rugs & Textiles - Layered</h3>
             <div class="item-grid">
-                <div class="item-card" onclick="selectFurniture('rug-persian-burgundy')">
-                    <div class="item-preview" style="background: linear-gradient(135deg, #8b2942 0%, #6a1f32 100%); border-radius: 2px;">🟥</div>
-                    <div class="item-name">Burgundy Rug</div>
+                <div class="item-card" onclick="selectFurniture('rug-persian-red')">
+                    <div class="item-preview" style="background: linear-gradient(135deg, #b71c1c 0%, #7f0000 100%); border-radius: 2px;">🟥</div>
+                    <div class="item-name">Persian Red</div>
                 </div>
-                <div class="item-card" onclick="selectFurniture('rug-persian-teal')">
-                    <div class="item-preview" style="background: linear-gradient(135deg, #2d5a5a 0%, #1f4040 100%); border-radius: 2px;">🟩</div>
-                    <div class="item-name">Teal Rug</div>
+                <div class="item-card" onclick="selectFurniture('rug-persian-cream')">
+                    <div class="item-preview" style="background: linear-gradient(135deg, #efebe9 0%, #bcaaa4 100%); border-radius: 2px;">⬜</div>
+                    <div class="item-name">Persian Cream</div>
                 </div>
-                <div class="item-card" onclick="selectFurniture('rug-striped')">
-                    <div class="item-preview" style="background: repeating-linear-gradient(90deg, #c9a227 0px, #c9a227 10px, #8b6914 10px, #8b6914 20px); border-radius: 2px;">🟨</div>
-                    <div class="item-name">Striped Rug</div>
+                <div class="item-card" onclick="selectFurniture('rug-kilim-multicolor')">
+                    <div class="item-preview" style="background: repeating-linear-gradient(0deg, #c41e3a 0px, #c41e3a 5px, #1a3a5c 5px, #1a3a5c 10px, #c9a227 10px, #c9a227 15px); border-radius: 2px;">🌈</div>
+                    <div class="item-name">Kilim Multicolor</div>
                 </div>
-                <div class="item-card" onclick="selectFurniture('tablecloth-yellow')">
-                    <div class="item-preview" style="background: linear-gradient(135deg, #ffd93d 0%, #e0c030 100%); border-radius: 2px;">🟡</div>
-                    <div class="item-name">Yellow Cloth</div>
+                <div class="item-card" onclick="selectFurniture('rug-checkered-pink')">
+                    <div class="item-preview" style="background: repeating-conic-gradient(#e91e63 0% 25%, #f8bbd0 0% 50%) 50% / 10px 10px;">🩷</div>
+                    <div class="item-name">Checkered Pink</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('rug-checkered-teal')">
+                    <div class="item-preview" style="background: repeating-conic-gradient(#00897b 0% 25%, #b2dfdb 0% 50%) 50% / 10px 10px;">🩵</div>
+                    <div class="item-name">Checkered Teal</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('rug-wax-yellow')">
+                    <div class="item-preview" style="background: linear-gradient(135deg, #fdd835 0%, #f9a825 50%, #c41e3a 100%); border-radius: 2px;">🟡</div>
+                    <div class="item-name">Wax Print Yellow</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('rug-geometric-bw')">
+                    <div class="item-preview" style="background: repeating-linear-gradient(45deg, #000 0px, #000 5px, #fff 5px, #fff 10px); border-radius: 2px;">⬛</div>
+                    <div class="item-name">Geometric B&W</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('tablecloth-tiedye')">
+                    <div class="item-preview" style="background: radial-gradient(circle, #c41e3a 0%, #1a3a5c 50%, #2d5a5a 100%); border-radius: 2px;">🎨</div>
+                    <div class="item-name">Tie-Dye Cloth</div>
                 </div>
             </div>
         </div>
 
         <div class="decorator-category" id="cat-lighting">
-            <h3 onclick="toggleCategory('cat-lighting')">Lighting</h3>
+            <h3 onclick="toggleCategory('cat-lighting')">Lighting & Hanging</h3>
             <div class="item-grid">
-                <div class="item-card" onclick="selectFurniture('light-pendant')">
-                    <div class="item-preview" style="background: linear-gradient(180deg, #333 0%, #d4a76a 100%); border-radius: 0 0 50% 50%;">💡</div>
-                    <div class="item-name">Pendant Light</div>
+                <div class="item-card" onclick="selectFurniture('lamp-ethiopian')">
+                    <div class="item-preview" style="background: linear-gradient(180deg, #e65100 0%, #ff8f00 30%, #ffcc80 100%); border-radius: 50% 50% 20% 20%;">🏺</div>
+                    <div class="item-name">Ethiopian Lamp</div>
                 </div>
-                <div class="item-card" onclick="selectFurniture('light-floor')">
-                    <div class="item-preview" style="background: linear-gradient(135deg, #f5f5f5 0%, #ccc 100%);">🪔</div>
-                    <div class="item-name">Floor Lamp</div>
+                <div class="item-card" onclick="selectFurniture('lamp-beaded')">
+                    <div class="item-preview" style="background: linear-gradient(180deg, #d4a76a 0%, #bcaaa4 50%); border-radius: 30%;">✨</div>
+                    <div class="item-name">Beaded Lamp</div>
                 </div>
                 <div class="item-card" onclick="selectFurniture('disco-ball')">
-                    <div class="item-preview" style="background: linear-gradient(135deg, #c0c0c0 0%, #808080 50%, #c0c0c0 100%); border-radius: 50%;">🪩</div>
+                    <div class="item-preview" style="background: radial-gradient(circle, #fff 0%, #c0c0c0 50%, #808080 100%); border-radius: 50%;">🪩</div>
                     <div class="item-name">Disco Ball</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('disco-ball-cluster')">
+                    <div class="item-preview" style="background: radial-gradient(circle at 30% 30%, #fff 0%, #c0c0c0 20%, transparent 40%), radial-gradient(circle at 70% 60%, #fff 0%, #c0c0c0 15%, transparent 30%); background-color: #333;">🪩🪩</div>
+                    <div class="item-name">Disco Cluster</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('light-string')">
+                    <div class="item-preview" style="background: linear-gradient(90deg, #fff700 0%, transparent 20%, #fff700 25%, transparent 45%, #fff700 50%, transparent 70%, #fff700 75%, transparent 100%); background-color: #333;">💡</div>
+                    <div class="item-name">String Lights</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('lantern-paper')">
+                    <div class="item-preview" style="background: radial-gradient(circle, #fff8e1 0%, #ffcc80 100%); border-radius: 50%;">🏮</div>
+                    <div class="item-name">Paper Lantern</div>
                 </div>
             </div>
         </div>
 
         <div class="decorator-category" id="cat-plants">
-            <h3 onclick="toggleCategory('cat-plants')">Plants & Decor</h3>
+            <h3 onclick="toggleCategory('cat-plants')">Plants & African Decor</h3>
             <div class="item-grid">
-                <div class="item-card" onclick="selectFurniture('plant-large')">
-                    <div class="item-preview" style="background: linear-gradient(180deg, #228b22 0%, #c4713d 70%);">🪴</div>
-                    <div class="item-name">Large Plant</div>
+                <div class="item-card" onclick="selectFurniture('plant-palm')">
+                    <div class="item-preview" style="background: linear-gradient(180deg, #2e7d32 0%, #1b5e20 50%, #6d4c41 80%);">🌴</div>
+                    <div class="item-name">Palm Plant</div>
                 </div>
-                <div class="item-card" onclick="selectFurniture('plant-small')">
-                    <div class="item-preview" style="background: linear-gradient(180deg, #32cd32 0%, #8b4513 80%);">🌱</div>
-                    <div class="item-name">Small Plant</div>
+                <div class="item-card" onclick="selectFurniture('plant-hanging')">
+                    <div class="item-preview" style="background: linear-gradient(180deg, #388e3c 0%, #66bb6a 100%);">🌿</div>
+                    <div class="item-name">Hanging Plant</div>
                 </div>
-                <div class="item-card" onclick="selectFurniture('vase-flowers')">
-                    <div class="item-preview" style="background: linear-gradient(180deg, #ff69b4 0%, #4169e1 70%);">💐</div>
-                    <div class="item-name">Vase</div>
+                <div class="item-card" onclick="selectFurniture('plant-pothos')">
+                    <div class="item-preview" style="background: linear-gradient(135deg, #4caf50 0%, #81c784 100%);">🍃</div>
+                    <div class="item-name">Pothos Vine</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('basket-woven')">
+                    <div class="item-preview" style="background: repeating-linear-gradient(45deg, #d4a76a 0px, #d4a76a 3px, #8d6e63 3px, #8d6e63 6px);">🧺</div>
+                    <div class="item-name">Woven Basket</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('pottery-african')">
+                    <div class="item-preview" style="background: linear-gradient(180deg, #5d4037 0%, #3e2723 100%); border-radius: 40% 40% 50% 50%;">🏺</div>
+                    <div class="item-name">African Pottery</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('sculpture-wood')">
+                    <div class="item-preview" style="background: linear-gradient(180deg, #4e342e 0%, #3e2723 100%);">🗿</div>
+                    <div class="item-name">Wood Sculpture</div>
                 </div>
             </div>
         </div>
@@ -952,20 +1576,20 @@
         // ============================================================
         // EXACT DIMENSIONS FROM FLOOR PLAN (converted to meters)
         // CORRECTED LAYOUT: Windows on FRONT (south), Doors on BACK (north)
-        // Room 5202 "Special Special" is LEFT, Room 5203 "Reading Room" is RIGHT
-        // Room 5202 has an entry vestibule/corridor before main space
+        // Room S202 "Special Special" is LEFT, Room S203 "Reading Room" is RIGHT
+        // Room S202 has an entry vestibule/corridor before main space
         // ============================================================
-        const ROOM_5202_WIDTH = 3.496;  // 11'-5⅝" (X direction)
-        const ROOM_5202_DEPTH = 7.715;  // 25'-3¾" (Z direction)
-        const ROOM_5203_WIDTH = 4.465;  // 14'-7¾"
-        const ROOM_5203_DEPTH = 7.715;  // 25'-3¾"
+        const ROOM_S202_WIDTH = 3.496;  // 11'-5⅝" (X direction)
+        const ROOM_S202_DEPTH = 7.715;  // 25'-3¾" (Z direction)
+        const ROOM_S203_WIDTH = 4.465;  // 14'-7¾"
+        const ROOM_S203_DEPTH = 7.715;  // 25'-3¾"
         const CEILING_HEIGHT = 3.66;   // 12' ceiling
         const WALL_THICKNESS = 0.152;  // 6"
         const DOOR_WIDTH = 1.044;      // 3'-5⅛"
         const DOOR_HEIGHT = 2.134;     // 7'-0"
 
-        // Entry vestibule dimensions for Room 5202 (estimated from plan)
-        const VESTIBULE_WIDTH = ROOM_5202_WIDTH;  // Same width as room
+        // Entry vestibule dimensions for Room S202 (estimated from plan)
+        const VESTIBULE_WIDTH = ROOM_S202_WIDTH;  // Same width as room
         const VESTIBULE_DEPTH = 1.5;  // ~5' deep vestibule/corridor
 
         // Window dimensions (from reference photos - MoMA PS1 industrial windows)
@@ -990,16 +1614,16 @@
         const labelsGroup = new THREE.Group();
         const ceilingsGroup = new THREE.Group();
         const wallsGroup = new THREE.Group();
-        const room5202Walls = { front: null, back: null, left: null, right: null, vestibuleLeft: null, vestibuleRight: null };
-        const room5203Walls = { front: null, back: null, left: null, right: null };
+        const roomS202Walls = { front: null, back: null, left: null, right: null, vestibuleLeft: null, vestibuleRight: null };
+        const roomS203Walls = { front: null, back: null, left: null, right: null };
 
         const gridHelper = new THREE.GridHelper(20, 40, 0x444444, 0x333333);
         scene.add(gridHelper);
 
-        // Position rooms side by side (Room 5202 LEFT, Room 5203 RIGHT)
-        const TOTAL_WIDTH = ROOM_5202_WIDTH + WALL_THICKNESS + ROOM_5203_WIDTH;
-        const ROOM_5202_X = -TOTAL_WIDTH / 2 + ROOM_5202_WIDTH / 2;
-        const ROOM_5203_X = TOTAL_WIDTH / 2 - ROOM_5203_WIDTH / 2;
+        // Position rooms side by side (Room S202 LEFT, Room S203 RIGHT)
+        const TOTAL_WIDTH = ROOM_S202_WIDTH + WALL_THICKNESS + ROOM_S203_WIDTH;
+        const ROOM_S202_X = -TOTAL_WIDTH / 2 + ROOM_S202_WIDTH / 2;
+        const ROOM_S203_X = TOTAL_WIDTH / 2 - ROOM_S203_WIDTH / 2;
 
         // ============ HELPER FUNCTIONS ============
 
@@ -1286,10 +1910,10 @@
             return group;
         }
 
-        // ============ ROOM 5202 - SPECIAL SPECIAL ============
-        // LAYOUT: Windows on FRONT (+Z), Door to corridor on BACK (-Z) via VESTIBULE, Door to 5203 on RIGHT (+X)
+        // ============ ROOM S202 - SPECIAL SPECIAL ============
+        // LAYOUT: Windows on FRONT (+Z), Door to corridor on BACK (-Z) via VESTIBULE, Door to S203 on RIGHT (+X)
         // Has an entry vestibule/corridor - a narrow enclosed passage before the main room
-        function createRoom5202() {
+        function createRoomS202() {
             const group = new THREE.Group();
 
             // Vestibule corridor dimensions - enclosed passage with side walls
@@ -1297,30 +1921,30 @@
             const CORRIDOR_OFFSET_X = 0;  // Corridor centered on door
 
             // ========== FLOOR (entire room) ==========
-            const floor = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_5202_WIDTH, ROOM_5202_DEPTH), floorMaterial);
+            const floor = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_S202_WIDTH, ROOM_S202_DEPTH), floorMaterial);
             floor.rotation.x = -Math.PI / 2;
             floor.position.set(0, 0.01, 0);
             group.add(floor);
 
             // Dark blue carpet in main area (not in vestibule)
-            const carpet = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_5202_WIDTH - 0.5, ROOM_5202_DEPTH - VESTIBULE_DEPTH - 0.5), new THREE.MeshLambertMaterial({ color: 0x1a3a5c }));
+            const carpet = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_S202_WIDTH - 0.5, ROOM_S202_DEPTH - VESTIBULE_DEPTH - 0.5), new THREE.MeshLambertMaterial({ color: 0x1a3a5c }));
             carpet.rotation.x = -Math.PI / 2;
             carpet.position.set(0, 0.02, VESTIBULE_DEPTH / 2);
             group.add(carpet);
 
             // ========== BACK WALL (-Z) - Door to corridor/STUDIO ==========
             const backWallGroup = new THREE.Group();
-            const backWall1 = new THREE.Mesh(new THREE.BoxGeometry((ROOM_5202_WIDTH - DOOR_WIDTH) / 2, CEILING_HEIGHT, WALL_THICKNESS), wallMaterial);
-            backWall1.position.set(-ROOM_5202_WIDTH / 4 - DOOR_WIDTH / 4, CEILING_HEIGHT / 2, -ROOM_5202_DEPTH / 2);
+            const backWall1 = new THREE.Mesh(new THREE.BoxGeometry((ROOM_S202_WIDTH - DOOR_WIDTH) / 2, CEILING_HEIGHT, WALL_THICKNESS), wallMaterial);
+            backWall1.position.set(-ROOM_S202_WIDTH / 4 - DOOR_WIDTH / 4, CEILING_HEIGHT / 2, -ROOM_S202_DEPTH / 2);
             backWallGroup.add(backWall1);
-            const backWall2 = new THREE.Mesh(new THREE.BoxGeometry((ROOM_5202_WIDTH - DOOR_WIDTH) / 2, CEILING_HEIGHT, WALL_THICKNESS), wallMaterial);
-            backWall2.position.set(ROOM_5202_WIDTH / 4 + DOOR_WIDTH / 4, CEILING_HEIGHT / 2, -ROOM_5202_DEPTH / 2);
+            const backWall2 = new THREE.Mesh(new THREE.BoxGeometry((ROOM_S202_WIDTH - DOOR_WIDTH) / 2, CEILING_HEIGHT, WALL_THICKNESS), wallMaterial);
+            backWall2.position.set(ROOM_S202_WIDTH / 4 + DOOR_WIDTH / 4, CEILING_HEIGHT / 2, -ROOM_S202_DEPTH / 2);
             backWallGroup.add(backWall2);
             const backDoorHeader = new THREE.Mesh(new THREE.BoxGeometry(DOOR_WIDTH, CEILING_HEIGHT - DOOR_HEIGHT, WALL_THICKNESS), wallMaterial);
-            backDoorHeader.position.set(0, DOOR_HEIGHT + (CEILING_HEIGHT - DOOR_HEIGHT) / 2, -ROOM_5202_DEPTH / 2);
+            backDoorHeader.position.set(0, DOOR_HEIGHT + (CEILING_HEIGHT - DOOR_HEIGHT) / 2, -ROOM_S202_DEPTH / 2);
             backWallGroup.add(backDoorHeader);
             group.add(backWallGroup);
-            room5202Walls.back = backWallGroup;
+            roomS202Walls.back = backWallGroup;
 
             // ========== VESTIBULE CORRIDOR WALLS ==========
             // The vestibule is an enclosed corridor with:
@@ -1336,7 +1960,7 @@
             vestibuleLeftSide.position.set(
                 CORRIDOR_OFFSET_X - CORRIDOR_WIDTH / 2,
                 CEILING_HEIGHT / 2,
-                -ROOM_5202_DEPTH / 2 + VESTIBULE_DEPTH / 2
+                -ROOM_S202_DEPTH / 2 + VESTIBULE_DEPTH / 2
             );
             vestibuleGroup.add(vestibuleLeftSide);
 
@@ -1348,37 +1972,37 @@
             vestibuleRightSide.position.set(
                 CORRIDOR_OFFSET_X + CORRIDOR_WIDTH / 2,
                 CEILING_HEIGHT / 2,
-                -ROOM_5202_DEPTH / 2 + VESTIBULE_DEPTH / 2
+                -ROOM_S202_DEPTH / 2 + VESTIBULE_DEPTH / 2
             );
             vestibuleGroup.add(vestibuleRightSide);
 
             // FRONT partition wall of vestibule (with door opening to main room)
             // Left section of front partition
-            const partitionLeftWidth = (ROOM_5202_WIDTH / 2) - (CORRIDOR_WIDTH / 2) - CORRIDOR_OFFSET_X;
+            const partitionLeftWidth = (ROOM_S202_WIDTH / 2) - (CORRIDOR_WIDTH / 2) - CORRIDOR_OFFSET_X;
             if (partitionLeftWidth > 0) {
                 const partitionLeft = new THREE.Mesh(
                     new THREE.BoxGeometry(partitionLeftWidth, CEILING_HEIGHT, WALL_THICKNESS),
                     wallMaterial
                 );
                 partitionLeft.position.set(
-                    -ROOM_5202_WIDTH / 2 + partitionLeftWidth / 2,
+                    -ROOM_S202_WIDTH / 2 + partitionLeftWidth / 2,
                     CEILING_HEIGHT / 2,
-                    -ROOM_5202_DEPTH / 2 + VESTIBULE_DEPTH
+                    -ROOM_S202_DEPTH / 2 + VESTIBULE_DEPTH
                 );
                 vestibuleGroup.add(partitionLeft);
             }
 
             // Right section of front partition
-            const partitionRightWidth = (ROOM_5202_WIDTH / 2) - (CORRIDOR_WIDTH / 2) + CORRIDOR_OFFSET_X;
+            const partitionRightWidth = (ROOM_S202_WIDTH / 2) - (CORRIDOR_WIDTH / 2) + CORRIDOR_OFFSET_X;
             if (partitionRightWidth > 0) {
                 const partitionRight = new THREE.Mesh(
                     new THREE.BoxGeometry(partitionRightWidth, CEILING_HEIGHT, WALL_THICKNESS),
                     wallMaterial
                 );
                 partitionRight.position.set(
-                    ROOM_5202_WIDTH / 2 - partitionRightWidth / 2,
+                    ROOM_S202_WIDTH / 2 - partitionRightWidth / 2,
                     CEILING_HEIGHT / 2,
-                    -ROOM_5202_DEPTH / 2 + VESTIBULE_DEPTH
+                    -ROOM_S202_DEPTH / 2 + VESTIBULE_DEPTH
                 );
                 vestibuleGroup.add(partitionRight);
             }
@@ -1391,242 +2015,281 @@
             vestibuleDoorHeader.position.set(
                 CORRIDOR_OFFSET_X,
                 DOOR_HEIGHT + (CEILING_HEIGHT - DOOR_HEIGHT) / 2,
-                -ROOM_5202_DEPTH / 2 + VESTIBULE_DEPTH
+                -ROOM_S202_DEPTH / 2 + VESTIBULE_DEPTH
             );
             vestibuleGroup.add(vestibuleDoorHeader);
 
             group.add(vestibuleGroup);
-            room5202Walls.vestibuleLeft = vestibuleLeftSide;
-            room5202Walls.vestibuleRight = vestibuleRightSide;
-            room5202Walls.vestibuleGroup = vestibuleGroup;  // Store entire vestibule for hiding
+            roomS202Walls.vestibuleLeft = vestibuleLeftSide;
+            roomS202Walls.vestibuleRight = vestibuleRightSide;
+            roomS202Walls.vestibuleGroup = vestibuleGroup;  // Store entire vestibule for hiding
 
             // ========== FRONT WALL (+Z) - PS1 Industrial Windows ==========
             const frontWallGroup = new THREE.Group();
 
             // Wall below windows (sill area)
             const frontWallBase = new THREE.Mesh(
-                new THREE.BoxGeometry(ROOM_5202_WIDTH, PS1_WINDOW_SILL, WALL_THICKNESS),
+                new THREE.BoxGeometry(ROOM_S202_WIDTH, PS1_WINDOW_SILL, WALL_THICKNESS),
                 wallMaterial
             );
-            frontWallBase.position.set(0, PS1_WINDOW_SILL / 2, ROOM_5202_DEPTH / 2);
+            frontWallBase.position.set(0, PS1_WINDOW_SILL / 2, ROOM_S202_DEPTH / 2);
             frontWallGroup.add(frontWallBase);
 
             // Wall above windows
             const topWallHeight = CEILING_HEIGHT - PS1_WINDOW_SILL - PS1_WINDOW_HEIGHT;
             const frontWallTop = new THREE.Mesh(
-                new THREE.BoxGeometry(ROOM_5202_WIDTH, topWallHeight, WALL_THICKNESS),
+                new THREE.BoxGeometry(ROOM_S202_WIDTH, topWallHeight, WALL_THICKNESS),
                 wallMaterial
             );
-            frontWallTop.position.set(0, PS1_WINDOW_SILL + PS1_WINDOW_HEIGHT + topWallHeight / 2, ROOM_5202_DEPTH / 2);
+            frontWallTop.position.set(0, PS1_WINDOW_SILL + PS1_WINDOW_HEIGHT + topWallHeight / 2, ROOM_S202_DEPTH / 2);
             frontWallGroup.add(frontWallTop);
 
             // Two windows with fluted column between them
-            const windowSpacing = (ROOM_5202_WIDTH - PS1_COLUMN_WIDTH) / 2;
+            const windowSpacing = (ROOM_S202_WIDTH - PS1_COLUMN_WIDTH) / 2;
             const windowCenterY = PS1_WINDOW_SILL + PS1_WINDOW_HEIGHT / 2;
 
             // Left window
             const win1 = createPS1Window(PS1_WINDOW_WIDTH, PS1_WINDOW_HEIGHT);
-            win1.position.set(-windowSpacing / 2, windowCenterY, ROOM_5202_DEPTH / 2 - 0.02);
+            win1.position.set(-windowSpacing / 2, windowCenterY, ROOM_S202_DEPTH / 2 - 0.02);
             frontWallGroup.add(win1);
 
             // Right window
             const win2 = createPS1Window(PS1_WINDOW_WIDTH, PS1_WINDOW_HEIGHT);
-            win2.position.set(windowSpacing / 2, windowCenterY, ROOM_5202_DEPTH / 2 - 0.02);
+            win2.position.set(windowSpacing / 2, windowCenterY, ROOM_S202_DEPTH / 2 - 0.02);
             frontWallGroup.add(win2);
 
             // Fluted column between windows
-            const column5202 = createFlutedColumn(PS1_WINDOW_HEIGHT);
-            column5202.position.set(0, PS1_WINDOW_SILL, ROOM_5202_DEPTH / 2 - 0.02);
-            frontWallGroup.add(column5202);
+            const columnS202 = createFlutedColumn(PS1_WINDOW_HEIGHT);
+            columnS202.position.set(0, PS1_WINDOW_SILL, ROOM_S202_DEPTH / 2 - 0.02);
+            frontWallGroup.add(columnS202);
 
             // Wall sections on either side of windows
-            const sideWallWidth = (ROOM_5202_WIDTH - windowSpacing * 2 - PS1_WINDOW_WIDTH * 2) / 2 + 0.3;
+            const sideWallWidth = (ROOM_S202_WIDTH - windowSpacing * 2 - PS1_WINDOW_WIDTH * 2) / 2 + 0.3;
             if (sideWallWidth > 0.1) {
                 const leftSide = new THREE.Mesh(
                     new THREE.BoxGeometry(sideWallWidth, PS1_WINDOW_HEIGHT, WALL_THICKNESS),
                     wallMaterial
                 );
-                leftSide.position.set(-ROOM_5202_WIDTH / 2 + sideWallWidth / 2, windowCenterY, ROOM_5202_DEPTH / 2);
+                leftSide.position.set(-ROOM_S202_WIDTH / 2 + sideWallWidth / 2, windowCenterY, ROOM_S202_DEPTH / 2);
                 frontWallGroup.add(leftSide);
 
                 const rightSide = new THREE.Mesh(
                     new THREE.BoxGeometry(sideWallWidth, PS1_WINDOW_HEIGHT, WALL_THICKNESS),
                     wallMaterial
                 );
-                rightSide.position.set(ROOM_5202_WIDTH / 2 - sideWallWidth / 2, windowCenterY, ROOM_5202_DEPTH / 2);
+                rightSide.position.set(ROOM_S202_WIDTH / 2 - sideWallWidth / 2, windowCenterY, ROOM_S202_DEPTH / 2);
                 frontWallGroup.add(rightSide);
             }
 
             group.add(frontWallGroup);
-            room5202Walls.front = frontWallGroup;
+            roomS202Walls.front = frontWallGroup;
 
             // ========== LEFT WALL (-X) - Wall with CLOSED DOOR to Three Star room ==========
+            // From floor plan: Three Star door is near the SOUTH (window) end of the west wall
+            // The west wall runs the full depth of the room from north to south
             const leftWallGroup = new THREE.Group();
-            // Door to Three Star room - positioned toward the back of the room
-            const threeStarDoorZ = -ROOM_5202_DEPTH / 4;  // Door position along Z axis
 
-            // Wall segment in front of door (toward windows)
-            const leftWallFront = new THREE.Mesh(
-                new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, ROOM_5202_DEPTH / 2 - DOOR_WIDTH / 2 - threeStarDoorZ),
-                wallMaterial
-            );
-            leftWallFront.position.set(-ROOM_5202_WIDTH / 2, CEILING_HEIGHT / 2, ROOM_5202_DEPTH / 4 + (ROOM_5202_DEPTH / 2 - DOOR_WIDTH / 2 - threeStarDoorZ) / 2 - DOOR_WIDTH / 4);
-            leftWallGroup.add(leftWallFront);
+            // Wall X position (west wall of room) - flush with room boundary
+            const leftWallX = -ROOM_S202_WIDTH / 2;
 
-            // Wall segment behind door (toward corridor)
-            const leftWallBack = new THREE.Mesh(
-                new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, ROOM_5202_DEPTH / 2 + threeStarDoorZ - DOOR_WIDTH / 2),
-                wallMaterial
-            );
-            leftWallBack.position.set(-ROOM_5202_WIDTH / 2, CEILING_HEIGHT / 2, -ROOM_5202_DEPTH / 4 + threeStarDoorZ / 2 - DOOR_WIDTH / 4);
-            leftWallGroup.add(leftWallBack);
+            // Room Z boundaries
+            const roomSouthZ = ROOM_S202_DEPTH / 2;    // South - windows (+Z)
+            const roomNorthZ = -ROOM_S202_DEPTH / 2;   // North - corridor entry (-Z)
+
+            // Three Star door position - near the SOUTH (window) end
+            // From floor plan, door appears about 1.5m from the south wall
+            const threeStarDoorCenterZ = roomSouthZ - 1.5;  // 1.5m from south wall
+            const doorHalfWidth = DOOR_WIDTH / 2;
+
+            // SOUTH segment: short wall between door and south wall (window wall)
+            const southSegmentLength = roomSouthZ - (threeStarDoorCenterZ + doorHalfWidth);
+            if (southSegmentLength > 0.05) {
+                const leftWallSouth = new THREE.Mesh(
+                    new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, southSegmentLength),
+                    wallMaterial
+                );
+                leftWallSouth.position.set(leftWallX, CEILING_HEIGHT / 2, roomSouthZ - southSegmentLength / 2);
+                leftWallGroup.add(leftWallSouth);
+            }
+
+            // NORTH segment: long wall from door to north wall (runs past vestibule area)
+            const northSegmentLength = (threeStarDoorCenterZ - doorHalfWidth) - roomNorthZ;
+            if (northSegmentLength > 0.05) {
+                const leftWallNorth = new THREE.Mesh(
+                    new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, northSegmentLength),
+                    wallMaterial
+                );
+                leftWallNorth.position.set(leftWallX, CEILING_HEIGHT / 2, roomNorthZ + northSegmentLength / 2);
+                leftWallGroup.add(leftWallNorth);
+            }
 
             // Door header above the Three Star door
             const leftDoorHeader = new THREE.Mesh(
                 new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT - DOOR_HEIGHT, DOOR_WIDTH),
                 wallMaterial
             );
-            leftDoorHeader.position.set(-ROOM_5202_WIDTH / 2, DOOR_HEIGHT + (CEILING_HEIGHT - DOOR_HEIGHT) / 2, threeStarDoorZ);
+            leftDoorHeader.position.set(leftWallX, DOOR_HEIGHT + (CEILING_HEIGHT - DOOR_HEIGHT) / 2, threeStarDoorCenterZ);
             leftWallGroup.add(leftDoorHeader);
 
-            // CLOSED DOOR to Three Star room (actual door panel)
+            // CLOSED DOOR to Three Star room (brown wood panel)
             const threeStarDoor = new THREE.Mesh(
                 new THREE.BoxGeometry(0.05, DOOR_HEIGHT, DOOR_WIDTH),
-                new THREE.MeshLambertMaterial({ color: 0x8B4513 })  // Wood brown color
+                new THREE.MeshLambertMaterial({ color: 0x8B4513 })
             );
-            threeStarDoor.position.set(-ROOM_5202_WIDTH / 2 + 0.03, DOOR_HEIGHT / 2, threeStarDoorZ);
+            threeStarDoor.position.set(leftWallX + 0.03, DOOR_HEIGHT / 2, threeStarDoorCenterZ);
             leftWallGroup.add(threeStarDoor);
 
-            // Door handle
+            // Door handle (silver)
             const doorHandle = new THREE.Mesh(
                 new THREE.BoxGeometry(0.03, 0.12, 0.03),
-                new THREE.MeshLambertMaterial({ color: 0xC0C0C0 })  // Silver
+                new THREE.MeshLambertMaterial({ color: 0xC0C0C0 })
             );
-            doorHandle.position.set(-ROOM_5202_WIDTH / 2 + 0.07, DOOR_HEIGHT / 2, threeStarDoorZ + DOOR_WIDTH / 2 - 0.1);
+            doorHandle.position.set(leftWallX + 0.07, DOOR_HEIGHT / 2, threeStarDoorCenterZ + doorHalfWidth - 0.15);
             leftWallGroup.add(doorHandle);
 
             group.add(leftWallGroup);
-            room5202Walls.left = leftWallGroup;
+            roomS202Walls.left = leftWallGroup;
 
-            // ========== RIGHT WALL (+X) - OPEN PASSAGE to Room 5203 (NO DOOR) ==========
-            // This is an open archway/passage between the two rooms - no wall here except header
-            const rightWallGroup = new THREE.Group();
-
-            // Only a header above the open passage (if ceiling is higher than passage)
-            // The passage is full height so no header needed, but we add small wall sections at front and back
-            const passageWidth = 2.0;  // Wide open passage between rooms
-            const passageZ = 0;  // Centered
-
-            // Small wall section at the BACK (near vestibule area)
-            const rightWallBack = new THREE.Mesh(
-                new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, ROOM_5202_DEPTH / 2 - passageWidth / 2),
+            // ========== RIGHT WALL (+X) - SOLID WALL shared with Room S203 ==========
+            // NO door or passage between rooms - just a solid shared wall
+            const rightWall = new THREE.Mesh(
+                new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, ROOM_S202_DEPTH),
                 wallMaterial
             );
-            rightWallBack.position.set(ROOM_5202_WIDTH / 2, CEILING_HEIGHT / 2, -ROOM_5202_DEPTH / 4 - passageWidth / 4);
-            rightWallGroup.add(rightWallBack);
-
-            // Small wall section at the FRONT (near windows)
-            const rightWallFront = new THREE.Mesh(
-                new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, ROOM_5202_DEPTH / 2 - passageWidth / 2),
-                wallMaterial
-            );
-            rightWallFront.position.set(ROOM_5202_WIDTH / 2, CEILING_HEIGHT / 2, ROOM_5202_DEPTH / 4 + passageWidth / 4);
-            rightWallGroup.add(rightWallFront);
-
-            group.add(rightWallGroup);
-            room5202Walls.right = rightWallGroup;
+            rightWall.position.set(ROOM_S202_WIDTH / 2, CEILING_HEIGHT / 2, 0);
+            group.add(rightWall);
+            roomS202Walls.right = rightWall;
 
             // ========== CEILING ==========
-            const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_5202_WIDTH, ROOM_5202_DEPTH), wallMaterial);
-            ceiling.rotation.x = Math.PI / 2;
-            ceiling.position.set(0, CEILING_HEIGHT, 0);
-            ceiling.userData.isCeiling = true;
-            ceilingsGroup.add(ceiling);
-            group.add(ceilingsGroup);
+            const ceilingS202 = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_S202_WIDTH, ROOM_S202_DEPTH), wallMaterial);
+            ceilingS202.rotation.x = Math.PI / 2;
+            ceilingS202.position.set(0, CEILING_HEIGHT, 0);
+            ceilingS202.userData.isCeiling = true;
+            group.add(ceilingS202);
 
-            // ========== FURNITURE ==========
-            // Display table with colorful cloth (in main room area, past the vestibule)
-            const mainRoomZ = VESTIBULE_DEPTH / 2 + 0.5;
-            const tableCloth = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.02, 0.9), new THREE.MeshLambertMaterial({ color: 0xffd93d }));
-            tableCloth.position.set(0, 0.74, mainRoomZ);
-            group.add(tableCloth);
-            const displayTable = new THREE.Mesh(new THREE.BoxGeometry(2, 0.72, 0.8), woodMaterial);
+            // ========== PANAFRICAN-INSPIRED FURNITURE - S202 SPECIAL SPECIAL ==========
+            // Layout: Entry from NORTH (-Z) through vestibule, Windows on SOUTH (+Z)
+            // West wall (-X) has door to Three Star, East wall (+X) is shared with S203
+            // Main room area starts after the vestibule
+
+            const mainRoomZ = VESTIBULE_DEPTH / 2 + 0.8;  // Center of main room area
+            const windowZ = ROOM_S202_DEPTH / 2 - 1.0;    // Near window wall
+
+            // === DISPLAY TABLE with TIE-DYE CLOTH - center of main room ===
+            const displayTable = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.72, 0.7), woodMaterial);
             displayTable.position.set(0, 0.36, mainRoomZ);
             group.add(displayTable);
+            const tieDyeCloth = createTieDyeCloth();
+            tieDyeCloth.position.set(0, 0, mainRoomZ);
+            group.add(tieDyeCloth);
 
             // Books on table
-            const bookColors = [0x4ecdc4, 0xff6b6b, 0xffd93d, 0x45b7d1, 0x96ceb4, 0xdfe6e9, 0x74b9ff, 0xe17055];
-            for (let i = 0; i < 10; i++) {
-                const book = new THREE.Mesh(new THREE.BoxGeometry(0.12 + Math.random() * 0.08, 0.015, 0.16 + Math.random() * 0.06), new THREE.MeshLambertMaterial({ color: bookColors[i % bookColors.length] }));
-                book.position.set(-0.7 + (i % 5) * 0.3 + (Math.random() - 0.5) * 0.1, 0.76 + Math.floor(i / 5) * 0.02, mainRoomZ + (Math.random() - 0.5) * 0.3);
-                book.rotation.y = Math.random() * 0.5 - 0.25;
-                group.add(book);
-            }
+            const bookStack1 = createBookStack();
+            bookStack1.position.set(-0.4, 0.74, mainRoomZ);
+            group.add(bookStack1);
+            const bookStack2 = createBookStack();
+            bookStack2.position.set(0.3, 0.74, mainRoomZ + 0.1);
+            group.add(bookStack2);
 
-            // Floor cushions (near window wall for listening)
-            const cushion1 = createFloorCushion(0xfd7e14, 0.6);
-            cushion1.position.set(-0.8, 0.03, ROOM_5202_DEPTH / 3);
+            // === LISTENING AREA near windows (south wall) ===
+            // Layered rugs on floor
+            const mainRug = createLayeredRug(2.2, 1.8, 0xb71c1c);
+            mainRug.position.set(0, 0, windowZ);
+            group.add(mainRug);
+            const kilimRug = createKilimRug();
+            kilimRug.position.set(-0.2, 0.02, windowZ + 0.3);
+            kilimRug.rotation.y = 0.1;
+            group.add(kilimRug);
+
+            // Bean bags for listening - arranged in a cozy circle
+            const beanCream = createTriangleBeanbag(0xf5f0e8);
+            beanCream.position.set(-0.6, 0, windowZ - 0.2);
+            beanCream.rotation.y = 0.4;
+            group.add(beanCream);
+            const beanOrange = createTriangleBeanbag(0xfd7e14);
+            beanOrange.position.set(0.5, 0, windowZ + 0.3);
+            beanOrange.rotation.y = -0.3;
+            group.add(beanOrange);
+
+            // Cushions around the bean bags
+            const cushion1 = createEthnicCushion([0xc41e3a, 0xfdd835]);
+            cushion1.position.set(-0.1, 0, windowZ);
             group.add(cushion1);
-            const cushion2 = createFloorCushion(0x20c997, 0.55);
-            cushion2.position.set(0.3, 0.03, ROOM_5202_DEPTH / 3 + 0.3);
+            const cushion2 = createVelvetCushion(0x00897b);
+            cushion2.position.set(0.2, 0, windowZ + 0.5);
             group.add(cushion2);
-            const cushion3 = createFloorCushion(0xd63384, 0.5);
-            cushion3.position.set(-0.2, 0.03, ROOM_5202_DEPTH / 3 - 0.3);
+            const cushion3 = createPebbleCushion(0xc2185b);
+            cushion3.position.set(-0.4, 0, windowZ + 0.4);
             group.add(cushion3);
 
-            // Bookshelf against left wall in main room area (past the vestibule)
-            const smallShelf = createWoodenBookshelf(1.2, 1.6, 3);
-            smallShelf.position.set(-ROOM_5202_WIDTH / 2 + 0.2, 0, 0.5);
-            smallShelf.rotation.y = Math.PI / 2;
-            group.add(smallShelf);
+            // === WEST WALL (-X): Book display near Three Star door ===
+            const bookCubby = createBookCubby();
+            bookCubby.position.set(-ROOM_S202_WIDTH / 2 + 0.3, 0, mainRoomZ - 0.5);
+            bookCubby.rotation.y = Math.PI / 2;
+            group.add(bookCubby);
 
-            // Potted plant
-            const plant = createPottedPlant();
-            plant.position.set(ROOM_5202_WIDTH / 2 - 0.4, 0, ROOM_5202_DEPTH / 3);
-            group.add(plant);
+            // === DECOR ===
+            // Woven basket near east wall
+            const basket = createWovenBasket();
+            basket.position.set(ROOM_S202_WIDTH / 2 - 0.35, 0, mainRoomZ + 0.8);
+            group.add(basket);
+            // African pottery near window
+            const pottery = createAfricanPottery();
+            pottery.position.set(-ROOM_S202_WIDTH / 2 + 0.35, 0, windowZ + 0.5);
+            group.add(pottery);
 
-            // Pendant light (in main room)
-            const pendant = createPendantLight();
-            pendant.position.set(0, CEILING_HEIGHT - 0.8, mainRoomZ);
-            group.add(pendant);
+            // === PLANTS ===
+            const hangingPlant = createHangingPlant();
+            hangingPlant.position.set(ROOM_S202_WIDTH / 2 - 0.4, CEILING_HEIGHT - 0.3, windowZ);
+            group.add(hangingPlant);
+
+            // === LIGHTING ===
+            // Ethiopian lamp over display table
+            const ethiopianLamp = createEthiopianLamp();
+            ethiopianLamp.position.set(0, CEILING_HEIGHT - 0.5, mainRoomZ);
+            group.add(ethiopianLamp);
+            // Disco ball over listening area
+            const disco = createDiscoBall();
+            disco.position.set(0, CEILING_HEIGHT - 0.3, windowZ);
+            group.add(disco);
 
             return group;
         }
 
-        // ============ ROOM 5203 - READING ROOM ============
-        // LAYOUT: Windows on FRONT (+Z), Door to corridor on BACK (-Z), Door to 5202 on LEFT (-X)
-        function createRoom5203() {
+        // ============ ROOM S203 - READING ROOM ============
+        // LAYOUT: Windows on FRONT (+Z), Door to corridor on BACK (-Z), Door to S202 on LEFT (-X)
+        function createRoomS203() {
             const group = new THREE.Group();
 
             // Floor
-            const floor = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_5203_WIDTH, ROOM_5203_DEPTH), floorMaterial);
+            const floor = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_S203_WIDTH, ROOM_S203_DEPTH), floorMaterial);
             floor.rotation.x = -Math.PI / 2;
             floor.position.set(0, 0.01, 0);
             group.add(floor);
 
             // BACK WALL (-Z) - Door to corridor (door is positioned toward LEFT, not centered)
-            // From floor plan: door is closer to the shared wall with 5202
+            // From floor plan: door is closer to the shared wall with S202
             const backWallGroup = new THREE.Group();
-            const doorOffsetX = -ROOM_5203_WIDTH / 4;  // Door offset toward left (shared wall side)
+            const doorOffsetX = -ROOM_S203_WIDTH / 4;  // Door offset toward left (shared wall side)
 
             // Left wall section (small, between door and left wall)
-            const leftWallWidth = ROOM_5203_WIDTH / 2 + doorOffsetX - DOOR_WIDTH / 2;
+            const leftWallWidth = ROOM_S203_WIDTH / 2 + doorOffsetX - DOOR_WIDTH / 2;
             if (leftWallWidth > 0.1) {
                 const backWallLeft = new THREE.Mesh(
                     new THREE.BoxGeometry(leftWallWidth, CEILING_HEIGHT, WALL_THICKNESS),
                     brickMaterial
                 );
-                backWallLeft.position.set(-ROOM_5203_WIDTH / 2 + leftWallWidth / 2, CEILING_HEIGHT / 2, -ROOM_5203_DEPTH / 2);
+                backWallLeft.position.set(-ROOM_S203_WIDTH / 2 + leftWallWidth / 2, CEILING_HEIGHT / 2, -ROOM_S203_DEPTH / 2);
                 backWallGroup.add(backWallLeft);
             }
 
             // Right wall section (larger, most of the poster wall)
-            const rightWallWidth = ROOM_5203_WIDTH / 2 - doorOffsetX - DOOR_WIDTH / 2;
+            const rightWallWidth = ROOM_S203_WIDTH / 2 - doorOffsetX - DOOR_WIDTH / 2;
             const backWallRight = new THREE.Mesh(
                 new THREE.BoxGeometry(rightWallWidth, CEILING_HEIGHT, WALL_THICKNESS),
                 brickMaterial
             );
-            backWallRight.position.set(ROOM_5203_WIDTH / 2 - rightWallWidth / 2, CEILING_HEIGHT / 2, -ROOM_5203_DEPTH / 2);
+            backWallRight.position.set(ROOM_S203_WIDTH / 2 - rightWallWidth / 2, CEILING_HEIGHT / 2, -ROOM_S203_DEPTH / 2);
             backWallGroup.add(backWallRight);
 
             // Door header
@@ -1634,188 +2297,215 @@
                 new THREE.BoxGeometry(DOOR_WIDTH, CEILING_HEIGHT - DOOR_HEIGHT, WALL_THICKNESS),
                 brickMaterial
             );
-            backDoorHeader.position.set(doorOffsetX, DOOR_HEIGHT + (CEILING_HEIGHT - DOOR_HEIGHT) / 2, -ROOM_5203_DEPTH / 2);
+            backDoorHeader.position.set(doorOffsetX, DOOR_HEIGHT + (CEILING_HEIGHT - DOOR_HEIGHT) / 2, -ROOM_S203_DEPTH / 2);
             backWallGroup.add(backDoorHeader);
 
             // Poster wall on right section (main poster wall area)
             const posterWall = createPosterWall(rightWallWidth - 0.2, CEILING_HEIGHT - 0.3);
-            posterWall.position.set(ROOM_5203_WIDTH / 2 - rightWallWidth / 2, CEILING_HEIGHT / 2, -ROOM_5203_DEPTH / 2 + WALL_THICKNESS / 2 + 0.02);
+            posterWall.position.set(ROOM_S203_WIDTH / 2 - rightWallWidth / 2, CEILING_HEIGHT / 2, -ROOM_S203_DEPTH / 2 + WALL_THICKNESS / 2 + 0.02);
             backWallGroup.add(posterWall);
 
             group.add(backWallGroup);
-            room5203Walls.back = backWallGroup;
+            roomS203Walls.back = backWallGroup;
 
-            // FRONT WALL (+Z) - PS1 Industrial Windows (same style as 5202)
+            // FRONT WALL (+Z) - PS1 Industrial Windows (same style as S202)
             const frontWallGroup = new THREE.Group();
 
             // Wall below windows
             const frontWallBase = new THREE.Mesh(
-                new THREE.BoxGeometry(ROOM_5203_WIDTH, PS1_WINDOW_SILL, WALL_THICKNESS),
+                new THREE.BoxGeometry(ROOM_S203_WIDTH, PS1_WINDOW_SILL, WALL_THICKNESS),
                 brickMaterial
             );
-            frontWallBase.position.set(0, PS1_WINDOW_SILL / 2, ROOM_5203_DEPTH / 2);
+            frontWallBase.position.set(0, PS1_WINDOW_SILL / 2, ROOM_S203_DEPTH / 2);
             frontWallGroup.add(frontWallBase);
 
             // Wall above windows
-            const topWallHeight5203 = CEILING_HEIGHT - PS1_WINDOW_SILL - PS1_WINDOW_HEIGHT;
+            const topWallHeightS203 = CEILING_HEIGHT - PS1_WINDOW_SILL - PS1_WINDOW_HEIGHT;
             const frontWallTop = new THREE.Mesh(
-                new THREE.BoxGeometry(ROOM_5203_WIDTH, topWallHeight5203, WALL_THICKNESS),
+                new THREE.BoxGeometry(ROOM_S203_WIDTH, topWallHeightS203, WALL_THICKNESS),
                 brickMaterial
             );
-            frontWallTop.position.set(0, PS1_WINDOW_SILL + PS1_WINDOW_HEIGHT + topWallHeight5203 / 2, ROOM_5203_DEPTH / 2);
+            frontWallTop.position.set(0, PS1_WINDOW_SILL + PS1_WINDOW_HEIGHT + topWallHeightS203 / 2, ROOM_S203_DEPTH / 2);
             frontWallGroup.add(frontWallTop);
 
-            // Room 5203 is wider, so it can have 3 windows with 2 columns
-            const windowCenterY5203 = PS1_WINDOW_SILL + PS1_WINDOW_HEIGHT / 2;
-            const totalWindowArea = ROOM_5203_WIDTH - 0.4;  // Leave some wall on sides
+            // Room S203 is wider, so it can have 3 windows with 2 columns
+            const windowCenterYS203 = PS1_WINDOW_SILL + PS1_WINDOW_HEIGHT / 2;
+            const totalWindowArea = ROOM_S203_WIDTH - 0.4;  // Leave some wall on sides
             const numWindows = 3;
             const numColumns = 2;
-            const windowWidth5203 = (totalWindowArea - numColumns * PS1_COLUMN_WIDTH) / numWindows;
-            const windowSpacing5203 = windowWidth5203 + PS1_COLUMN_WIDTH;
+            const windowWidthS203 = (totalWindowArea - numColumns * PS1_COLUMN_WIDTH) / numWindows;
+            const windowSpacingS203 = windowWidthS203 + PS1_COLUMN_WIDTH;
 
             // Create 3 windows with columns between
             for (let i = 0; i < numWindows; i++) {
-                const xPos = -totalWindowArea / 2 + windowWidth5203 / 2 + i * windowSpacing5203;
-                const win = createPS1Window(windowWidth5203 * 0.9, PS1_WINDOW_HEIGHT);
-                win.position.set(xPos, windowCenterY5203, ROOM_5203_DEPTH / 2 - 0.02);
+                const xPos = -totalWindowArea / 2 + windowWidthS203 / 2 + i * windowSpacingS203;
+                const win = createPS1Window(windowWidthS203 * 0.9, PS1_WINDOW_HEIGHT);
+                win.position.set(xPos, windowCenterYS203, ROOM_S203_DEPTH / 2 - 0.02);
                 frontWallGroup.add(win);
 
                 // Add column after each window except the last
                 if (i < numWindows - 1) {
                     const col = createFlutedColumn(PS1_WINDOW_HEIGHT);
-                    col.position.set(xPos + windowSpacing5203 / 2, PS1_WINDOW_SILL, ROOM_5203_DEPTH / 2 - 0.02);
+                    col.position.set(xPos + windowSpacingS203 / 2, PS1_WINDOW_SILL, ROOM_S203_DEPTH / 2 - 0.02);
                     frontWallGroup.add(col);
                 }
             }
 
             // Side wall sections
-            const sideWidth5203 = 0.2;
-            const leftSide5203 = new THREE.Mesh(
-                new THREE.BoxGeometry(sideWidth5203, PS1_WINDOW_HEIGHT, WALL_THICKNESS),
+            const sideWidthS203 = 0.2;
+            const leftSideS203 = new THREE.Mesh(
+                new THREE.BoxGeometry(sideWidthS203, PS1_WINDOW_HEIGHT, WALL_THICKNESS),
                 brickMaterial
             );
-            leftSide5203.position.set(-ROOM_5203_WIDTH / 2 + sideWidth5203 / 2, windowCenterY5203, ROOM_5203_DEPTH / 2);
-            frontWallGroup.add(leftSide5203);
+            leftSideS203.position.set(-ROOM_S203_WIDTH / 2 + sideWidthS203 / 2, windowCenterYS203, ROOM_S203_DEPTH / 2);
+            frontWallGroup.add(leftSideS203);
 
-            const rightSide5203 = new THREE.Mesh(
-                new THREE.BoxGeometry(sideWidth5203, PS1_WINDOW_HEIGHT, WALL_THICKNESS),
+            const rightSideS203 = new THREE.Mesh(
+                new THREE.BoxGeometry(sideWidthS203, PS1_WINDOW_HEIGHT, WALL_THICKNESS),
                 brickMaterial
             );
-            rightSide5203.position.set(ROOM_5203_WIDTH / 2 - sideWidth5203 / 2, windowCenterY5203, ROOM_5203_DEPTH / 2);
-            frontWallGroup.add(rightSide5203);
+            rightSideS203.position.set(ROOM_S203_WIDTH / 2 - sideWidthS203 / 2, windowCenterYS203, ROOM_S203_DEPTH / 2);
+            frontWallGroup.add(rightSideS203);
 
             group.add(frontWallGroup);
-            room5203Walls.front = frontWallGroup;
+            roomS203Walls.front = frontWallGroup;
 
-            // LEFT WALL (-X) - OPEN PASSAGE to Room 5202 (NO DOOR - open archway)
-            const leftWallGroup = new THREE.Group();
-            const passageWidth5203 = 2.0;  // Same wide open passage
-
-            // Small wall section at the BACK (near corridor door)
-            const leftWall1 = new THREE.Mesh(
-                new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, ROOM_5203_DEPTH / 2 - passageWidth5203 / 2),
+            // LEFT WALL (-X) - SOLID WALL shared with Room S202
+            // NO door or passage between rooms - just a solid shared wall
+            const leftWall = new THREE.Mesh(
+                new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, ROOM_S203_DEPTH),
                 brickMaterial
             );
-            leftWall1.position.set(-ROOM_5203_WIDTH / 2, CEILING_HEIGHT / 2, -ROOM_5203_DEPTH / 4 - passageWidth5203 / 4);
-            leftWallGroup.add(leftWall1);
-
-            // Small wall section at the FRONT (near windows)
-            const leftWall2 = new THREE.Mesh(
-                new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, ROOM_5203_DEPTH / 2 - passageWidth5203 / 2),
-                brickMaterial
-            );
-            leftWall2.position.set(-ROOM_5203_WIDTH / 2, CEILING_HEIGHT / 2, ROOM_5203_DEPTH / 4 + passageWidth5203 / 4);
-            leftWallGroup.add(leftWall2);
-
-            // No door header - it's a full-height open passage
-            group.add(leftWallGroup);
-            room5203Walls.left = leftWallGroup;
+            leftWall.position.set(-ROOM_S203_WIDTH / 2, CEILING_HEIGHT / 2, 0);
+            group.add(leftWall);
+            roomS203Walls.left = leftWall;
 
             // RIGHT WALL (+X) - Solid exterior wall
-            const rightWall = new THREE.Mesh(new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, ROOM_5203_DEPTH), brickMaterial);
-            rightWall.position.set(ROOM_5203_WIDTH / 2, CEILING_HEIGHT / 2, 0);
+            const rightWall = new THREE.Mesh(new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, ROOM_S203_DEPTH), brickMaterial);
+            rightWall.position.set(ROOM_S203_WIDTH / 2, CEILING_HEIGHT / 2, 0);
             group.add(rightWall);
-            room5203Walls.right = rightWall;
+            roomS203Walls.right = rightWall;
 
             // Ceiling
-            const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_5203_WIDTH, ROOM_5203_DEPTH), wallMaterial);
-            ceiling.rotation.x = Math.PI / 2;
-            ceiling.position.set(0, CEILING_HEIGHT, 0);
-            ceiling.userData.isCeiling = true;
-            ceilingsGroup.add(ceiling);
-            group.add(ceilingsGroup);
+            const ceilingS203 = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_S203_WIDTH, ROOM_S203_DEPTH), wallMaterial);
+            ceilingS203.rotation.x = Math.PI / 2;
+            ceilingS203.position.set(0, CEILING_HEIGHT, 0);
+            ceilingS203.userData.isCeiling = true;
+            group.add(ceilingS203);
 
-            // FURNITURE - Reading area
+            // ========== PANAFRICAN-INSPIRED FURNITURE - READING ROOM ==========
+            // Room: 4.465m wide (X) x 7.715m deep (Z)
+            // Door on NORTH wall (-Z) at x = -1.1m (left side)
+            // Windows on SOUTH wall (+Z)
+            // Left wall (WEST, -X) shared with S202, Right wall (EAST, +X) exterior
 
-            // Layered rugs
-            const mainRug = createLayeredRug(3.5, 2.5, 0x8b2942);
-            mainRug.position.set(0, 0, 0);
+            // CLEAR ZONES:
+            // - Entry path from door (x=-1.1, z=-3.8) into room - keep clear!
+            // - Window area at z > 3.0
+
+            // === RUGS: Center of room, not blocking entry ===
+            const mainRug = createLayeredRug(2.8, 2.0, 0xb71c1c);
+            mainRug.position.set(0.3, 0, 0);  // Slightly right of center
             group.add(mainRug);
-            const rug2 = createLayeredRug(2.2, 1.8, 0x2d5a5a);
-            rug2.position.set(-0.6, 0.02, -0.3);
-            rug2.rotation.y = -0.15;
-            group.add(rug2);
 
-            // Tufted floor mattress
-            const floorMattress = createTuftedFloorMattress(2.2, 1.4);
-            floorMattress.position.set(0, 0.05, 0);
-            group.add(floorMattress);
+            // === SEATING ALONG WALLS ===
+            // Olive sofa against RIGHT WALL (east), facing center
+            const oliveSofa = createOliveSofa();
+            oliveSofa.position.set(ROOM_S203_WIDTH / 2 - 0.6, 0, 0);
+            oliveSofa.rotation.y = -Math.PI / 2;
+            group.add(oliveSofa);
 
-            // Floor cushions around mattress
-            const cushionColors = [0xd63384, 0xdc3545, 0x20c997, 0xfd7e14, 0xffc107, 0x6c757d];
-            const cushionPositions = [[-0.8, 0.5], [0.7, 0.3], [-0.4, 1.2], [0.9, 1.0], [-1.1, 0.8], [1.1, 0.5]];
-            cushionPositions.forEach((pos, i) => {
-                const cushion = createFloorCushion(cushionColors[i], 0.5 + Math.random() * 0.2);
-                cushion.position.set(pos[0], 0.15, pos[1]);
-                group.add(cushion);
-            });
+            // Pink armchair in corner, angled
+            const pinkChair = createPinkArmchair();
+            pinkChair.position.set(ROOM_S203_WIDTH / 2 - 0.5, 0, 1.5);
+            pinkChair.rotation.y = -Math.PI / 3;
+            group.add(pinkChair);
 
-            // Low coffee table
-            const coffeeTable = createLowCoffeeTable();
-            coffeeTable.position.set(0, 0.15, 0.8);
-            group.add(coffeeTable);
+            // === BEAN BAGS: In seating area on the rug ===
+            const beanCream = createTriangleBeanbag(0xf5f0e8);
+            beanCream.position.set(-0.3, 0, 0.3);
+            group.add(beanCream);
+            const beanOrange = createTriangleBeanbag(0xfd7e14);
+            beanOrange.position.set(0.4, 0, 0.8);
+            group.add(beanOrange);
+            const beanMagenta = createTriangleBeanbag(0xc2185b);
+            beanMagenta.position.set(-0.5, 0, 1.0);
+            group.add(beanMagenta);
 
-            // Book displays near back wall
-            const bookDisplay1 = createRedBookDisplay();
-            bookDisplay1.position.set(-1.2, 0, -ROOM_5203_DEPTH / 2 + 1);
-            group.add(bookDisplay1);
-            const bookDisplay2 = createRedBookDisplay();
-            bookDisplay2.position.set(1.2, 0, -ROOM_5203_DEPTH / 2 + 1);
-            group.add(bookDisplay2);
+            // === CUSHIONS: Around bean bags ===
+            const cushion1 = createEthnicCushion([0xc41e3a, 0xfdd835]);
+            cushion1.position.set(0.1, 0, 0.5);
+            group.add(cushion1);
+            const cushion2 = createVelvetCushion(0x00897b);
+            cushion2.position.set(-0.2, 0, 1.3);
+            group.add(cushion2);
+            const cushion3 = createPebbleCushion(0x9c27b0);
+            cushion3.position.set(0.6, 0, 0.2);
+            group.add(cushion3);
 
-            // Bookshelf near side wall
-            const bookshelf = createWoodenBookshelf(2, 2.2, 4);
-            bookshelf.position.set(ROOM_5203_WIDTH / 2 - 0.3, 0, -1);
-            bookshelf.rotation.y = -Math.PI / 2;
-            group.add(bookshelf);
+            // === BOOK DISPLAYS: RIGHT side of back wall (door is on LEFT) ===
+            const wallBookcase = createWallBookcase();
+            wallBookcase.position.set(1.2, 0, -ROOM_S203_DEPTH / 2 + 0.2);
+            group.add(wallBookcase);
 
-            // Plants
-            const plant1 = createPottedPlant();
-            plant1.position.set(ROOM_5203_WIDTH / 2 - 0.4, 0, ROOM_5203_DEPTH / 3);
-            group.add(plant1);
-            const plant2 = createPottedPlant();
-            plant2.position.set(-ROOM_5203_WIDTH / 2 + 0.4, 0, ROOM_5203_DEPTH / 3);
-            group.add(plant2);
+            // Book cubby against RIGHT WALL
+            const bookCubby = createBookCubby();
+            bookCubby.position.set(ROOM_S203_WIDTH / 2 - 0.2, 0, -1.5);
+            bookCubby.rotation.y = -Math.PI / 2;
+            group.add(bookCubby);
 
-            // Pendant lights
-            const pendant1 = createPendantLight();
-            pendant1.position.set(-1, CEILING_HEIGHT - 0.8, 0);
-            group.add(pendant1);
-            const pendant2 = createPendantLight();
-            pendant2.position.set(1, CEILING_HEIGHT - 0.8, 0.5);
-            group.add(pendant2);
+            // === DECOR: In corners ===
+            const basket = createWovenBasket();
+            basket.position.set(ROOM_S203_WIDTH / 2 - 0.3, 0, 2.5);
+            group.add(basket);
+            const pottery = createAfricanPottery();
+            pottery.position.set(-ROOM_S203_WIDTH / 2 + 0.3, 0, 2.0);
+            group.add(pottery);
+            const sculpture = createWoodSculpture();
+            sculpture.position.set(ROOM_S203_WIDTH / 2 - 0.3, 0, -2.8);
+            group.add(sculpture);
+
+            // === PLANTS: Corners near windows ===
+            const palm1 = createPalmPlant();
+            palm1.position.set(ROOM_S203_WIDTH / 2 - 0.35, 0, 3.2);
+            group.add(palm1);
+            const palm2 = createPalmPlant();
+            palm2.position.set(-ROOM_S203_WIDTH / 2 + 0.35, 0, 3.2);
+            group.add(palm2);
+
+            // Hanging plants
+            const hangingPlant1 = createHangingPlant();
+            hangingPlant1.position.set(1.0, CEILING_HEIGHT - 0.3, 2.5);
+            group.add(hangingPlant1);
+
+            // === LIGHTING ===
+            const discoBalls = createDiscoBallCluster();
+            discoBalls.position.set(0, CEILING_HEIGHT - 0.4, 0.5);
+            group.add(discoBalls);
+
+            const ethLamp1 = createEthiopianLamp();
+            ethLamp1.position.set(-0.5, CEILING_HEIGHT - 0.5, 0);
+            group.add(ethLamp1);
+            const ethLamp2 = createEthiopianLamp();
+            ethLamp2.position.set(0.8, CEILING_HEIGHT - 0.5, 2.0);
+            group.add(ethLamp2);
+
+            // String lights along window wall
+            const stringLights = createStringLights();
+            stringLights.position.set(0, CEILING_HEIGHT - 0.5, ROOM_S203_DEPTH / 2 - 0.3);
+            group.add(stringLights);
 
             return group;
         }
 
         // Create and position rooms
-        const room5202 = createRoom5202();
-        room5202.position.set(ROOM_5202_X, 0, 0);
-        scene.add(room5202);
+        const roomS202 = createRoomS202();
+        roomS202.position.set(ROOM_S202_X, 0, 0);
+        scene.add(roomS202);
 
-        const room5203 = createRoom5203();
-        room5203.position.set(ROOM_5203_X, 0, 0);
-        scene.add(room5203);
+        const roomS203 = createRoomS203();
+        roomS203.position.set(ROOM_S203_X, 0, 0);
+        scene.add(roomS203);
 
         // Room labels
         function createLabel(text, position) {
@@ -1837,8 +2527,8 @@
             return sprite;
         }
 
-        labelsGroup.add(createLabel('ROOM 5202 - SPECIAL SPECIAL', new THREE.Vector3(ROOM_5202_X, CEILING_HEIGHT + 0.5, 0)));
-        labelsGroup.add(createLabel('ROOM 5203 - READING ROOM', new THREE.Vector3(ROOM_5203_X, CEILING_HEIGHT + 0.5, 0)));
+        labelsGroup.add(createLabel('ROOM S202 - SPECIAL SPECIAL', new THREE.Vector3(ROOM_S202_X, CEILING_HEIGHT + 0.5, 0)));
+        labelsGroup.add(createLabel('ROOM S203 - READING ROOM', new THREE.Vector3(ROOM_S203_X, CEILING_HEIGHT + 0.5, 0)));
         scene.add(labelsGroup);
 
         // Lighting
@@ -1851,12 +2541,12 @@
         const fillLight = new THREE.DirectionalLight(0xffffff, 0.3);
         fillLight.position.set(-10, 10, -10);
         scene.add(fillLight);
-        const room5202Light = new THREE.PointLight(0xffffee, 0.4, 12);
-        room5202Light.position.set(ROOM_5202_X, CEILING_HEIGHT - 0.5, 0);
-        scene.add(room5202Light);
-        const room5203Light = new THREE.PointLight(0xffffee, 0.4, 12);
-        room5203Light.position.set(ROOM_5203_X, CEILING_HEIGHT - 0.5, 0);
-        scene.add(room5203Light);
+        const roomS202Light = new THREE.PointLight(0xffffee, 0.4, 12);
+        roomS202Light.position.set(ROOM_S202_X, CEILING_HEIGHT - 0.5, 0);
+        scene.add(roomS202Light);
+        const roomS203Light = new THREE.PointLight(0xffffee, 0.4, 12);
+        roomS203Light.position.set(ROOM_S203_X, CEILING_HEIGHT - 0.5, 0);
+        scene.add(roomS203Light);
 
         // Camera controls
         let isMouseDown = false;
@@ -1907,18 +2597,18 @@
         const views = {
             overview: { rotX: 0, rotY: 0.5, dist: 18, target: new THREE.Vector3(0, 2, 0) },
             floorPlan: { rotX: 0, rotY: 1.5, dist: 14, target: new THREE.Vector3(0, 0, 0) },
-            // Room 5202 views - Entry through vestibule door, looking toward windows
+            // Room S202 views - Entry through vestibule door, looking toward windows
             // rotX=Math.PI puts camera at -Z (door) looking toward +Z (windows)
-            room5202Entry: { rotX: Math.PI, rotY: 0.15, dist: 3, target: new THREE.Vector3(ROOM_5202_X, 1.5, -ROOM_5202_DEPTH / 2 + 1) },
-            room5202Inside: { rotX: Math.PI, rotY: 0.2, dist: 5, target: new THREE.Vector3(ROOM_5202_X, 1.5, 0) },
-            room5202Windows: { rotX: Math.PI, rotY: 0.15, dist: 4, target: new THREE.Vector3(ROOM_5202_X, 1.5, ROOM_5202_DEPTH / 4) },
-            room5202Table: { rotX: Math.PI * 0.8, rotY: 0.25, dist: 4, target: new THREE.Vector3(ROOM_5202_X, 0.8, 0) },
-            // Room 5203 views - Entry through corridor door, looking toward arched windows
-            room5203Entry: { rotX: Math.PI, rotY: 0.15, dist: 3, target: new THREE.Vector3(ROOM_5203_X, 1.5, -ROOM_5203_DEPTH / 2 + 1) },
-            room5203Inside: { rotX: Math.PI, rotY: 0.2, dist: 6, target: new THREE.Vector3(ROOM_5203_X, 1.5, 0) },
-            room5203Windows: { rotX: Math.PI, rotY: 0.15, dist: 4, target: new THREE.Vector3(ROOM_5203_X, 1.5, ROOM_5203_DEPTH / 4) },
-            room5203Seating: { rotX: Math.PI * 0.7, rotY: 0.2, dist: 4, target: new THREE.Vector3(ROOM_5203_X, 0.5, 0.5) },
-            room5203Shelves: { rotX: Math.PI * 1.2, rotY: 0.2, dist: 5, target: new THREE.Vector3(ROOM_5203_X, 1.2, -ROOM_5203_DEPTH / 3) }
+            roomS202Entry: { rotX: Math.PI, rotY: 0.15, dist: 3, target: new THREE.Vector3(ROOM_S202_X, 1.5, -ROOM_S202_DEPTH / 2 + 1) },
+            roomS202Inside: { rotX: Math.PI, rotY: 0.2, dist: 5, target: new THREE.Vector3(ROOM_S202_X, 1.5, 0) },
+            roomS202Windows: { rotX: Math.PI, rotY: 0.15, dist: 4, target: new THREE.Vector3(ROOM_S202_X, 1.5, ROOM_S202_DEPTH / 4) },
+            roomS202Table: { rotX: Math.PI * 0.8, rotY: 0.25, dist: 4, target: new THREE.Vector3(ROOM_S202_X, 0.8, 0) },
+            // Room S203 views - Entry through corridor door, looking toward arched windows
+            roomS203Entry: { rotX: Math.PI, rotY: 0.15, dist: 3, target: new THREE.Vector3(ROOM_S203_X, 1.5, -ROOM_S203_DEPTH / 2 + 1) },
+            roomS203Inside: { rotX: Math.PI, rotY: 0.2, dist: 6, target: new THREE.Vector3(ROOM_S203_X, 1.5, 0) },
+            roomS203Windows: { rotX: Math.PI, rotY: 0.15, dist: 4, target: new THREE.Vector3(ROOM_S203_X, 1.5, ROOM_S203_DEPTH / 4) },
+            roomS203Seating: { rotX: Math.PI * 0.7, rotY: 0.2, dist: 4, target: new THREE.Vector3(ROOM_S203_X, 0.5, 0.5) },
+            roomS203Shelves: { rotX: Math.PI * 1.2, rotY: 0.2, dist: 5, target: new THREE.Vector3(ROOM_S203_X, 1.2, -ROOM_S203_DEPTH / 3) }
         };
 
         function animateToView(view, duration = 1500) {
@@ -1944,8 +2634,8 @@
 
         window.setView = function(viewName) { const view = views[viewName]; if (view) animateToView(view); };
         window.focusRoom = function(room) {
-            if (room === 'room5202') setView('room5202Inside');
-            else if (room === 'room5203') setView('room5203Inside');
+            if (room === 'roomS202') setView('roomS202Inside');
+            else if (room === 'roomS203') setView('roomS203Inside');
         };
 
         let tourRunning = false;
@@ -1953,7 +2643,7 @@
             if (tourRunning) return;
             tourRunning = true;
             // Tour starts from entry doors, walking through each room
-            const stops = ['overview', 'room5202Entry', 'room5202Inside', 'room5202Windows', 'room5202Table', 'room5203Entry', 'room5203Inside', 'room5203Windows', 'room5203Seating', 'room5203Shelves', 'overview'];
+            const stops = ['overview', 'roomS202Entry', 'roomS202Inside', 'roomS202Windows', 'roomS202Table', 'roomS203Entry', 'roomS203Inside', 'roomS203Windows', 'roomS203Seating', 'roomS203Shelves', 'overview'];
             let i = 0;
             function next() {
                 if (i >= stops.length) { tourRunning = false; return; }
@@ -1980,8 +2670,9 @@
 
         window.toggleCeiling = function() {
             showCeiling = !showCeiling;
-            ceilingsGroup.traverse((obj) => {
-                if (obj.userData.isCeiling || obj.isMesh) obj.visible = showCeiling;
+            // Find all ceilings in the scene
+            scene.traverse((obj) => {
+                if (obj.userData.isCeiling) obj.visible = showCeiling;
             });
             document.getElementById('ceilingBtn').classList.toggle('active', showCeiling);
         };
@@ -2065,43 +2756,57 @@
         function createFurnitureItem(type) {
             let item;
             switch(type) {
-                // Cushions
-                case 'cushion-orange': item = createFloorCushion(0xfd7e14, 0.6); break;
-                case 'cushion-teal': item = createFloorCushion(0x20c997, 0.6); break;
-                case 'cushion-pink': item = createFloorCushion(0xd63384, 0.6); break;
-                case 'cushion-yellow': item = createFloorCushion(0xffc107, 0.6); break;
-                case 'cushion-gray': item = createFloorCushion(0x6c757d, 0.6); break;
-                case 'cushion-red': item = createFloorCushion(0xdc3545, 0.6); break;
-                // Bean bag
-                case 'beanbag-orange': item = createBeanbag(0xfd7e14); break;
-                // Mattress
+                // Bean Bags - large triangular
+                case 'beanbag-cream': item = createTriangleBeanbag(0xf5f0e8); break;
+                case 'beanbag-orange': item = createTriangleBeanbag(0xfd7e14); break;
+                case 'beanbag-magenta': item = createTriangleBeanbag(0xc2185b); break;
+                case 'beanbag-teal': item = createTriangleBeanbag(0x26a69a); break;
+                // Ethnic cushions
+                case 'cushion-ethnic-orange': item = createEthnicCushion(0xfd7e14, 0xc96000); break;
+                case 'cushion-ethnic-burgundy': item = createEthnicCushion(0x8b2942, 0x5a1a2a); break;
+                case 'cushion-velvet-teal': item = createFloorCushion(0x00897b, 0.55); break;
+                case 'cushion-round-green': item = createFloorCushion(0x7cb342, 0.45); break;
+                case 'cushion-pebble-gray': item = createPebbleCushion(0x90a4ae); break;
+                // Mattress & Seating
                 case 'mattress-ochre': item = createTuftedFloorMattress(2.2, 1.4); break;
-                // Sofa
-                case 'sofa-gray': item = createLowSofa(); break;
+                case 'sofa-olive': item = createVelvetSofa(0x827717); break;
+                case 'armchair-pink': item = createVintageArmchair(0xe91e63); break;
                 // Tables
                 case 'table-display': item = createDisplayTable(); break;
                 case 'table-coffee': item = createLowCoffeeTable(); break;
                 case 'table-side': item = createSideTable(); break;
                 case 'bench-wood': item = createWoodenBench(); break;
-                // Storage
-                case 'shelf-wood': item = createWoodenBookshelf(1.2, 1.6, 3); break;
-                case 'display-red': item = createRedBookDisplay(); break;
-                case 'screen-folding': item = createFoldingScreen(); break;
-                case 'rack-wire': item = createWireRack(); break;
-                // Rugs
-                case 'rug-persian-burgundy': item = createLayeredRug(3.5, 2.5, 0x8b2942); break;
-                case 'rug-persian-teal': item = createLayeredRug(2.2, 1.8, 0x2d5a5a); break;
-                case 'rug-striped': item = createStripedRug(); break;
-                case 'tablecloth-yellow': item = createTablecloth(0xffd93d); break;
-                // Lighting
-                case 'light-pendant': item = createPendantLight(); break;
-                case 'light-floor': item = createFloorLamp(); break;
+                // Book Displays & Storage
+                case 'bookcase-wall': item = createWallBookcase(); break;
+                case 'book-cubby': item = createBookCubby(); break;
+                case 'magazine-rack': item = createMagazineRack(); break;
+                case 'book-stack': item = createBookStack(); break;
+                case 'display-pink': item = createColorDisplay(0xf8bbd0); break;
+                case 'shelf-leaning': item = createLeaningShelf(); break;
+                // Rugs - Layered Persian & African
+                case 'rug-persian-red': item = createLayeredRug(3.5, 2.5, 0xb71c1c); break;
+                case 'rug-persian-cream': item = createLayeredRug(3.0, 2.2, 0xefebe9); break;
+                case 'rug-kilim-multicolor': item = createKilimRug(); break;
+                case 'rug-checkered-pink': item = createCheckeredRug(0xe91e63, 0xf8bbd0); break;
+                case 'rug-checkered-teal': item = createCheckeredRug(0x00897b, 0xb2dfdb); break;
+                case 'rug-wax-yellow': item = createWaxPrintRug(0xfdd835, 0xc41e3a); break;
+                case 'rug-geometric-bw': item = createGeometricRug(); break;
+                case 'tablecloth-tiedye': item = createTieDyeCloth(); break;
+                // Lighting - Ethiopian & Disco
+                case 'lamp-ethiopian': item = createEthiopianLamp(); break;
+                case 'lamp-beaded': item = createBeadedLamp(); break;
                 case 'disco-ball': item = createDiscoBall(); break;
-                // Plants
-                case 'plant-large': item = createPottedPlant(); break;
-                case 'plant-small': item = createSmallPlant(); break;
-                case 'vase-flowers': item = createVase(); break;
-                // Wall art - these need special placement
+                case 'disco-ball-cluster': item = createDiscoBallCluster(); break;
+                case 'light-string': item = createStringLights(); break;
+                case 'lantern-paper': item = createPaperLantern(); break;
+                // Plants & African Decor
+                case 'plant-palm': item = createPalmPlant(); break;
+                case 'plant-hanging': item = createHangingPlant(); break;
+                case 'plant-pothos': item = createPothosVine(); break;
+                case 'basket-woven': item = createWovenBasket(); break;
+                case 'pottery-african': item = createAfricanPottery(); break;
+                case 'sculpture-wood': item = createWoodSculpture(); break;
+                // Wall art
                 case 'poster-afrikadaa-1': item = createWallPoster(0xff6b6b, 0.6, 0.8, 'Afrikadaa #1'); break;
                 case 'poster-afrikadaa-2': item = createWallPoster(0x45b7d1, 0.5, 0.7, 'Afrikadaa #2'); break;
                 case 'poster-afrikadaa-3': item = createWallPoster(0xe17055, 0.5, 0.65, 'African Art'); break;
@@ -2355,6 +3060,833 @@
             return group;
         }
 
+        // ==========================================
+        // PANAFRICAN-INSPIRED FURNITURE FUNCTIONS
+        // Based on reference images from the mood board
+        // ==========================================
+
+        // TRIANGLE BEAN BAGS - Large triangular floor cushions
+        function createTriangleBeanbag(color) {
+            const group = new THREE.Group();
+            // Simple low triangular cushion that sits ON the floor
+            const geometry = new THREE.ConeGeometry(0.5, 0.35, 3);
+            const material = new THREE.MeshLambertMaterial({ color });
+            const bean = new THREE.Mesh(geometry, material);
+            bean.rotation.y = Math.PI / 6;  // Rotate so flat side faces forward
+            bean.position.set(0, 0.175, 0);  // Half height so bottom is at y=0
+            group.add(bean);
+            return group;
+        }
+
+        // ETHNIC/VELVET CUSHIONS - Colorful floor cushions
+        function createEthnicCushion(colors) {
+            const group = new THREE.Group();
+            const cushion = new THREE.Mesh(
+                new THREE.BoxGeometry(0.5, 0.15, 0.5),
+                new THREE.MeshLambertMaterial({ color: colors[0] })
+            );
+            cushion.position.set(0, 0.08, 0);
+            group.add(cushion);
+            // Add pattern stripe
+            const stripe = new THREE.Mesh(
+                new THREE.BoxGeometry(0.52, 0.02, 0.1),
+                new THREE.MeshLambertMaterial({ color: colors[1] || 0xffd700 })
+            );
+            stripe.position.set(0, 0.16, 0);
+            group.add(stripe);
+            return group;
+        }
+
+        function createVelvetCushion(color) {
+            const group = new THREE.Group();
+            const cushion = new THREE.Mesh(
+                new THREE.BoxGeometry(0.45, 0.12, 0.45),
+                new THREE.MeshLambertMaterial({ color })
+            );
+            cushion.position.set(0, 0.06, 0);
+            group.add(cushion);
+            // Tufted center button
+            const button = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.03, 0.03, 0.02, 8),
+                new THREE.MeshLambertMaterial({ color: 0x333333 })
+            );
+            button.position.set(0, 0.13, 0);
+            group.add(button);
+            return group;
+        }
+
+        function createPebbleCushion(color) {
+            const group = new THREE.Group();
+            const cushion = new THREE.Mesh(
+                new THREE.SphereGeometry(0.25, 12, 12),
+                new THREE.MeshLambertMaterial({ color })
+            );
+            cushion.scale.set(1, 0.4, 1);
+            cushion.position.set(0, 0.1, 0);
+            group.add(cushion);
+            return group;
+        }
+
+        // OLIVE VELVET SOFA - Low-profile tufted sofa
+        function createOliveSofa() {
+            const group = new THREE.Group();
+            const mat = new THREE.MeshLambertMaterial({ color: 0x6b8e23 }); // Olive green
+            // Seat
+            const seat = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.25, 0.9), mat);
+            seat.position.set(0, 0.2, 0);
+            group.add(seat);
+            // Low back
+            const back = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.35, 0.15), mat);
+            back.position.set(0, 0.45, -0.4);
+            group.add(back);
+            // Rounded arms
+            const armMat = new THREE.MeshLambertMaterial({ color: 0x5a7d1a });
+            const armL = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.9, 12), armMat);
+            armL.rotation.x = Math.PI / 2;
+            armL.position.set(-0.95, 0.3, 0);
+            group.add(armL);
+            const armR = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.9, 12), armMat);
+            armR.rotation.x = Math.PI / 2;
+            armR.position.set(0.95, 0.3, 0);
+            group.add(armR);
+            // Tufting buttons
+            for (let x = -0.6; x <= 0.6; x += 0.4) {
+                for (let z = -0.2; z <= 0.2; z += 0.4) {
+                    const btn = new THREE.Mesh(
+                        new THREE.CylinderGeometry(0.02, 0.02, 0.02, 8),
+                        new THREE.MeshLambertMaterial({ color: 0x333333 })
+                    );
+                    btn.position.set(x, 0.34, z);
+                    group.add(btn);
+                }
+            }
+            return group;
+        }
+
+        // PINK VELVET ARMCHAIR
+        function createPinkArmchair() {
+            const group = new THREE.Group();
+            const mat = new THREE.MeshLambertMaterial({ color: 0xe91e63 }); // Pink
+            // Seat
+            const seat = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.2, 0.7), mat);
+            seat.position.set(0, 0.25, 0);
+            group.add(seat);
+            // Back - curved
+            const back = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.6, 0.1), mat);
+            back.position.set(0, 0.6, -0.3);
+            group.add(back);
+            // Arms
+            const armL = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.3, 0.6), mat);
+            armL.position.set(-0.35, 0.4, 0);
+            group.add(armL);
+            const armR = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.3, 0.6), mat);
+            armR.position.set(0.35, 0.4, 0);
+            group.add(armR);
+            // Legs - wooden
+            const legMat = new THREE.MeshLambertMaterial({ color: 0x8b4513 });
+            [[-0.25, -0.25], [-0.25, 0.25], [0.25, -0.25], [0.25, 0.25]].forEach(([x, z]) => {
+                const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.02, 0.15, 8), legMat);
+                leg.position.set(x, 0.075, z);
+                group.add(leg);
+            });
+            return group;
+        }
+
+        // BOOK DISPLAYS & STORAGE
+        function createWallBookcase() {
+            const group = new THREE.Group();
+            const woodMat = new THREE.MeshLambertMaterial({ color: 0xd4a76a });
+            // Back panel
+            const back = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.8, 0.03), woodMat);
+            back.position.set(0, 0.9, -0.15);
+            group.add(back);
+            // Shelves
+            for (let y = 0.15; y <= 1.65; y += 0.3) {
+                const shelf = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.03, 0.3), woodMat);
+                shelf.position.set(0, y, 0);
+                group.add(shelf);
+                // Add some books
+                const bookColors = [0xc41e3a, 0x1a3a5c, 0xfdd835, 0x4caf50, 0x9c27b0];
+                for (let i = 0; i < 5; i++) {
+                    const book = new THREE.Mesh(
+                        new THREE.BoxGeometry(0.05 + Math.random() * 0.03, 0.2 + Math.random() * 0.05, 0.15),
+                        new THREE.MeshLambertMaterial({ color: bookColors[i % bookColors.length] })
+                    );
+                    book.position.set(-0.45 + i * 0.2, y + 0.12, 0);
+                    group.add(book);
+                }
+            }
+            // Sides
+            const sideL = new THREE.Mesh(new THREE.BoxGeometry(0.03, 1.8, 0.3), woodMat);
+            sideL.position.set(-0.6, 0.9, 0);
+            group.add(sideL);
+            const sideR = new THREE.Mesh(new THREE.BoxGeometry(0.03, 1.8, 0.3), woodMat);
+            sideR.position.set(0.6, 0.9, 0);
+            group.add(sideR);
+            return group;
+        }
+
+        function createBookCubby() {
+            const group = new THREE.Group();
+            const woodMat = new THREE.MeshLambertMaterial({ color: 0xdeb887 }); // Light wood
+            // Create cubby grid
+            const cubbies = 3;
+            const cubbySize = 0.35;
+            for (let x = 0; x < cubbies; x++) {
+                for (let y = 0; y < cubbies; y++) {
+                    // Cubby box
+                    const box = new THREE.Mesh(
+                        new THREE.BoxGeometry(cubbySize, cubbySize, 0.3),
+                        woodMat
+                    );
+                    box.position.set((x - 1) * (cubbySize + 0.02), y * (cubbySize + 0.02) + cubbySize/2, 0);
+                    group.add(box);
+                    // Random content
+                    if (Math.random() > 0.3) {
+                        const content = new THREE.Mesh(
+                            new THREE.BoxGeometry(cubbySize * 0.8, cubbySize * 0.7, 0.15),
+                            new THREE.MeshLambertMaterial({ color: [0xc41e3a, 0x1a3a5c, 0xfdd835, 0x4caf50][Math.floor(Math.random() * 4)] })
+                        );
+                        content.position.set((x - 1) * (cubbySize + 0.02), y * (cubbySize + 0.02) + cubbySize/2, 0.05);
+                        group.add(content);
+                    }
+                }
+            }
+            return group;
+        }
+
+        function createMagazineRack() {
+            const group = new THREE.Group();
+            const wireMat = new THREE.MeshLambertMaterial({ color: 0x333333 });
+            // Wire frame
+            for (let i = 0; i < 4; i++) {
+                const wire = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.01, 0.01, 0.6, 8),
+                    wireMat
+                );
+                wire.rotation.z = Math.PI / 6;
+                wire.position.set(-0.15 + i * 0.1, 0.35, 0);
+                group.add(wire);
+            }
+            // Base
+            const base = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.02, 0.2), wireMat);
+            base.position.set(0, 0.02, 0);
+            group.add(base);
+            // Magazines
+            const magColors = [0xff6b6b, 0x45b7d1, 0xfdd835, 0x4caf50];
+            for (let i = 0; i < 4; i++) {
+                const mag = new THREE.Mesh(
+                    new THREE.BoxGeometry(0.02, 0.28, 0.2),
+                    new THREE.MeshLambertMaterial({ color: magColors[i] })
+                );
+                mag.rotation.z = Math.PI / 6;
+                mag.position.set(-0.12 + i * 0.08, 0.25 + i * 0.03, 0);
+                group.add(mag);
+            }
+            return group;
+        }
+
+        function createBookStack() {
+            const group = new THREE.Group();
+            const colors = [0xc41e3a, 0x1a3a5c, 0xfdd835, 0x4caf50, 0x9c27b0, 0xff6b6b];
+            let y = 0;
+            for (let i = 0; i < 5; i++) {
+                const book = new THREE.Mesh(
+                    new THREE.BoxGeometry(0.2 + Math.random() * 0.05, 0.03 + Math.random() * 0.02, 0.15),
+                    new THREE.MeshLambertMaterial({ color: colors[i % colors.length] })
+                );
+                book.position.set((Math.random() - 0.5) * 0.03, y + 0.015, 0);
+                book.rotation.y = (Math.random() - 0.5) * 0.2;
+                group.add(book);
+                y += 0.035;
+            }
+            return group;
+        }
+
+        function createColorDisplay(color) {
+            const group = new THREE.Group();
+            const mat = new THREE.MeshLambertMaterial({ color });
+            // Pedestal display
+            const base = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.6, 0.4), mat);
+            base.position.set(0, 0.3, 0);
+            group.add(base);
+            // Books on top
+            const bookMat = new THREE.MeshLambertMaterial({ color: 0x1a1a1a });
+            for (let i = 0; i < 3; i++) {
+                const book = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.04, 0.12), bookMat);
+                book.position.set(-0.1 + i * 0.1, 0.62 + i * 0.04, 0);
+                book.rotation.y = (Math.random() - 0.5) * 0.3;
+                group.add(book);
+            }
+            return group;
+        }
+
+        function createLeaningShelf() {
+            const group = new THREE.Group();
+            const woodMat = new THREE.MeshLambertMaterial({ color: 0xd4a76a });
+            // Leaning frame
+            const angle = Math.PI / 12;
+            for (let side = -1; side <= 1; side += 2) {
+                const leg = new THREE.Mesh(new THREE.BoxGeometry(0.04, 1.5, 0.04), woodMat);
+                leg.position.set(side * 0.4, 0.7, -0.1);
+                leg.rotation.x = -angle;
+                group.add(leg);
+            }
+            // Shelves
+            for (let i = 0; i < 4; i++) {
+                const shelf = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.02, 0.25), woodMat);
+                shelf.position.set(0, 0.2 + i * 0.35, -0.05 - i * 0.08);
+                group.add(shelf);
+            }
+            return group;
+        }
+
+        // RUGS - Layered Persian & African
+        function createLayeredRug(width, depth, color) {
+            const group = new THREE.Group();
+            const rugMat = new THREE.MeshLambertMaterial({ color });
+            const rug = new THREE.Mesh(new THREE.BoxGeometry(width, 0.02, depth), rugMat);
+            rug.position.set(0, 0.01, 0);
+            group.add(rug);
+            // Border
+            const borderMat = new THREE.MeshLambertMaterial({ color: darkenColor(color, 0.3) });
+            const borderW = 0.08;
+            const borderT = new THREE.Mesh(new THREE.BoxGeometry(width, 0.025, borderW), borderMat);
+            borderT.position.set(0, 0.012, depth/2 - borderW/2);
+            group.add(borderT);
+            const borderB = new THREE.Mesh(new THREE.BoxGeometry(width, 0.025, borderW), borderMat);
+            borderB.position.set(0, 0.012, -depth/2 + borderW/2);
+            group.add(borderB);
+            const borderL = new THREE.Mesh(new THREE.BoxGeometry(borderW, 0.025, depth), borderMat);
+            borderL.position.set(-width/2 + borderW/2, 0.012, 0);
+            group.add(borderL);
+            const borderR = new THREE.Mesh(new THREE.BoxGeometry(borderW, 0.025, depth), borderMat);
+            borderR.position.set(width/2 - borderW/2, 0.012, 0);
+            group.add(borderR);
+            return group;
+        }
+
+        function darkenColor(color, amount) {
+            const r = ((color >> 16) & 255) * (1 - amount);
+            const g = ((color >> 8) & 255) * (1 - amount);
+            const b = (color & 255) * (1 - amount);
+            return (Math.floor(r) << 16) | (Math.floor(g) << 8) | Math.floor(b);
+        }
+
+        function createKilimRug() {
+            const group = new THREE.Group();
+            const width = 2.5, depth = 1.8;
+            // Base
+            const baseMat = new THREE.MeshLambertMaterial({ color: 0xb71c1c });
+            const base = new THREE.Mesh(new THREE.BoxGeometry(width, 0.02, depth), baseMat);
+            base.position.set(0, 0.01, 0);
+            group.add(base);
+            // Kilim stripes
+            const stripeColors = [0xfdd835, 0x1a3a5c, 0xf5f0e8, 0x4caf50, 0xff6b6b];
+            for (let i = 0; i < 8; i++) {
+                const stripe = new THREE.Mesh(
+                    new THREE.BoxGeometry(width * 0.9, 0.025, 0.12),
+                    new THREE.MeshLambertMaterial({ color: stripeColors[i % stripeColors.length] })
+                );
+                stripe.position.set(0, 0.012, -depth/2 + 0.2 + i * 0.2);
+                group.add(stripe);
+            }
+            return group;
+        }
+
+        function createCheckeredRug(color1, color2) {
+            const group = new THREE.Group();
+            const size = 0.3;
+            const count = 6;
+            for (let x = 0; x < count; x++) {
+                for (let z = 0; z < count; z++) {
+                    const color = (x + z) % 2 === 0 ? color1 : color2;
+                    const tile = new THREE.Mesh(
+                        new THREE.BoxGeometry(size, 0.02, size),
+                        new THREE.MeshLambertMaterial({ color })
+                    );
+                    tile.position.set((x - count/2 + 0.5) * size, 0.01, (z - count/2 + 0.5) * size);
+                    group.add(tile);
+                }
+            }
+            return group;
+        }
+
+        function createWaxPrintRug(color1, color2) {
+            const group = new THREE.Group();
+            const width = 2.0, depth = 1.5;
+            // Base
+            const base = new THREE.Mesh(
+                new THREE.BoxGeometry(width, 0.02, depth),
+                new THREE.MeshLambertMaterial({ color: color1 })
+            );
+            base.position.set(0, 0.01, 0);
+            group.add(base);
+            // African wax print pattern - circular motifs
+            for (let x = -0.6; x <= 0.6; x += 0.4) {
+                for (let z = -0.4; z <= 0.4; z += 0.4) {
+                    const circle = new THREE.Mesh(
+                        new THREE.CylinderGeometry(0.12, 0.12, 0.025, 16),
+                        new THREE.MeshLambertMaterial({ color: color2 })
+                    );
+                    circle.position.set(x, 0.012, z);
+                    group.add(circle);
+                    // Inner circle
+                    const inner = new THREE.Mesh(
+                        new THREE.CylinderGeometry(0.06, 0.06, 0.027, 12),
+                        new THREE.MeshLambertMaterial({ color: color1 })
+                    );
+                    inner.position.set(x, 0.014, z);
+                    group.add(inner);
+                }
+            }
+            return group;
+        }
+
+        function createGeometricRug() {
+            const group = new THREE.Group();
+            const width = 2.2, depth = 1.6;
+            // Base - cream
+            const base = new THREE.Mesh(
+                new THREE.BoxGeometry(width, 0.02, depth),
+                new THREE.MeshLambertMaterial({ color: 0xf5f0e8 })
+            );
+            base.position.set(0, 0.01, 0);
+            group.add(base);
+            // Black geometric triangles
+            const triMat = new THREE.MeshLambertMaterial({ color: 0x1a1a1a });
+            const triShape = new THREE.Shape();
+            triShape.moveTo(0, 0.15);
+            triShape.lineTo(-0.1, 0);
+            triShape.lineTo(0.1, 0);
+            triShape.lineTo(0, 0.15);
+            const triGeo = new THREE.ShapeGeometry(triShape);
+            for (let x = -0.7; x <= 0.7; x += 0.35) {
+                for (let z = -0.5; z <= 0.5; z += 0.3) {
+                    const tri = new THREE.Mesh(triGeo, triMat);
+                    tri.rotation.x = -Math.PI / 2;
+                    tri.position.set(x, 0.012, z);
+                    if (Math.random() > 0.5) tri.rotation.z = Math.PI;
+                    group.add(tri);
+                }
+            }
+            return group;
+        }
+
+        function createTieDyeCloth() {
+            const group = new THREE.Group();
+            // Table-sized cloth
+            const cloth = new THREE.Mesh(
+                new THREE.BoxGeometry(1.8, 0.01, 0.8),
+                new THREE.MeshLambertMaterial({ color: 0x4169e1 })
+            );
+            cloth.position.set(0, 0.72, 0);
+            group.add(cloth);
+            // Tie-dye circles
+            const dyeColors = [0xffffff, 0x9c27b0, 0x00bcd4];
+            for (let i = 0; i < 5; i++) {
+                const circle = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.1 + Math.random() * 0.1, 0.1, 0.015, 12),
+                    new THREE.MeshLambertMaterial({ color: dyeColors[i % dyeColors.length] })
+                );
+                circle.position.set(-0.6 + i * 0.3, 0.725, (Math.random() - 0.5) * 0.4);
+                group.add(circle);
+            }
+            return group;
+        }
+
+        // LIGHTING - Ethiopian & Disco
+        function createEthiopianLamp() {
+            const group = new THREE.Group();
+            // Woven basket shade
+            const shadeMat = new THREE.MeshLambertMaterial({ color: 0xd4a76a, side: THREE.DoubleSide });
+            const shade = new THREE.Mesh(
+                new THREE.ConeGeometry(0.25, 0.35, 12, 1, true),
+                shadeMat
+            );
+            shade.position.set(0, 0, 0);
+            shade.rotation.x = Math.PI;
+            group.add(shade);
+            // Beaded fringe
+            const beadMat = new THREE.MeshLambertMaterial({ color: 0xc41e3a });
+            for (let i = 0; i < 12; i++) {
+                const angle = (i / 12) * Math.PI * 2;
+                for (let j = 0; j < 4; j++) {
+                    const bead = new THREE.Mesh(
+                        new THREE.SphereGeometry(0.015, 6, 6),
+                        j % 2 === 0 ? beadMat : new THREE.MeshLambertMaterial({ color: 0xfdd835 })
+                    );
+                    bead.position.set(
+                        Math.cos(angle) * 0.23,
+                        -0.38 - j * 0.04,
+                        Math.sin(angle) * 0.23
+                    );
+                    group.add(bead);
+                }
+            }
+            // Cord
+            const cord = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.01, 0.01, 0.5, 8),
+                new THREE.MeshLambertMaterial({ color: 0x8b4513 })
+            );
+            cord.position.set(0, 0.42, 0);
+            group.add(cord);
+            return group;
+        }
+
+        function createBeadedLamp() {
+            const group = new THREE.Group();
+            // Cylinder shade
+            const shadeMat = new THREE.MeshLambertMaterial({ color: 0xf5f5dc, side: THREE.DoubleSide });
+            const shade = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.15, 0.2, 0.3, 12, 1, true),
+                shadeMat
+            );
+            shade.position.set(0, 0, 0);
+            group.add(shade);
+            // Colorful beads hanging
+            const beadColors = [0xc41e3a, 0xfdd835, 0x4caf50, 0x2196f3, 0x9c27b0];
+            for (let i = 0; i < 16; i++) {
+                const angle = (i / 16) * Math.PI * 2;
+                const color = beadColors[i % beadColors.length];
+                for (let j = 0; j < 6; j++) {
+                    const bead = new THREE.Mesh(
+                        new THREE.SphereGeometry(0.012, 6, 6),
+                        new THREE.MeshLambertMaterial({ color })
+                    );
+                    bead.position.set(
+                        Math.cos(angle) * 0.18,
+                        -0.18 - j * 0.025,
+                        Math.sin(angle) * 0.18
+                    );
+                    group.add(bead);
+                }
+            }
+            // Cord
+            const cord = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.01, 0.01, 0.4, 8),
+                new THREE.MeshLambertMaterial({ color: 0x333333 })
+            );
+            cord.position.set(0, 0.35, 0);
+            group.add(cord);
+            return group;
+        }
+
+        function createDiscoBallCluster() {
+            const group = new THREE.Group();
+            const ballMat = new THREE.MeshLambertMaterial({ color: 0xc0c0c0 });
+            const cordMat = new THREE.MeshLambertMaterial({ color: 0x333333 });
+            // Multiple balls at different heights
+            const positions = [
+                { x: 0, y: 0, z: 0, size: 0.15, cordLen: 0.3 },
+                { x: 0.25, y: 0.15, z: 0.1, size: 0.1, cordLen: 0.15 },
+                { x: -0.2, y: 0.1, z: -0.1, size: 0.12, cordLen: 0.2 },
+                { x: 0.1, y: -0.1, z: 0.2, size: 0.08, cordLen: 0.4 }
+            ];
+            positions.forEach(p => {
+                const ball = new THREE.Mesh(new THREE.SphereGeometry(p.size, 12, 12), ballMat);
+                ball.position.set(p.x, p.y, p.z);
+                group.add(ball);
+                const cord = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.008, 0.008, p.cordLen, 8),
+                    cordMat
+                );
+                cord.position.set(p.x, p.y + p.size + p.cordLen/2, p.z);
+                group.add(cord);
+            });
+            return group;
+        }
+
+        function createStringLights() {
+            const group = new THREE.Group();
+            const wireMat = new THREE.MeshLambertMaterial({ color: 0x333333 });
+            const bulbColors = [0xfdd835, 0xff6b6b, 0x4caf50, 0x2196f3, 0x9c27b0];
+            // Wire
+            const points = [];
+            for (let i = 0; i <= 10; i++) {
+                points.push(new THREE.Vector3(
+                    -1.5 + i * 0.3,
+                    Math.sin(i * 0.5) * 0.1,
+                    0
+                ));
+            }
+            // Bulbs along the wire
+            for (let i = 0; i < 10; i++) {
+                const bulb = new THREE.Mesh(
+                    new THREE.SphereGeometry(0.03, 8, 8),
+                    new THREE.MeshLambertMaterial({ color: bulbColors[i % bulbColors.length], emissive: bulbColors[i % bulbColors.length], emissiveIntensity: 0.3 })
+                );
+                bulb.position.set(-1.5 + i * 0.3, Math.sin(i * 0.5) * 0.1 - 0.05, 0);
+                group.add(bulb);
+                // Wire segment
+                if (i < 9) {
+                    const wire = new THREE.Mesh(
+                        new THREE.CylinderGeometry(0.005, 0.005, 0.3, 6),
+                        wireMat
+                    );
+                    wire.position.set(-1.35 + i * 0.3, Math.sin(i * 0.5 + 0.25) * 0.1, 0);
+                    wire.rotation.z = Math.PI / 2;
+                    group.add(wire);
+                }
+            }
+            return group;
+        }
+
+        function createPaperLantern() {
+            const group = new THREE.Group();
+            const lanternMat = new THREE.MeshLambertMaterial({
+                color: 0xfff8e1,
+                side: THREE.DoubleSide,
+                transparent: true,
+                opacity: 0.9
+            });
+            const lantern = new THREE.Mesh(
+                new THREE.SphereGeometry(0.2, 16, 12),
+                lanternMat
+            );
+            lantern.scale.set(1, 1.2, 1);
+            lantern.position.set(0, 0, 0);
+            group.add(lantern);
+            // Wire frame rings
+            const wireMat = new THREE.MeshLambertMaterial({ color: 0x333333 });
+            for (let i = -0.15; i <= 0.15; i += 0.1) {
+                const ring = new THREE.Mesh(
+                    new THREE.TorusGeometry(0.18, 0.005, 8, 16),
+                    wireMat
+                );
+                ring.position.set(0, i, 0);
+                ring.rotation.x = Math.PI / 2;
+                group.add(ring);
+            }
+            // Cord
+            const cord = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.01, 0.01, 0.3, 8),
+                wireMat
+            );
+            cord.position.set(0, 0.38, 0);
+            group.add(cord);
+            return group;
+        }
+
+        // PLANTS & AFRICAN DECOR
+        function createPalmPlant() {
+            const group = new THREE.Group();
+            // Pot
+            const potMat = new THREE.MeshLambertMaterial({ color: 0x8b4513 });
+            const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.12, 0.25, 12), potMat);
+            pot.position.set(0, 0.125, 0);
+            group.add(pot);
+            // Soil
+            const soil = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.14, 0.14, 0.03, 12),
+                new THREE.MeshLambertMaterial({ color: 0x3e2723 })
+            );
+            soil.position.set(0, 0.24, 0);
+            group.add(soil);
+            // Palm fronds
+            const leafMat = new THREE.MeshLambertMaterial({ color: 0x2e7d32, side: THREE.DoubleSide });
+            for (let i = 0; i < 6; i++) {
+                const angle = (i / 6) * Math.PI * 2;
+                const leaf = new THREE.Mesh(
+                    new THREE.BoxGeometry(0.08, 0.5, 0.01),
+                    leafMat
+                );
+                leaf.position.set(
+                    Math.cos(angle) * 0.1,
+                    0.5,
+                    Math.sin(angle) * 0.1
+                );
+                leaf.rotation.x = -0.5;
+                leaf.rotation.y = angle;
+                leaf.rotation.z = 0.3;
+                group.add(leaf);
+            }
+            return group;
+        }
+
+        function createHangingPlant() {
+            const group = new THREE.Group();
+            // Macrame holder
+            const cordMat = new THREE.MeshLambertMaterial({ color: 0xf5f5dc });
+            for (let i = 0; i < 4; i++) {
+                const angle = (i / 4) * Math.PI * 2;
+                const cord = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.008, 0.008, 0.4, 6),
+                    cordMat
+                );
+                cord.position.set(Math.cos(angle) * 0.1, 0.2, Math.sin(angle) * 0.1);
+                group.add(cord);
+            }
+            // Pot
+            const pot = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.12, 0.1, 0.15, 12),
+                new THREE.MeshLambertMaterial({ color: 0xd4a76a })
+            );
+            pot.position.set(0, 0, 0);
+            group.add(pot);
+            // Trailing vines
+            const vineMat = new THREE.MeshLambertMaterial({ color: 0x4caf50 });
+            for (let i = 0; i < 5; i++) {
+                const angle = (i / 5) * Math.PI * 2;
+                for (let j = 0; j < 4; j++) {
+                    const leaf = new THREE.Mesh(
+                        new THREE.SphereGeometry(0.025, 6, 6),
+                        vineMat
+                    );
+                    leaf.position.set(
+                        Math.cos(angle) * (0.12 + j * 0.03),
+                        -0.1 - j * 0.08,
+                        Math.sin(angle) * (0.12 + j * 0.03)
+                    );
+                    group.add(leaf);
+                }
+            }
+            return group;
+        }
+
+        function createPothosVine() {
+            const group = new THREE.Group();
+            // Small pot
+            const pot = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.08, 0.06, 0.1, 10),
+                new THREE.MeshLambertMaterial({ color: 0xffffff })
+            );
+            pot.position.set(0, 0.05, 0);
+            group.add(pot);
+            // Trailing vine with heart-shaped leaves
+            const leafMat = new THREE.MeshLambertMaterial({ color: 0x66bb6a });
+            const vineMat = new THREE.MeshLambertMaterial({ color: 0x2e7d32 });
+            for (let v = 0; v < 3; v++) {
+                const angle = (v / 3) * Math.PI * 2;
+                for (let i = 0; i < 6; i++) {
+                    // Vine segment
+                    const vine = new THREE.Mesh(
+                        new THREE.CylinderGeometry(0.005, 0.005, 0.08, 6),
+                        vineMat
+                    );
+                    vine.position.set(
+                        Math.cos(angle) * 0.06 + Math.sin(i) * 0.02,
+                        -i * 0.06,
+                        Math.sin(angle) * 0.06
+                    );
+                    vine.rotation.z = 0.3;
+                    group.add(vine);
+                    // Leaf
+                    const leaf = new THREE.Mesh(
+                        new THREE.SphereGeometry(0.03, 6, 6),
+                        leafMat
+                    );
+                    leaf.scale.set(1, 0.3, 1.2);
+                    leaf.position.set(
+                        Math.cos(angle) * 0.08 + Math.sin(i) * 0.03,
+                        -i * 0.06 - 0.02,
+                        Math.sin(angle) * 0.08
+                    );
+                    group.add(leaf);
+                }
+            }
+            return group;
+        }
+
+        function createWovenBasket() {
+            const group = new THREE.Group();
+            const basketMat = new THREE.MeshLambertMaterial({ color: 0xd4a76a });
+            const basket = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.2, 0.15, 0.25, 16),
+                basketMat
+            );
+            basket.position.set(0, 0.125, 0);
+            group.add(basket);
+            // Weave pattern stripes
+            const stripeMat = new THREE.MeshLambertMaterial({ color: 0x8b4513 });
+            for (let i = 0; i < 4; i++) {
+                const stripe = new THREE.Mesh(
+                    new THREE.TorusGeometry(0.17 - i * 0.01, 0.01, 8, 16),
+                    stripeMat
+                );
+                stripe.position.set(0, 0.05 + i * 0.05, 0);
+                stripe.rotation.x = Math.PI / 2;
+                group.add(stripe);
+            }
+            return group;
+        }
+
+        function createAfricanPottery() {
+            const group = new THREE.Group();
+            // Rounded pot with narrow neck
+            const potMat = new THREE.MeshLambertMaterial({ color: 0x8b4513 });
+            const body = new THREE.Mesh(
+                new THREE.SphereGeometry(0.15, 12, 12),
+                potMat
+            );
+            body.scale.set(1, 0.8, 1);
+            body.position.set(0, 0.12, 0);
+            group.add(body);
+            const neck = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.06, 0.1, 0.1, 12),
+                potMat
+            );
+            neck.position.set(0, 0.27, 0);
+            group.add(neck);
+            // Geometric pattern
+            const patternMat = new THREE.MeshLambertMaterial({ color: 0xf5f0e8 });
+            for (let i = 0; i < 8; i++) {
+                const angle = (i / 8) * Math.PI * 2;
+                const dot = new THREE.Mesh(
+                    new THREE.SphereGeometry(0.015, 6, 6),
+                    patternMat
+                );
+                dot.position.set(
+                    Math.cos(angle) * 0.14,
+                    0.12,
+                    Math.sin(angle) * 0.14
+                );
+                group.add(dot);
+            }
+            return group;
+        }
+
+        function createWoodSculpture() {
+            const group = new THREE.Group();
+            const woodMat = new THREE.MeshLambertMaterial({ color: 0x5d4037 });
+            // Abstract figure
+            const base = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.08, 0.1, 0.05, 12),
+                woodMat
+            );
+            base.position.set(0, 0.025, 0);
+            group.add(base);
+            const body = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.04, 0.06, 0.3, 8),
+                woodMat
+            );
+            body.position.set(0, 0.2, 0);
+            group.add(body);
+            const head = new THREE.Mesh(
+                new THREE.SphereGeometry(0.06, 10, 10),
+                woodMat
+            );
+            head.scale.set(1, 1.3, 0.8);
+            head.position.set(0, 0.42, 0);
+            group.add(head);
+            // Arms
+            const armL = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.015, 0.015, 0.15, 6),
+                woodMat
+            );
+            armL.position.set(-0.08, 0.25, 0);
+            armL.rotation.z = 0.5;
+            group.add(armL);
+            const armR = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.015, 0.015, 0.15, 6),
+                woodMat
+            );
+            armR.position.set(0.08, 0.25, 0);
+            armR.rotation.z = -0.5;
+            group.add(armR);
+            return group;
+        }
+
         // Place item in scene
         container.addEventListener('click', function(event) {
             if (!decoratorMode || !selectedFurnitureType) return;
@@ -2534,8 +4066,8 @@
         function updateWallVisibility() {
             if (!hideNearWall) {
                 // Show all walls
-                Object.values(room5202Walls).forEach(w => { if (w) w.visible = true; });
-                Object.values(room5203Walls).forEach(w => { if (w) w.visible = true; });
+                Object.values(roomS202Walls).forEach(w => { if (w) w.visible = true; });
+                Object.values(roomS203Walls).forEach(w => { if (w) w.visible = true; });
                 return;
             }
 
@@ -2543,34 +4075,34 @@
             const camX = camera.position.x;
             const camZ = camera.position.z;
 
-            // Room 5202 walls
+            // Room S202 walls
             // FRONT wall (windows) - hide when camera is in front (positive Z)
-            if (room5202Walls.front) room5202Walls.front.visible = camZ < ROOM_5202_DEPTH / 4;
+            if (roomS202Walls.front) roomS202Walls.front.visible = camZ < ROOM_S202_DEPTH / 4;
 
             // BACK wall (corridor entry) - hide when camera is behind (negative Z)
             // Also hide entire vestibule (all corridor walls) when hiding back area
-            const hideBackArea = camZ < -ROOM_5202_DEPTH / 4;
-            if (room5202Walls.back) room5202Walls.back.visible = !hideBackArea;
-            if (room5202Walls.vestibuleGroup) room5202Walls.vestibuleGroup.visible = !hideBackArea;
+            const hideBackArea = camZ < -ROOM_S202_DEPTH / 4;
+            if (roomS202Walls.back) roomS202Walls.back.visible = !hideBackArea;
+            if (roomS202Walls.vestibuleGroup) roomS202Walls.vestibuleGroup.visible = !hideBackArea;
 
             // LEFT wall (Three Star door) - hide when camera is to the left
-            if (room5202Walls.left) room5202Walls.left.visible = camX > ROOM_5202_X - ROOM_5202_WIDTH / 2;
+            if (roomS202Walls.left) roomS202Walls.left.visible = camX > ROOM_S202_X - ROOM_S202_WIDTH / 2;
 
-            // RIGHT wall (open passage to 5203) - hide when camera is between rooms
-            if (room5202Walls.right) room5202Walls.right.visible = camX < ROOM_5202_X + ROOM_5202_WIDTH / 4;
+            // RIGHT wall (solid shared wall with S203) - hide when camera is to the right
+            if (roomS202Walls.right) roomS202Walls.right.visible = camX < ROOM_S202_X + ROOM_S202_WIDTH / 2;
 
-            // Room 5203 walls
+            // Room S203 walls
             // FRONT wall (windows) - hide when camera is in front
-            if (room5203Walls.front) room5203Walls.front.visible = camZ < ROOM_5203_DEPTH / 4;
+            if (roomS203Walls.front) roomS203Walls.front.visible = camZ < ROOM_S203_DEPTH / 4;
 
             // BACK wall (corridor entry + poster wall) - hide when camera is behind
-            if (room5203Walls.back) room5203Walls.back.visible = camZ > -ROOM_5203_DEPTH / 4;
+            if (roomS203Walls.back) roomS203Walls.back.visible = camZ > -ROOM_S203_DEPTH / 4;
 
-            // LEFT wall (open passage to 5202) - hide when camera is between rooms
-            if (room5203Walls.left) room5203Walls.left.visible = camX > ROOM_5203_X - ROOM_5203_WIDTH / 4;
+            // LEFT wall (solid shared wall with S202) - hide when camera is to the left
+            if (roomS203Walls.left) roomS203Walls.left.visible = camX > ROOM_S203_X - ROOM_S203_WIDTH / 2;
 
             // RIGHT wall (solid exterior) - hide when camera is to the right
-            if (room5203Walls.right) room5203Walls.right.visible = camX < ROOM_5203_X + ROOM_5203_WIDTH / 2;
+            if (roomS203Walls.right) roomS203Walls.right.visible = camX < ROOM_S203_X + ROOM_S203_WIDTH / 2;
         }
 
         // Auto ceiling visibility based on camera height
@@ -2580,8 +4112,8 @@
 
             if (showCeiling) {
                 // Auto-hide ceiling when viewing from above
-                ceilingsGroup.traverse((obj) => {
-                    if (obj.userData.isCeiling || obj.isMesh) {
+                scene.traverse((obj) => {
+                    if (obj.userData.isCeiling) {
                         obj.visible = !isAbove;
                     }
                 });
@@ -2615,6 +4147,365 @@
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
+
+        // ========== ADMIN SYSTEM ==========
+        let adminUser = null;
+        let adminToken = null;
+        let selectedRenderStyle = 'photorealistic';
+
+        // Check for saved admin session
+        const savedAdmin = localStorage.getItem('panafricanAdmin');
+        if (savedAdmin) {
+            try {
+                const data = JSON.parse(savedAdmin);
+                adminUser = data.email;
+                adminToken = data.token;
+                document.getElementById('admin-btn').classList.add('logged-in');
+                document.getElementById('admin-btn').textContent = '👤 ' + (data.name || 'Admin');
+            } catch(e) {}
+        }
+
+        window.toggleAdminLogin = function() {
+            if (adminUser) {
+                toggleAdminPanel();
+            } else {
+                document.getElementById('login-modal').classList.add('visible');
+                document.getElementById('login-email').focus();
+            }
+        };
+
+        window.closeLoginModal = function() {
+            document.getElementById('login-modal').classList.remove('visible');
+            document.getElementById('login-email').value = '';
+            document.getElementById('login-error').textContent = '';
+        };
+
+        window.attemptLogin = async function() {
+            const email = document.getElementById('login-email').value.trim();
+            if (!email) {
+                document.getElementById('login-error').textContent = 'Please enter your email';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                const result = await response.json();
+
+                if (result.success && result.isAdmin) {
+                    adminUser = result.email;
+                    adminToken = result.token;
+                    localStorage.setItem('panafricanAdmin', JSON.stringify({
+                        email: result.email,
+                        token: result.token,
+                        name: result.name
+                    }));
+                    document.getElementById('admin-btn').classList.add('logged-in');
+                    document.getElementById('admin-btn').textContent = '👤 ' + result.name;
+                    document.getElementById('admin-user-name').textContent = 'Logged in as: ' + result.name;
+                    closeLoginModal();
+                    toggleAdminPanel();
+                    loadAdminConfigs();
+                } else {
+                    document.getElementById('login-error').textContent = 'Not an authorized admin email';
+                }
+            } catch (err) {
+                document.getElementById('login-error').textContent = 'Login failed: ' + err.message;
+            }
+        };
+
+        window.logoutAdmin = function() {
+            adminUser = null;
+            adminToken = null;
+            localStorage.removeItem('panafricanAdmin');
+            document.getElementById('admin-btn').classList.remove('logged-in');
+            document.getElementById('admin-btn').textContent = '🔐 Admin';
+            document.getElementById('admin-panel').classList.remove('open');
+        };
+
+        window.toggleAdminPanel = function() {
+            if (!adminUser) {
+                toggleAdminLogin();
+                return;
+            }
+            const panel = document.getElementById('admin-panel');
+            panel.classList.toggle('open');
+            if (panel.classList.contains('open')) {
+                loadAdminConfigs();
+                updateCameraPositionDisplay();
+            }
+        };
+
+        window.switchAdminTab = function(tab) {
+            document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            document.querySelectorAll('.admin-content').forEach(c => c.style.display = 'none');
+            document.getElementById('admin-tab-' + tab).style.display = 'block';
+        };
+
+        function updateCameraPositionDisplay() {
+            const display = document.getElementById('camera-position-display');
+            if (display) {
+                display.innerHTML = `Position: (${camera.position.x.toFixed(2)}, ${camera.position.y.toFixed(2)}, ${camera.position.z.toFixed(2)})<br>Target: (${cameraTarget.x.toFixed(2)}, ${cameraTarget.y.toFixed(2)}, ${cameraTarget.z.toFixed(2)})<br>Distance: ${cameraDistance.toFixed(2)} | RotX: ${currentRotationX.toFixed(2)} | RotY: ${currentRotationY.toFixed(2)}`;
+            }
+        }
+
+        setInterval(() => {
+            if (document.getElementById('admin-panel').classList.contains('open')) {
+                updateCameraPositionDisplay();
+            }
+        }, 500);
+
+        async function loadAdminConfigs() {
+            try {
+                const layoutRes = await fetch('/api/config?type=layout');
+                const layoutData = await layoutRes.json();
+                renderConfigList('saved-layouts-list', layoutData.configs || [], 'layout');
+            } catch (e) {
+                document.getElementById('saved-layouts-list').innerHTML = '<div style="color:#666;font-size:12px;padding:10px;">Failed to load</div>';
+            }
+            try {
+                const viewRes = await fetch('/api/config?type=view');
+                const viewData = await viewRes.json();
+                renderConfigList('saved-views-list', viewData.configs || [], 'view');
+            } catch (e) {
+                document.getElementById('saved-views-list').innerHTML = '<div style="color:#666;font-size:12px;padding:10px;">Failed to load</div>';
+            }
+            try {
+                const moodRes = await fetch('/api/config?type=mood');
+                const moodData = await moodRes.json();
+                renderConfigList('saved-mood-list', moodData.configs || [], 'mood');
+            } catch (e) {
+                document.getElementById('saved-mood-list').innerHTML = '<div style="color:#666;font-size:12px;padding:10px;">Failed to load</div>';
+            }
+        }
+
+        function renderConfigList(containerId, configs, type) {
+            const container = document.getElementById(containerId);
+            if (configs.length === 0) {
+                container.innerHTML = '<div style="color:#666;font-size:12px;padding:10px;">No saved ' + type + 's yet</div>';
+                return;
+            }
+            container.innerHTML = configs.map(cfg => `
+                <div class="saved-config-item">
+                    <div>
+                        <div class="saved-config-name">${cfg.name}</div>
+                        <div class="saved-config-meta">By ${cfg.author} • ${new Date(cfg.createdAt).toLocaleDateString()}</div>
+                    </div>
+                    <div class="saved-config-actions">
+                        <button class="saved-config-btn" onclick="loadConfig('${type}', '${cfg.name}')">Load</button>
+                        <button class="saved-config-btn danger" onclick="deleteConfig('${type}', '${cfg.name}')">✕</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.saveAdminLayout = async function() {
+            const name = document.getElementById('layout-name').value.trim();
+            if (!name) { alert('Please enter a layout name'); return; }
+            const layout = placedItems.map(item => ({
+                type: item.userData.itemType,
+                position: { x: item.position.x, y: item.position.y, z: item.position.z },
+                rotation: { y: item.rotation.y }
+            }));
+            try {
+                const response = await fetch('/api/config', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'layout', name: name, data: layout, author: adminUser || 'Unknown' })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert('Layout saved!');
+                    document.getElementById('layout-name').value = '';
+                    loadAdminConfigs();
+                }
+            } catch (err) { alert('Failed to save layout: ' + err.message); }
+        };
+
+        window.saveAdminView = async function() {
+            const name = document.getElementById('view-name').value.trim();
+            const description = document.getElementById('view-description').value.trim();
+            if (!name) { alert('Please enter a view name'); return; }
+            const viewData = {
+                position: { x: camera.position.x, y: camera.position.y, z: camera.position.z },
+                target: { x: cameraTarget.x, y: cameraTarget.y, z: cameraTarget.z },
+                distance: cameraDistance,
+                rotationX: currentRotationX,
+                rotationY: currentRotationY,
+                description: description
+            };
+            try {
+                const response = await fetch('/api/config', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'view', name: name, data: viewData, author: adminUser || 'Unknown' })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert('View saved!');
+                    document.getElementById('view-name').value = '';
+                    document.getElementById('view-description').value = '';
+                    loadAdminConfigs();
+                }
+            } catch (err) { alert('Failed to save view: ' + err.message); }
+        };
+
+        window.saveMoodEntry = async function() {
+            const title = document.getElementById('mood-title').value.trim();
+            const imageUrl = document.getElementById('mood-image-url').value.trim();
+            const description = document.getElementById('mood-description').value.trim();
+            const category = document.getElementById('mood-category').value;
+            if (!title) { alert('Please enter a title'); return; }
+            const moodData = { title, imageUrl, description, category };
+            try {
+                const response = await fetch('/api/config', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'mood', name: title, data: moodData, author: adminUser || 'Unknown' })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert('Mood board entry added!');
+                    document.getElementById('mood-title').value = '';
+                    document.getElementById('mood-image-url').value = '';
+                    document.getElementById('mood-description').value = '';
+                    loadAdminConfigs();
+                }
+            } catch (err) { alert('Failed to save mood entry: ' + err.message); }
+        };
+
+        window.loadConfig = async function(type, name) {
+            try {
+                const response = await fetch(`/api/config?type=${type}&name=${encodeURIComponent(name)}`);
+                const result = await response.json();
+                if (result.success && result.config) {
+                    const data = result.config.data;
+                    if (type === 'layout') {
+                        applyLayout(data);
+                        alert('Layout loaded!');
+                    } else if (type === 'view') {
+                        cameraTarget.set(data.target.x, data.target.y, data.target.z);
+                        cameraDistance = data.distance;
+                        targetRotationX = data.rotationX;
+                        targetRotationY = data.rotationY;
+                        currentRotationX = data.rotationX;
+                        currentRotationY = data.rotationY;
+                        alert('View loaded: ' + (data.description || name));
+                    }
+                }
+            } catch (err) { alert('Failed to load config: ' + err.message); }
+        };
+
+        window.deleteConfig = async function(type, name) {
+            if (!confirm(`Delete ${type} "${name}"?`)) return;
+            try {
+                const response = await fetch('/api/config', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type, name })
+                });
+                const result = await response.json();
+                if (result.success) loadAdminConfigs();
+            } catch (err) { alert('Failed to delete: ' + err.message); }
+        };
+
+        window.exportLayoutFile = function() {
+            const layout = placedItems.map(item => ({
+                type: item.userData.itemType,
+                position: { x: item.position.x, y: item.position.y, z: item.position.z },
+                rotation: { y: item.rotation.y }
+            }));
+            const blob = new Blob([JSON.stringify(layout, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'panafrican-library-layout-' + new Date().toISOString().slice(0,10) + '.json';
+            a.click();
+        };
+
+        // ========== AI RENDER SYSTEM ==========
+        let capturedImageData = null;
+
+        window.openRenderModal = function() {
+            document.getElementById('render-modal').classList.add('visible');
+            captureForRender();
+        };
+
+        window.closeRenderModal = function() {
+            document.getElementById('render-modal').classList.remove('visible');
+            capturedImageData = null;
+        };
+
+        window.selectRenderStyle = function(style, btn) {
+            selectedRenderStyle = style;
+            document.querySelectorAll('.render-style-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        };
+
+        function captureForRender() {
+            renderer.render(scene, camera);
+            const dataURL = renderer.domElement.toDataURL('image/png');
+            capturedImageData = dataURL;
+            document.getElementById('render-input-preview').innerHTML = `<img src="${dataURL}" alt="3D Scene">`;
+        }
+
+        window.generateRender = async function() {
+            if (!capturedImageData) { alert('Please wait for capture'); return; }
+            const btn = document.getElementById('generate-render-btn');
+            const status = document.getElementById('render-status');
+            const statusText = document.getElementById('render-status-text');
+            const outputPreview = document.getElementById('render-output-preview');
+
+            btn.disabled = true;
+            status.style.display = 'block';
+            statusText.textContent = 'Generating photorealistic render... This may take 10-30 seconds';
+            outputPreview.innerHTML = '<span class="render-spinner"></span>';
+
+            try {
+                const customPrompt = document.getElementById('render-custom-prompt').value.trim();
+                const response = await fetch('/api/render', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        imageBase64: capturedImageData,
+                        style: selectedRenderStyle,
+                        prompt: customPrompt
+                    })
+                });
+                const result = await response.json();
+                if (result.success && result.image) {
+                    outputPreview.innerHTML = `<img src="${result.image}" alt="AI Render">`;
+                    statusText.textContent = 'Render complete!';
+                    setTimeout(() => {
+                        status.innerHTML = `
+                            <button class="admin-btn admin-btn-success" onclick="downloadRender()">💾 Download Render</button>
+                            <button class="admin-btn admin-btn-secondary" onclick="captureForRender()">🔄 Capture New View</button>
+                        `;
+                    }, 1000);
+                    window.lastRenderImage = result.image;
+                } else {
+                    throw new Error(result.error || result.text || 'Unknown error');
+                }
+            } catch (err) {
+                statusText.textContent = 'Error: ' + err.message;
+                outputPreview.innerHTML = 'Generation failed';
+            } finally {
+                btn.disabled = false;
+            }
+        };
+
+        window.downloadRender = function() {
+            if (!window.lastRenderImage) return;
+            const a = document.createElement('a');
+            a.href = window.lastRenderImage;
+            a.download = 'panafrican-library-render-' + selectedRenderStyle + '-' + new Date().toISOString().slice(0,19).replace(/:/g, '-') + '.png';
+            a.click();
+        };
+
     </script>
 </body>
 </html>
