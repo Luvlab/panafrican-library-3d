@@ -2167,85 +2167,90 @@
             ceilingS202.userData.isCeiling = true;
             group.add(ceilingS202);
 
-            // ========== PANAFRICAN-INSPIRED FURNITURE ==========
-            const mainRoomZ = VESTIBULE_DEPTH / 2 + 0.5;
+            // ========== PANAFRICAN-INSPIRED FURNITURE - S202 SPECIAL SPECIAL ==========
+            // Layout: Entry from NORTH (-Z) through vestibule, Windows on SOUTH (+Z)
+            // West wall (-X) has door to Three Star, East wall (+X) is shared with S203
+            // Main room area starts after the vestibule
 
-            // Display table with TIE-DYE CLOTH (from reference images)
+            const mainRoomZ = VESTIBULE_DEPTH / 2 + 0.8;  // Center of main room area
+            const windowZ = ROOM_S202_DEPTH / 2 - 1.0;    // Near window wall
+
+            // === DISPLAY TABLE with TIE-DYE CLOTH - center of main room ===
+            const displayTable = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.72, 0.7), woodMaterial);
+            displayTable.position.set(0, 0.36, mainRoomZ);
+            group.add(displayTable);
             const tieDyeCloth = createTieDyeCloth();
             tieDyeCloth.position.set(0, 0, mainRoomZ);
             group.add(tieDyeCloth);
-            const displayTable = new THREE.Mesh(new THREE.BoxGeometry(2, 0.72, 0.8), woodMaterial);
-            displayTable.position.set(0, 0.36, mainRoomZ);
-            group.add(displayTable);
 
-            // Books and magazines on table
+            // Books on table
             const bookStack1 = createBookStack();
-            bookStack1.position.set(-0.5, 0.74, mainRoomZ);
+            bookStack1.position.set(-0.4, 0.74, mainRoomZ);
             group.add(bookStack1);
             const bookStack2 = createBookStack();
-            bookStack2.position.set(0.4, 0.74, mainRoomZ + 0.1);
+            bookStack2.position.set(0.3, 0.74, mainRoomZ + 0.1);
             group.add(bookStack2);
-            const magRack = createMagazineRack();
-            magRack.position.set(0, 0.74, mainRoomZ - 0.2);
-            group.add(magRack);
 
-            // LAYERED RUGS (Persian + Kilim style from references)
-            const persianRug = createLayeredRug(2.8, 2.0, 0xb71c1c);
-            persianRug.position.set(0, 0, ROOM_S202_DEPTH / 3);
-            group.add(persianRug);
+            // === LISTENING AREA near windows (south wall) ===
+            // Layered rugs on floor
+            const mainRug = createLayeredRug(2.2, 1.8, 0xb71c1c);
+            mainRug.position.set(0, 0, windowZ);
+            group.add(mainRug);
             const kilimRug = createKilimRug();
-            kilimRug.position.set(-0.3, 0.025, ROOM_S202_DEPTH / 3 + 0.2);
+            kilimRug.position.set(-0.2, 0.02, windowZ + 0.3);
             kilimRug.rotation.y = 0.1;
             group.add(kilimRug);
 
-            // TRIANGLE BEAN BAGS (cream and orange from references)
+            // Bean bags for listening - arranged in a cozy circle
             const beanCream = createTriangleBeanbag(0xf5f0e8);
-            beanCream.position.set(-0.9, 0, ROOM_S202_DEPTH / 3 - 0.3);
-            beanCream.rotation.y = 0.3;
+            beanCream.position.set(-0.6, 0, windowZ - 0.2);
+            beanCream.rotation.y = 0.4;
             group.add(beanCream);
             const beanOrange = createTriangleBeanbag(0xfd7e14);
-            beanOrange.position.set(0.7, 0, ROOM_S202_DEPTH / 3 + 0.4);
-            beanOrange.rotation.y = -0.4;
+            beanOrange.position.set(0.5, 0, windowZ + 0.3);
+            beanOrange.rotation.y = -0.3;
             group.add(beanOrange);
 
-            // ETHNIC CUSHIONS scattered around
-            const ethnicCushion1 = createEthnicCushion([0xc41e3a, 0xfdd835]);
-            ethnicCushion1.position.set(-0.3, 0.02, ROOM_S202_DEPTH / 3);
-            group.add(ethnicCushion1);
-            const ethnicCushion2 = createEthnicCushion([0x00897b, 0xf5f0e8]);
-            ethnicCushion2.position.set(0.2, 0.02, ROOM_S202_DEPTH / 3 - 0.5);
-            group.add(ethnicCushion2);
-            const velvetCushion = createVelvetCushion(0xc2185b);
-            velvetCushion.position.set(0.5, 0.02, ROOM_S202_DEPTH / 3 - 0.2);
-            group.add(velvetCushion);
+            // Cushions around the bean bags
+            const cushion1 = createEthnicCushion([0xc41e3a, 0xfdd835]);
+            cushion1.position.set(-0.1, 0, windowZ);
+            group.add(cushion1);
+            const cushion2 = createVelvetCushion(0x00897b);
+            cushion2.position.set(0.2, 0, windowZ + 0.5);
+            group.add(cushion2);
+            const cushion3 = createPebbleCushion(0xc2185b);
+            cushion3.position.set(-0.4, 0, windowZ + 0.4);
+            group.add(cushion3);
 
-            // BOOK CUBBY against west wall (from reference - modular wooden displays)
+            // === WEST WALL (-X): Book display near Three Star door ===
             const bookCubby = createBookCubby();
-            bookCubby.position.set(-ROOM_S202_WIDTH / 2 + 0.25, 0, 0.5);
+            bookCubby.position.set(-ROOM_S202_WIDTH / 2 + 0.3, 0, mainRoomZ - 0.5);
             bookCubby.rotation.y = Math.PI / 2;
             group.add(bookCubby);
 
-            // WOVEN BASKET and AFRICAN POTTERY
+            // === DECOR ===
+            // Woven basket near east wall
             const basket = createWovenBasket();
-            basket.position.set(ROOM_S202_WIDTH / 2 - 0.35, 0, 0);
+            basket.position.set(ROOM_S202_WIDTH / 2 - 0.35, 0, mainRoomZ + 0.8);
             group.add(basket);
+            // African pottery near window
             const pottery = createAfricanPottery();
-            pottery.position.set(-ROOM_S202_WIDTH / 2 + 0.35, 0, ROOM_S202_DEPTH / 4);
+            pottery.position.set(-ROOM_S202_WIDTH / 2 + 0.35, 0, windowZ + 0.5);
             group.add(pottery);
 
-            // HANGING PLANT in macramé holder
+            // === PLANTS ===
             const hangingPlant = createHangingPlant();
-            hangingPlant.position.set(ROOM_S202_WIDTH / 2 - 0.5, CEILING_HEIGHT - 0.3, ROOM_S202_DEPTH / 3);
+            hangingPlant.position.set(ROOM_S202_WIDTH / 2 - 0.4, CEILING_HEIGHT - 0.3, windowZ);
             group.add(hangingPlant);
 
-            // ETHIOPIAN LAMP with beaded fringe (from reference images)
+            // === LIGHTING ===
+            // Ethiopian lamp over display table
             const ethiopianLamp = createEthiopianLamp();
             ethiopianLamp.position.set(0, CEILING_HEIGHT - 0.5, mainRoomZ);
             group.add(ethiopianLamp);
-
-            // DISCO BALL (from reference images!)
+            // Disco ball over listening area
             const disco = createDiscoBall();
-            disco.position.set(-0.6, CEILING_HEIGHT - 0.3, ROOM_S202_DEPTH / 3);
+            disco.position.set(0, CEILING_HEIGHT - 0.3, windowZ);
             group.add(disco);
 
             return group;
@@ -2389,136 +2394,137 @@
             group.add(ceilingS203);
 
             // ========== PANAFRICAN-INSPIRED FURNITURE - READING ROOM ==========
+            // Layout: Entry from NORTH (-Z), Windows on SOUTH (+Z)
+            // Left wall (WEST, -X) is shared with S202, Right wall (EAST, +X) is exterior
 
-            // LAYERED RUGS - Persian, Kilim, Checkered (from reference images)
-            const mainRug203 = createLayeredRug(3.8, 2.8, 0xb71c1c);  // Deep red Persian
-            mainRug203.position.set(0, 0, 0.3);
-            group.add(mainRug203);
-            const kilimRug203 = createKilimRug();
-            kilimRug203.position.set(-0.5, 0.025, 0);
-            kilimRug203.rotation.y = -0.1;
-            group.add(kilimRug203);
-            const checkeredRug = createCheckeredRug(0xe91e63, 0xf8bbd0);  // Pink checkered
-            checkeredRug.position.set(0.8, 0.03, 0.8);
-            checkeredRug.rotation.y = 0.2;
-            group.add(checkeredRug);
-            const waxRug = createWaxPrintRug(0xfdd835, 0xc41e3a);  // African wax pattern
-            waxRug.position.set(-0.7, 0.035, 1.2);
-            group.add(waxRug);
+            // === FLOOR LAYER 1: LAYERED RUGS ===
+            // Large Persian rug as base in center of room
+            const mainRug = createLayeredRug(3.2, 2.4, 0xb71c1c);
+            mainRug.position.set(0, 0, 0.5);
+            group.add(mainRug);
+            // Kilim rug layered on top, slightly offset
+            const kilimRug = createKilimRug();
+            kilimRug.position.set(-0.3, 0.02, 0.3);
+            kilimRug.rotation.y = 0.15;
+            group.add(kilimRug);
 
-            // OLIVE VELVET SOFA (from reference images - low tufted)
+            // === SEATING ZONE: Center of room on the rugs ===
+            // Olive sofa against the LEFT WALL (shared wall with S202), facing center
             const oliveSofa = createOliveSofa();
-            oliveSofa.position.set(0, 0, -0.5);
+            oliveSofa.position.set(-ROOM_S203_WIDTH / 2 + 0.7, 0, 0.5);
+            oliveSofa.rotation.y = Math.PI / 2;  // Face into room
             group.add(oliveSofa);
 
-            // PINK ARMCHAIR (from reference images)
+            // Pink armchair near sofa, angled toward center
             const pinkChair = createPinkArmchair();
-            pinkChair.position.set(1.3, 0, 0.3);
-            pinkChair.rotation.y = -0.4;
+            pinkChair.position.set(-ROOM_S203_WIDTH / 2 + 0.8, 0, 1.5);
+            pinkChair.rotation.y = Math.PI / 4;
             group.add(pinkChair);
 
-            // LARGE TRIANGLE BEAN BAGS (cream, orange, magenta from references)
-            const beanCream203 = createTriangleBeanbag(0xf5f0e8);
-            beanCream203.position.set(-1.2, 0, 0.8);
-            beanCream203.rotation.y = 0.5;
-            group.add(beanCream203);
-            const beanOrange203 = createTriangleBeanbag(0xfd7e14);
-            beanOrange203.position.set(0.3, 0, 1.5);
-            beanOrange203.rotation.y = -0.3;
-            group.add(beanOrange203);
+            // Triangle bean bags in seating area - ON THE FLOOR (y=0)
+            const beanCream = createTriangleBeanbag(0xf5f0e8);
+            beanCream.position.set(0.5, 0, 0.8);
+            beanCream.rotation.y = -0.3;
+            group.add(beanCream);
+            const beanOrange = createTriangleBeanbag(0xfd7e14);
+            beanOrange.position.set(-0.3, 0, 1.2);
+            beanOrange.rotation.y = 0.4;
+            group.add(beanOrange);
             const beanMagenta = createTriangleBeanbag(0xc2185b);
-            beanMagenta.position.set(-0.5, 0, 1.8);
-            beanMagenta.rotation.y = 0.2;
+            beanMagenta.position.set(0.8, 0, 1.6);
+            beanMagenta.rotation.y = -0.5;
             group.add(beanMagenta);
 
-            // ETHNIC & VELVET CUSHIONS scattered everywhere
-            const cushionData = [
-                { pos: [-0.9, 0.4], color: [0xc41e3a, 0xfdd835], type: 'ethnic' },
-                { pos: [0.6, 0.2], color: [0x00897b, 0xf5f0e8], type: 'ethnic' },
-                { pos: [-0.2, 1.0], color: 0x9c27b0, type: 'velvet' },
-                { pos: [1.0, 1.2], color: 0xfdd835, type: 'velvet' },
-                { pos: [-1.0, 1.4], color: [0x1a3a5c, 0xffffff], type: 'ethnic' },
-                { pos: [0.2, 0.6], color: 0x6b8e23, type: 'pebble' },
-                { pos: [-0.6, 0.1], color: 0xf5f0e8, type: 'pebble' }
+            // Cushions scattered around seating area
+            const cushionPositions = [
+                { x: -0.6, z: 0.6, color: [0xc41e3a, 0xfdd835], type: 'ethnic' },
+                { x: 0.2, z: 0.4, color: [0x00897b, 0xf5f0e8], type: 'ethnic' },
+                { x: 1.2, z: 1.0, color: 0x9c27b0, type: 'velvet' },
+                { x: -0.1, z: 1.8, color: 0xfdd835, type: 'velvet' },
+                { x: 0.6, z: 0.3, color: 0xf5f0e8, type: 'pebble' }
             ];
-            cushionData.forEach(c => {
+            cushionPositions.forEach(c => {
                 let cushion;
                 if (c.type === 'ethnic') cushion = createEthnicCushion(c.color);
                 else if (c.type === 'velvet') cushion = createVelvetCushion(c.color);
                 else cushion = createPebbleCushion(c.color);
-                cushion.position.set(c.pos[0], 0.02, c.pos[1]);
+                cushion.position.set(c.x, 0, c.z);
                 group.add(cushion);
             });
 
-            // BOOK CUBBIES & DISPLAYS (modular wooden from references)
-            const bookCubby203 = createBookCubby();
-            bookCubby203.position.set(-1.5, 0, -ROOM_S203_DEPTH / 2 + 0.8);
-            group.add(bookCubby203);
+            // === BOOK DISPLAYS: Against BACK WALL (NORTH, -Z) ===
+            // Wall bookcase against back wall, away from door
             const wallBookcase = createWallBookcase();
-            wallBookcase.position.set(ROOM_S203_WIDTH / 2 - 0.2, 0, -0.5);
-            wallBookcase.rotation.y = -Math.PI / 2;
+            wallBookcase.position.set(0.8, 0, -ROOM_S203_DEPTH / 2 + 0.2);
             group.add(wallBookcase);
+
+            // Book cubby next to bookcase
+            const bookCubby = createBookCubby();
+            bookCubby.position.set(-0.5, 0, -ROOM_S203_DEPTH / 2 + 0.25);
+            group.add(bookCubby);
+
+            // === RIGHT WALL (EAST, +X): Leaning shelf and decor ===
             const leaningShelf = createLeaningShelf();
-            leaningShelf.position.set(1.5, 0, -ROOM_S203_DEPTH / 2 + 1);
+            leaningShelf.position.set(ROOM_S203_WIDTH / 2 - 0.3, 0, -1.0);
+            leaningShelf.rotation.y = -Math.PI / 2;  // Lean against wall
             group.add(leaningShelf);
 
-            // BOOK STACKS on floor
+            // Book stacks near seating
             const stack1 = createBookStack();
-            stack1.position.set(-0.3, 0, 0.5);
+            stack1.position.set(-0.8, 0, 0.9);
             group.add(stack1);
             const stack2 = createBookStack();
-            stack2.position.set(0.8, 0, 0.9);
+            stack2.position.set(1.0, 0, 0.5);
             group.add(stack2);
 
-            // WOVEN BASKETS & AFRICAN POTTERY
-            const basket203 = createWovenBasket();
-            basket203.position.set(-ROOM_S203_WIDTH / 2 + 0.4, 0, 1.5);
-            group.add(basket203);
-            const pottery203 = createAfricanPottery();
-            pottery203.position.set(ROOM_S203_WIDTH / 2 - 0.4, 0, 1.0);
-            group.add(pottery203);
-            const woodSculpture = createWoodSculpture();
-            woodSculpture.position.set(-ROOM_S203_WIDTH / 2 + 0.35, 0, 0);
-            group.add(woodSculpture);
+            // === DECOR: Pottery, baskets, sculptures ===
+            // Woven basket in corner
+            const basket = createWovenBasket();
+            basket.position.set(ROOM_S203_WIDTH / 2 - 0.35, 0, 1.8);
+            group.add(basket);
+            // African pottery near window
+            const pottery = createAfricanPottery();
+            pottery.position.set(-ROOM_S203_WIDTH / 2 + 0.35, 0, 2.5);
+            group.add(pottery);
+            // Wood sculpture in corner
+            const sculpture = createWoodSculpture();
+            sculpture.position.set(ROOM_S203_WIDTH / 2 - 0.35, 0, -2.5);
+            group.add(sculpture);
 
-            // PALM PLANTS & HANGING PLANTS (from references)
+            // === PLANTS: Corners and near windows ===
             const palm1 = createPalmPlant();
-            palm1.position.set(ROOM_S203_WIDTH / 2 - 0.4, 0, ROOM_S203_DEPTH / 3);
+            palm1.position.set(ROOM_S203_WIDTH / 2 - 0.4, 0, 2.8);
             group.add(palm1);
             const palm2 = createPalmPlant();
-            palm2.position.set(-ROOM_S203_WIDTH / 2 + 0.4, 0, ROOM_S203_DEPTH / 3);
+            palm2.position.set(-ROOM_S203_WIDTH / 2 + 0.4, 0, 2.8);
             group.add(palm2);
-            const hangingPlant203a = createHangingPlant();
-            hangingPlant203a.position.set(-1.0, CEILING_HEIGHT - 0.3, 0.5);
-            group.add(hangingPlant203a);
-            const hangingPlant203b = createHangingPlant();
-            hangingPlant203b.position.set(1.2, CEILING_HEIGHT - 0.25, 1.0);
-            group.add(hangingPlant203b);
-            const pothos = createPothosVine();
-            pothos.position.set(ROOM_S203_WIDTH / 2 - 0.3, 1.2, -1.5);
-            group.add(pothos);
 
-            // DISCO BALL CLUSTER (from reference images!)
-            const discoBallCluster = createDiscoBallCluster();
-            discoBallCluster.position.set(0, CEILING_HEIGHT - 0.4, 0.5);
-            group.add(discoBallCluster);
+            // Hanging plants from ceiling
+            const hangingPlant1 = createHangingPlant();
+            hangingPlant1.position.set(-1.0, CEILING_HEIGHT - 0.3, 2.0);
+            group.add(hangingPlant1);
+            const hangingPlant2 = createHangingPlant();
+            hangingPlant2.position.set(1.2, CEILING_HEIGHT - 0.3, 1.5);
+            group.add(hangingPlant2);
 
-            // ETHIOPIAN LAMPS with beaded fringe
+            // === LIGHTING: Ethiopian lamps and disco balls ===
+            // Disco ball cluster - center of room
+            const discoBalls = createDiscoBallCluster();
+            discoBalls.position.set(0, CEILING_HEIGHT - 0.4, 0.8);
+            group.add(discoBalls);
+
+            // Ethiopian lamp over seating area
             const ethLamp1 = createEthiopianLamp();
-            ethLamp1.position.set(-1.2, CEILING_HEIGHT - 0.5, 0);
+            ethLamp1.position.set(-0.8, CEILING_HEIGHT - 0.5, 0.5);
             group.add(ethLamp1);
+            // Second lamp near windows
             const ethLamp2 = createEthiopianLamp();
-            ethLamp2.position.set(1.0, CEILING_HEIGHT - 0.55, 1.0);
+            ethLamp2.position.set(0.5, CEILING_HEIGHT - 0.5, 2.0);
             group.add(ethLamp2);
 
-            // BEADED LAMP
-            const beadedLamp = createBeadedLamp();
-            beadedLamp.position.set(0.3, CEILING_HEIGHT - 0.45, -0.8);
-            group.add(beadedLamp);
-
-            // STRING LIGHTS near windows
+            // String lights along window wall
             const stringLights = createStringLights();
-            stringLights.position.set(0, CEILING_HEIGHT - 0.6, ROOM_S203_DEPTH / 2 - 0.5);
+            stringLights.position.set(0, CEILING_HEIGHT - 0.5, ROOM_S203_DEPTH / 2 - 0.3);
             group.add(stringLights);
 
             return group;
