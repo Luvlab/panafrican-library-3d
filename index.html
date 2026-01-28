@@ -2179,91 +2179,89 @@
             ceilingS202.userData.isCeiling = true;
             group.add(ceilingS202);
 
-            // ========== PANAFRICAN-INSPIRED FURNITURE - S202 SPECIAL SPECIAL ==========
-            // Layout: Entry from NORTH (-Z) through vestibule, Windows on SOUTH (+Z)
-            // West wall (-X) has door to Three Star, East wall (+X) is shared with S203
-            // Main room area starts after the vestibule
+            // ========== S202 - SOUND LIBRARY / RADIO ROOM ==========
+            // CURATORIAL BRIEF: Collective listening space for sound library, radio,
+            // DJ sets, readings, performances, poetry, round tables
+            //
+            // SPATIAL RULES:
+            // - Primary function = LISTENING
+            // - Clear central area for gatherings/performances
+            // - Low seating that doesn't block circulation
+            // - Speakers face inward, not blocked
+            // - Minimum 1.1m circulation paths
 
-            const mainRoomZ = VESTIBULE_DEPTH / 2 + 0.8;  // Center of main room area
-            const windowZ = ROOM_S202_DEPTH / 2 - 1.0;    // Near window wall
+            const mainRoomZ = VESTIBULE_DEPTH / 2 + 0.8;  // Center after vestibule
+            const windowZ = ROOM_S202_DEPTH / 2 - 1.2;    // Near window wall (inside boundary)
 
-            // === DISPLAY TABLE with TIE-DYE CLOTH - center of main room ===
-            const displayTable = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.72, 0.7), woodMaterial);
-            displayTable.position.set(0, 0.36, mainRoomZ);
-            group.add(displayTable);
-            const tieDyeCloth = createTieDyeCloth();
-            tieDyeCloth.position.set(0, 0, mainRoomZ);
-            group.add(tieDyeCloth);
+            // === AUDIO STATION - West wall, near entry ===
+            // Audio console/DJ table against west wall
+            const audioStation = createAudioStation();
+            audioStation.position.set(-ROOM_S202_WIDTH / 2 + 0.5, 0, mainRoomZ - 1.0);
+            audioStation.rotation.y = Math.PI / 2;  // Faces into room
+            group.add(audioStation);
 
-            // Books on table
-            const bookStack1 = createBookStack();
-            bookStack1.position.set(-0.4, 0.74, mainRoomZ);
-            group.add(bookStack1);
-            const bookStack2 = createBookStack();
-            bookStack2.position.set(0.3, 0.74, mainRoomZ + 0.1);
-            group.add(bookStack2);
+            // === SPEAKERS - Corners, facing inward ===
+            const speaker1 = createFloorSpeaker();
+            speaker1.position.set(-ROOM_S202_WIDTH / 2 + 0.3, 0, windowZ + 0.5);
+            speaker1.rotation.y = Math.PI / 4;  // Angled toward center
+            group.add(speaker1);
 
-            // === LISTENING AREA near windows (south wall) ===
-            // Layered rugs on floor
-            const mainRug = createLayeredRug(2.2, 1.8, 0xb71c1c);
-            mainRug.position.set(0, 0, windowZ);
-            group.add(mainRug);
-            const africanNatte = createAfricanNatte();
-            africanNatte.position.set(-0.2, 0.02, windowZ - 0.5);  // Moved back to stay inside room
-            africanNatte.rotation.y = 0.1;
-            group.add(africanNatte);
+            const speaker2 = createFloorSpeaker();
+            speaker2.position.set(ROOM_S202_WIDTH / 2 - 0.3, 0, windowZ + 0.5);
+            speaker2.rotation.y = -Math.PI / 4;
+            group.add(speaker2);
 
-            // Bean bags for listening - arranged in a cozy circle
-            const beanCream = createTriangleBeanbag(0xf5f0e8);
-            beanCream.position.set(-0.6, 0, windowZ - 0.2);
-            beanCream.rotation.y = 0.4;
-            group.add(beanCream);
-            const beanOrange = createTriangleBeanbag(0xfd7e14);
-            beanOrange.position.set(0.5, 0, windowZ - 0.5);  // Moved inside room
-            beanOrange.rotation.y = -0.3;
-            group.add(beanOrange);
+            // === CENTRAL GATHERING AREA - Keep clear for performances ===
+            // Single large woven mat defines the listening zone
+            const listeningMat = createAfricanNatte();
+            listeningMat.position.set(0, 0.01, windowZ - 0.3);
+            group.add(listeningMat);
 
-            // Cushions around the bean bags
-            const cushion1 = createEthnicCushion([0xc41e3a, 0xfdd835]);
-            cushion1.position.set(-0.1, 0, windowZ);
-            group.add(cushion1);
-            const cushion2 = createVelvetCushion(0x00897b);
-            cushion2.position.set(0.2, 0, windowZ - 0.3);  // Moved inside room
-            group.add(cushion2);
-            const cushion3 = createPebbleCushion(0xc2185b);
-            cushion3.position.set(-0.4, 0, windowZ - 0.4);  // Moved inside room
-            group.add(cushion3);
+            // === LOW SEATING - Perimeter only, not blocking center ===
+            // Floor cushions along walls, clustered loosely
+            // LEFT CLUSTER (near audio station)
+            const pouf1 = createSimplePouf(0x8b4513);  // Brown leather
+            pouf1.position.set(-ROOM_S202_WIDTH / 2 + 0.5, 0, windowZ);
+            group.add(pouf1);
 
-            // === WEST WALL (-X): Book display near Three Star door ===
-            const bookCubby = createBookCubby();
-            bookCubby.position.set(-ROOM_S202_WIDTH / 2 + 0.3, 0, mainRoomZ - 0.5);
-            bookCubby.rotation.y = Math.PI / 2;
-            group.add(bookCubby);
+            const pouf2 = createSimplePouf(0x2f4f4f);  // Dark gray
+            pouf2.position.set(-ROOM_S202_WIDTH / 2 + 0.5, 0, windowZ - 0.8);
+            group.add(pouf2);
 
-            // === DECOR ===
-            // Woven basket near east wall
-            const basket = createWovenBasket();
-            basket.position.set(ROOM_S202_WIDTH / 2 - 0.35, 0, mainRoomZ + 0.8);
-            group.add(basket);
-            // African pottery near window
-            const pottery = createAfricanPottery();
-            pottery.position.set(-ROOM_S202_WIDTH / 2 + 0.35, 0, windowZ - 0.3);  // Moved inside room
-            group.add(pottery);
+            // RIGHT CLUSTER (opposite wall)
+            const pouf3 = createSimplePouf(0x8b4513);
+            pouf3.position.set(ROOM_S202_WIDTH / 2 - 0.5, 0, windowZ);
+            group.add(pouf3);
 
-            // === PLANTS ===
-            const hangingPlant = createHangingPlant();
-            hangingPlant.position.set(ROOM_S202_WIDTH / 2 - 0.4, CEILING_HEIGHT - 0.3, windowZ);
-            group.add(hangingPlant);
+            const pouf4 = createSimplePouf(0x2f4f4f);
+            pouf4.position.set(ROOM_S202_WIDTH / 2 - 0.5, 0, windowZ - 0.8);
+            group.add(pouf4);
 
-            // === LIGHTING ===
-            // Ethiopian lamp over display table
-            const ethiopianLamp = createEthiopianLamp();
-            ethiopianLamp.position.set(0, CEILING_HEIGHT - 0.5, mainRoomZ);
-            group.add(ethiopianLamp);
-            // Disco ball over listening area
-            const disco = createDiscoBall();
-            disco.position.set(0, CEILING_HEIGHT - 0.3, windowZ);
-            group.add(disco);
+            // BACK CLUSTER (near vestibule, for observers)
+            const pouf5 = createSimplePouf(0x8b4513);
+            pouf5.position.set(-0.4, 0, mainRoomZ + 0.3);
+            group.add(pouf5);
+
+            const pouf6 = createSimplePouf(0x2f4f4f);
+            pouf6.position.set(0.4, 0, mainRoomZ + 0.3);
+            group.add(pouf6);
+
+            // === HEADPHONE STATION - Against east wall ===
+            const headphoneStand = createHeadphoneStation();
+            headphoneStand.position.set(ROOM_S202_WIDTH / 2 - 0.35, 0, mainRoomZ);
+            headphoneStand.rotation.y = -Math.PI / 2;
+            group.add(headphoneStand);
+
+            // === MINIMAL LIGHTING - Functional, warm ===
+            // Simple pendant light over audio station
+            const pendantLight = createSimplePendant();
+            pendantLight.position.set(-ROOM_S202_WIDTH / 2 + 0.5, CEILING_HEIGHT - 0.4, mainRoomZ - 1.0);
+            group.add(pendantLight);
+
+            // Ambient light over listening area
+            const pendantLight2 = createSimplePendant();
+            pendantLight2.position.set(0, CEILING_HEIGHT - 0.4, windowZ);
+            group.add(pendantLight2);
 
             return group;
         }
@@ -2405,135 +2403,122 @@
             ceilingS203.userData.isCeiling = true;
             group.add(ceilingS203);
 
-            // ========== FENG SHUI FURNITURE LAYOUT - READING ROOM S203 ==========
-            // FENG SHUI PRINCIPLES APPLIED:
-            // 1. COMMANDING POSITION: Main seating faces door but not directly in line
-            // 2. CLEAR CHI FLOW: Entry path kept clear, no blocking doorways
-            // 3. INTIMATE CONVERSATION: Seating arranged to face each other
-            // 4. GROUNDING: Heavy furniture against walls, not floating
-            // 5. BALANCE: Symmetry where possible, visual weight distributed
+            // ========== S203 - PANAFRICAN LIBRARY / READING ROOM ==========
+            // CURATORIAL BRIEF: Reading room for ~50 publications, AABF archives,
+            // video interviews, publishing network mapping
+            //
+            // FUNCTIONS: Read, browse, watch, listen, move quietly
+            //
+            // SPATIAL RULES:
+            // - Reading/browsing are PRIMARY
+            // - Books visible, legible, face-up or face-out
+            // - Clear viewing direction for screens
+            // - Minimum 1.1m circulation paths
+            // - 1.2m clearance from door
+            // - NO domestic furniture (sofas, armchairs, coffee tables)
 
             // Room: 4.465m wide (X) x 7.715m deep (Z)
-            // Door on NORTH wall (-Z) at x = -1.1m (LEFT side of back wall)
+            // Door on NORTH wall (-Z) at x = -1.1m (offset toward LEFT)
             // Windows on SOUTH wall (+Z)
-            // ROOM_S203_WIDTH = 4.465, ROOM_S203_DEPTH = 7.715
+            const doorX = -ROOM_S203_WIDTH / 4;  // ~-1.1m
+            const doorClearance = 1.2;  // 120cm clearance in front of door
 
-            // === ZONE 1: ENTRY AREA (back/north, z < -2) - KEEP CLEAR ===
-            // Door is at x=-1.1, so entry flows from left side toward center
+            // === ZONE 1: ENTRY/CIRCULATION (z < -2.0) ===
+            // Keep 1.2m clear in front of door for circulation
+            // Door is at z = -ROOM_S203_DEPTH/2 = -3.86m
 
-            // Bookcase FLAT AGAINST back wall, FAR RIGHT (away from door!)
-            // Door is at x=-1.1, so put bookcase at x=1.5 (right side)
-            const wallBookcase = createWallBookcase();
-            wallBookcase.position.set(1.5, 0, -ROOM_S203_DEPTH / 2 + 0.35);  // Against back wall, right side
-            group.add(wallBookcase);
+            // === ZONE 2: READING AREA (center, -2 < z < 1.5) ===
+            // Long reading table - central, allows collective use
+            const readingTable = createReadingTable();
+            readingTable.position.set(0, 0, -0.5);  // Center of room, away from door
+            group.add(readingTable);
 
-            // Small sculpture near door as welcoming element (but not blocking)
-            const sculpture = createWoodSculpture();
-            sculpture.position.set(0.5, 0, -ROOM_S203_DEPTH / 2 + 0.5);  // Right of entry path
-            group.add(sculpture);
+            // Simple stackable chairs around table (4 chairs)
+            const chair1 = createStackableChair();
+            chair1.position.set(-0.6, 0, -1.0);
+            chair1.rotation.y = 0;
+            group.add(chair1);
 
-            // === ZONE 2: MAIN SEATING AREA (center, -2 < z < 2) ===
-            // COMMANDING POSITION: Sofa against solid wall, facing door diagonally
+            const chair2 = createStackableChair();
+            chair2.position.set(0.6, 0, -1.0);
+            chair2.rotation.y = 0;
+            group.add(chair2);
 
-            // Main rug defines the conversation area - centered
-            const mainRug = createLayeredRug(2.5, 2.0, 0xb71c1c);
-            mainRug.position.set(0, 0, 0.5);  // Center of room
-            group.add(mainRug);
+            const chair3 = createStackableChair();
+            chair3.position.set(-0.6, 0, 0);
+            chair3.rotation.y = Math.PI;
+            group.add(chair3);
 
-            // Olive sofa against LEFT WALL (solid wall = security/support)
-            // Facing toward door and center - commanding position
-            const oliveSofa = createOliveSofa();
-            oliveSofa.position.set(-ROOM_S203_WIDTH / 2 + 0.55, 0, 0.5);
-            oliveSofa.rotation.y = Math.PI / 2;  // Faces right/center
-            group.add(oliveSofa);
+            const chair4 = createStackableChair();
+            chair4.position.set(0.6, 0, 0);
+            chair4.rotation.y = Math.PI;
+            group.add(chair4);
 
-            // Pink armchair against RIGHT WALL, facing sofa (conversation layout)
-            const pinkChair = createPinkArmchair();
-            pinkChair.position.set(ROOM_S203_WIDTH / 2 - 0.5, 0, 0.3);
-            pinkChair.rotation.y = -Math.PI / 2;  // Faces left toward sofa
-            group.add(pinkChair);
+            // === ARCHIVE WALL - Right wall (+X) ===
+            // Wall-mounted shelves for archives (doesn't block floor)
+            const archiveShelf1 = createWallShelf();
+            archiveShelf1.position.set(ROOM_S203_WIDTH / 2 - 0.15, 1.2, -1.5);
+            archiveShelf1.rotation.y = -Math.PI / 2;
+            group.add(archiveShelf1);
 
-            // Bean bags ON THE RUG, arranged in conversation circle
-            // These face inward toward each other
-            const beanCream = createTriangleBeanbag(0xf5f0e8);
-            beanCream.position.set(-0.3, 0, -0.3);  // Back of rug
-            beanCream.rotation.y = 0.3;
-            group.add(beanCream);
+            const archiveShelf2 = createWallShelf();
+            archiveShelf2.position.set(ROOM_S203_WIDTH / 2 - 0.15, 1.2, 0.5);
+            archiveShelf2.rotation.y = -Math.PI / 2;
+            group.add(archiveShelf2);
 
-            const beanOrange = createTriangleBeanbag(0xfd7e14);
-            beanOrange.position.set(0.5, 0, 0.7);  // Front right of rug
-            beanOrange.rotation.y = -0.5;
-            group.add(beanOrange);
+            // Low archive cabinet against right wall (below shelves)
+            const archiveCabinet = createLowArchiveCabinet();
+            archiveCabinet.position.set(ROOM_S203_WIDTH / 2 - 0.35, 0, -0.5);
+            archiveCabinet.rotation.y = -Math.PI / 2;
+            group.add(archiveCabinet);
 
-            const beanMagenta = createTriangleBeanbag(0xc2185b);
-            beanMagenta.position.set(-0.2, 0, 1.2);  // Front of rug
-            beanMagenta.rotation.y = Math.PI;
-            group.add(beanMagenta);
+            // === BOOK DISPLAY - Back wall, right of door ===
+            // Wall shelf for curated publications (face-out display)
+            const bookDisplay = createWallShelf();
+            bookDisplay.position.set(1.0, 1.2, -ROOM_S203_DEPTH / 2 + 0.15);
+            group.add(bookDisplay);
 
-            // Floor cushions scattered naturally on/around rug
-            const cushion1 = createEthnicCushion([0xc41e3a, 0xfdd835]);
-            cushion1.position.set(0.2, 0, 0.2);
-            group.add(cushion1);
-            const cushion2 = createVelvetCushion(0x00897b);
-            cushion2.position.set(0.6, 0, 1.0);
-            group.add(cushion2);
-            const cushion3 = createPebbleCushion(0x9c27b0);
-            cushion3.position.set(-0.5, 0, 0.8);
-            group.add(cushion3);
+            // === ZONE 3: VIDEO/MEDIA AREA (z > 1.5) ===
+            // Screen stands near window wall, clear viewing direction
+            const screenStand1 = createScreenStand();
+            screenStand1.position.set(-0.8, 0, 2.5);
+            screenStand1.rotation.y = Math.PI;  // Faces back into room
+            group.add(screenStand1);
 
-            // Low coffee table in center of seating area
-            const coffeeTable = createLowCoffeeTable();
-            coffeeTable.position.set(0.1, 0, 0.5);
-            group.add(coffeeTable);
+            const screenStand2 = createScreenStand();
+            screenStand2.position.set(0.8, 0, 2.5);
+            screenStand2.rotation.y = Math.PI;
+            group.add(screenStand2);
 
-            // Book cubby against RIGHT WALL (between armchair and window area)
-            const bookCubby = createBookCubby();
-            bookCubby.position.set(ROOM_S203_WIDTH / 2 - 0.25, 0, 1.5);
-            bookCubby.rotation.y = -Math.PI / 2;  // Faces into room
-            group.add(bookCubby);
+            // Headphone stations next to screens
+            const headphones1 = createHeadphoneStation();
+            headphones1.position.set(-1.4, 0, 2.3);
+            group.add(headphones1);
 
-            // === ZONE 3: WINDOW/READING AREA (front/south, z > 2) ===
-            // Light, airy zone near windows for reading
+            const headphones2 = createHeadphoneStation();
+            headphones2.position.set(1.4, 0, 2.3);
+            group.add(headphones2);
 
-            // Plants in corners (wood element, life energy)
-            const palm1 = createPalmPlant();
-            palm1.position.set(ROOM_S203_WIDTH / 2 - 0.4, 0, ROOM_S203_DEPTH / 2 - 0.5);
-            group.add(palm1);
-            const palm2 = createPalmPlant();
-            palm2.position.set(-ROOM_S203_WIDTH / 2 + 0.4, 0, ROOM_S203_DEPTH / 2 - 0.5);
-            group.add(palm2);
+            // Simple stools for viewing (can be moved)
+            const viewStool1 = createSimpleStool();
+            viewStool1.position.set(-0.8, 0, 1.8);
+            group.add(viewStool1);
 
-            // Decorative elements in corners (earth element)
-            const basket = createWovenBasket();
-            basket.position.set(ROOM_S203_WIDTH / 2 - 0.35, 0, 2.5);
-            group.add(basket);
-            const pottery = createAfricanPottery();
-            pottery.position.set(-ROOM_S203_WIDTH / 2 + 0.35, 0, 2.5);
-            group.add(pottery);
+            const viewStool2 = createSimpleStool();
+            viewStool2.position.set(0.8, 0, 1.8);
+            group.add(viewStool2);
 
-            // === LIGHTING: Balanced, warm ===
-            // Central disco ball cluster (reflects light/energy)
-            const discoBalls = createDiscoBallCluster();
-            discoBalls.position.set(0, CEILING_HEIGHT - 0.4, 0.5);
-            group.add(discoBalls);
+            // === LEFT WALL - Poster wall (keep clear) ===
+            // No furniture against left wall - posters are narrative surface
 
-            // Ethiopian lamps for warm ambient light
-            const ethLamp1 = createEthiopianLamp();
-            ethLamp1.position.set(-0.8, CEILING_HEIGHT - 0.5, -1.0);
-            group.add(ethLamp1);
-            const ethLamp2 = createEthiopianLamp();
-            ethLamp2.position.set(0.8, CEILING_HEIGHT - 0.5, 2.0);
-            group.add(ethLamp2);
+            // === MINIMAL LIGHTING ===
+            const pendant1 = createSimplePendant();
+            pendant1.position.set(0, CEILING_HEIGHT - 0.4, -0.5);
+            group.add(pendant1);
 
-            // String lights along window wall (festive, inviting)
-            const stringLights = createStringLights();
-            stringLights.position.set(0, CEILING_HEIGHT - 0.5, ROOM_S203_DEPTH / 2 - 0.3);
-            group.add(stringLights);
-
-            // Hanging plant (brings life energy down)
-            const hangingPlant1 = createHangingPlant();
-            hangingPlant1.position.set(1.0, CEILING_HEIGHT - 0.3, 2.0);
-            group.add(hangingPlant1);
+            const pendant2 = createSimplePendant();
+            pendant2.position.set(0, CEILING_HEIGHT - 0.4, 2.0);
+            group.add(pendant2);
 
             return group;
         }
@@ -3167,6 +3152,248 @@
             cushion.scale.set(1, 0.4, 1);
             cushion.position.set(0, 0.1, 0);
             group.add(cushion);
+            return group;
+        }
+
+        // ========== EXHIBITION FURNITURE (Curatorial) ==========
+        // These are appropriate for a 3-day public exhibition context
+        // NOT domestic/lounge furniture
+
+        // SIMPLE POUF - Low, robust seating for collective use
+        function createSimplePouf(color) {
+            const group = new THREE.Group();
+            const mat = new THREE.MeshLambertMaterial({ color });
+            const pouf = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.28, 0.35, 16), mat);
+            pouf.position.set(0, 0.175, 0);
+            group.add(pouf);
+            return group;
+        }
+
+        // AUDIO STATION - DJ/Radio terminal
+        function createAudioStation() {
+            const group = new THREE.Group();
+            const woodMat = new THREE.MeshLambertMaterial({ color: 0x8b7355 });
+            const metalMat = new THREE.MeshLambertMaterial({ color: 0x333333 });
+            // Table
+            const table = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.05, 0.6), woodMat);
+            table.position.set(0, 0.75, 0);
+            group.add(table);
+            // Legs
+            for (let x of [-0.55, 0.55]) {
+                for (let z of [-0.25, 0.25]) {
+                    const leg = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.75, 0.04), metalMat);
+                    leg.position.set(x, 0.375, z);
+                    group.add(leg);
+                }
+            }
+            // Equipment (mixer/laptop placeholder)
+            const equipment = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.08, 0.3), metalMat);
+            equipment.position.set(0, 0.82, 0);
+            group.add(equipment);
+            return group;
+        }
+
+        // FLOOR SPEAKER - Exhibition audio
+        function createFloorSpeaker() {
+            const group = new THREE.Group();
+            const mat = new THREE.MeshLambertMaterial({ color: 0x1a1a1a });
+            // Cabinet
+            const cabinet = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.6, 0.3), mat);
+            cabinet.position.set(0, 0.3, 0);
+            group.add(cabinet);
+            // Woofer
+            const woofer = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.05, 16), new THREE.MeshLambertMaterial({ color: 0x444444 }));
+            woofer.rotation.x = Math.PI / 2;
+            woofer.position.set(0, 0.2, 0.16);
+            group.add(woofer);
+            // Tweeter
+            const tweeter = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.03, 12), new THREE.MeshLambertMaterial({ color: 0x666666 }));
+            tweeter.rotation.x = Math.PI / 2;
+            tweeter.position.set(0, 0.45, 0.16);
+            group.add(tweeter);
+            return group;
+        }
+
+        // HEADPHONE STATION - Standing/wall mount
+        function createHeadphoneStation() {
+            const group = new THREE.Group();
+            const metalMat = new THREE.MeshLambertMaterial({ color: 0x555555 });
+            // Stand
+            const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 1.2, 8), metalMat);
+            pole.position.set(0, 0.6, 0);
+            group.add(pole);
+            // Base
+            const base = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.03, 16), metalMat);
+            base.position.set(0, 0.015, 0);
+            group.add(base);
+            // Headphone hook
+            const hook = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.02, 0.08), metalMat);
+            hook.position.set(0, 1.1, 0.05);
+            group.add(hook);
+            // Headphones
+            const hpMat = new THREE.MeshLambertMaterial({ color: 0x222222 });
+            const hpBand = new THREE.Mesh(new THREE.TorusGeometry(0.08, 0.015, 8, 16, Math.PI), hpMat);
+            hpBand.position.set(0, 1.08, 0.05);
+            group.add(hpBand);
+            return group;
+        }
+
+        // READING TABLE - Simple, robust, rectangular
+        function createReadingTable() {
+            const group = new THREE.Group();
+            const woodMat = new THREE.MeshLambertMaterial({ color: 0xb5906c });
+            const metalMat = new THREE.MeshLambertMaterial({ color: 0x333333 });
+            // Top
+            const top = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.04, 0.9), woodMat);
+            top.position.set(0, 0.72, 0);
+            group.add(top);
+            // Metal frame legs
+            for (let x of [-0.85, 0.85]) {
+                const legFrame = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.7, 0.8), metalMat);
+                legFrame.position.set(x, 0.35, 0);
+                group.add(legFrame);
+            }
+            // Cross bar
+            const crossBar = new THREE.Mesh(new THREE.BoxGeometry(1.66, 0.03, 0.03), metalMat);
+            crossBar.position.set(0, 0.15, 0);
+            group.add(crossBar);
+            return group;
+        }
+
+        // STACKABLE CHAIR - Simple, functional
+        function createStackableChair() {
+            const group = new THREE.Group();
+            const woodMat = new THREE.MeshLambertMaterial({ color: 0xc4a77d });
+            const metalMat = new THREE.MeshLambertMaterial({ color: 0x444444 });
+            // Seat
+            const seat = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.025, 0.4), woodMat);
+            seat.position.set(0, 0.45, 0);
+            group.add(seat);
+            // Back
+            const back = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.35, 0.02), woodMat);
+            back.position.set(0, 0.7, -0.18);
+            group.add(back);
+            // Legs (metal tube)
+            for (let x of [-0.18, 0.18]) {
+                for (let z of [-0.15, 0.15]) {
+                    const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.45, 8), metalMat);
+                    leg.position.set(x, 0.225, z);
+                    group.add(leg);
+                }
+            }
+            return group;
+        }
+
+        // WALL SHELF - For archives and books
+        function createWallShelf() {
+            const group = new THREE.Group();
+            const woodMat = new THREE.MeshLambertMaterial({ color: 0xb5906c });
+            const metalMat = new THREE.MeshLambertMaterial({ color: 0x333333 });
+            // Shelf
+            const shelf = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.025, 0.25), woodMat);
+            shelf.position.set(0, 0, 0);
+            group.add(shelf);
+            // Brackets
+            const bracket1 = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.15, 0.2), metalMat);
+            bracket1.position.set(-0.5, -0.075, 0);
+            group.add(bracket1);
+            const bracket2 = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.15, 0.2), metalMat);
+            bracket2.position.set(0.5, -0.075, 0);
+            group.add(bracket2);
+            // Some books
+            const bookColors = [0x8b0000, 0x1a3a5c, 0x2e7d32, 0xf57c00];
+            for (let i = 0; i < 4; i++) {
+                const book = new THREE.Mesh(
+                    new THREE.BoxGeometry(0.15, 0.22, 0.03),
+                    new THREE.MeshLambertMaterial({ color: bookColors[i] })
+                );
+                book.position.set(-0.4 + i * 0.25, 0.12, 0);
+                group.add(book);
+            }
+            return group;
+        }
+
+        // LOW ARCHIVE CABINET
+        function createLowArchiveCabinet() {
+            const group = new THREE.Group();
+            const woodMat = new THREE.MeshLambertMaterial({ color: 0xa08060 });
+            // Main body
+            const body = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.6, 0.4), woodMat);
+            body.position.set(0, 0.3, 0);
+            group.add(body);
+            // Drawer lines
+            const lineMat = new THREE.MeshLambertMaterial({ color: 0x5a4535 });
+            for (let y of [0.15, 0.35, 0.55]) {
+                const line = new THREE.Mesh(new THREE.BoxGeometry(0.96, 0.01, 0.01), lineMat);
+                line.position.set(0, y, 0.2);
+                group.add(line);
+            }
+            return group;
+        }
+
+        // SCREEN STAND - For video content
+        function createScreenStand() {
+            const group = new THREE.Group();
+            const metalMat = new THREE.MeshLambertMaterial({ color: 0x333333 });
+            const screenMat = new THREE.MeshLambertMaterial({ color: 0x111111 });
+            // Pole
+            const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 1.5, 8), metalMat);
+            pole.position.set(0, 0.75, 0);
+            group.add(pole);
+            // Base
+            const base = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.03, 0.4), metalMat);
+            base.position.set(0, 0.015, 0);
+            group.add(base);
+            // Screen
+            const screen = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.35, 0.03), screenMat);
+            screen.position.set(0, 1.4, 0);
+            group.add(screen);
+            // Screen content (placeholder)
+            const content = new THREE.Mesh(
+                new THREE.PlaneGeometry(0.55, 0.3),
+                new THREE.MeshLambertMaterial({ color: 0x2a4a6a })
+            );
+            content.position.set(0, 1.4, 0.02);
+            group.add(content);
+            return group;
+        }
+
+        // SIMPLE STOOL - For viewing areas
+        function createSimpleStool() {
+            const group = new THREE.Group();
+            const woodMat = new THREE.MeshLambertMaterial({ color: 0xb5906c });
+            const metalMat = new THREE.MeshLambertMaterial({ color: 0x444444 });
+            // Seat
+            const seat = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.03, 16), woodMat);
+            seat.position.set(0, 0.45, 0);
+            group.add(seat);
+            // Legs
+            for (let i = 0; i < 4; i++) {
+                const angle = (i / 4) * Math.PI * 2;
+                const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.44, 8), metalMat);
+                leg.position.set(Math.cos(angle) * 0.1, 0.22, Math.sin(angle) * 0.1);
+                group.add(leg);
+            }
+            return group;
+        }
+
+        // SIMPLE PENDANT LIGHT - Functional, not decorative
+        function createSimplePendant() {
+            const group = new THREE.Group();
+            const metalMat = new THREE.MeshLambertMaterial({ color: 0x333333 });
+            const lightMat = new THREE.MeshLambertMaterial({ color: 0xffffee, emissive: 0x444422 });
+            // Cord
+            const cord = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.005, 0.3, 8), metalMat);
+            cord.position.set(0, 0.15, 0);
+            group.add(cord);
+            // Shade
+            const shade = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.2, 0.15, 16, 1, true), metalMat);
+            shade.position.set(0, -0.05, 0);
+            group.add(shade);
+            // Bulb
+            const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.05, 12, 12), lightMat);
+            bulb.position.set(0, -0.02, 0);
+            group.add(bulb);
             return group;
         }
 
