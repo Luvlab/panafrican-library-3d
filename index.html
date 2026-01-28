@@ -1000,7 +1000,7 @@
                     <div class="color-palette">
                         <div class="color-swatch" style="background: #f5f0e8;" title="Cream/Off-White (Bean Bags, Walls)"></div>
                         <div class="color-swatch" style="background: #fd7e14;" title="Burnt Orange (Bean Bags, Accents)"></div>
-                        <div class="color-swatch" style="background: #c41e3a;" title="Deep Red (Kilim, Posters)"></div>
+                        <div class="color-swatch" style="background: #c41e3a;" title="Deep Red (Natte, Posters)"></div>
                         <div class="color-swatch" style="background: #fdd835;" title="Bright Yellow (Wax Print, Highlights)"></div>
                         <div class="color-swatch" style="background: #c2185b;" title="Magenta/Pink (Cushions, Rugs)"></div>
                         <div class="color-swatch" style="background: #6b8e23;" title="Olive Green (Velvet Sofa)"></div>
@@ -1025,15 +1025,15 @@
                     <p style="font-size: 10px; color: #888; margin-top: 6px;">Ankara • Kente • Adinkra • Mud Cloth</p>
                 </div>
                 <div class="moodboard-section">
-                    <h3>🛋️ Key Furniture</h3>
+                    <h3>🛋️ Key Furniture (African-Inspired)</h3>
                     <ul class="design-list" style="font-size: 12px;">
-                        <li>△ Large triangular bean bags (cream, orange, magenta)</li>
-                        <li>🟫 Modular wooden book cubbies & displays</li>
-                        <li>🧶 Layered Persian & kilim rugs</li>
-                        <li>💎 Colorful ethnic floor cushions</li>
-                        <li>🪑 Olive velvet low sofa with tufting</li>
-                        <li>🌸 Pink velvet armchair</li>
-                        <li>📚 Stacked books & magazine racks</li>
+                        <li>△ Large flat bean bags (cream, magenta, orange)</li>
+                        <li>🧵 Nattes plastiques (Senegalese woven mats)</li>
+                        <li>🟫 Built-in wooden platforms for seating</li>
+                        <li>💎 Colorful floor cushions & poufs</li>
+                        <li>🪑 Wooden folding chairs in circle</li>
+                        <li>📚 Books displayed flat on long tables</li>
+                        <li>🛏️ Ochre tufted floor mattress</li>
                     </ul>
                 </div>
                 <div class="moodboard-section">
@@ -1063,8 +1063,19 @@
                     <h3>📍 Room Layout</h3>
                     <div class="layout-info" style="font-size: 12px;">
                         <p><strong>S202 - Special Special:</strong> Entry vestibule, display table with tie-dye cloth, listening corner with bean bags</p>
-                        <p><strong>S203 - Reading Room:</strong> Poster-covered walls, layered rugs, floor cushion seating, book cubbies, disco balls</p>
-                        <p><strong>Connection:</strong> Open doorway with view through both spaces</p>
+                        <p><strong>S203 - Reading Room:</strong> Poster-covered walls, nattes on floor, floor cushion seating, book displays</p>
+                        <p><strong>Inspiration:</strong> Library of Muyinga (Burundi), Senegalese nattes, Wax prints</p>
+                    </div>
+                </div>
+                <div class="moodboard-section">
+                    <h3>📸 Reference Images</h3>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px;">
+                        <img src="photos refs reading room/Style mobilier/569a10d902522e95d504c7964c67310e.jpg" style="width: 100%; height: 60px; object-fit: cover; border-radius: 4px;" title="Ochre floor mattress with cushions">
+                        <img src="photos refs reading room/ambiance/352102ea74fd486ae6c0906204724e6d.jpg" style="width: 100%; height: 60px; object-fit: cover; border-radius: 4px;" title="Layered rugs, disco balls, wooden chairs">
+                        <img src="photos refs reading room/Style mobilier/-natte-plastique-thies.jpg" style="width: 100%; height: 60px; object-fit: cover; border-radius: 4px;" title="Senegalese plastic woven mats (nattes)">
+                        <img src="photos refs reading room/inspiration afrique/The-Library-of-Muyinga-by-BC-architects_dezeen_8.jpg" style="width: 100%; height: 60px; object-fit: cover; border-radius: 4px;" title="Library of Muyinga - wooden platforms">
+                        <img src="photos refs reading room/ambiance/_M5C0020.jpg" style="width: 100%; height: 60px; object-fit: cover; border-radius: 4px;" title="Colorful bean bags and poufs">
+                        <img src="photos refs reading room/Style mobilier/tissu-wax.webp" style="width: 100%; height: 60px; object-fit: cover; border-radius: 4px;" title="African wax print fabric">
                     </div>
                 </div>
             </div>
@@ -1409,9 +1420,9 @@
                     <div class="item-preview" style="background: linear-gradient(135deg, #efebe9 0%, #bcaaa4 100%); border-radius: 2px;">⬜</div>
                     <div class="item-name">Persian Cream</div>
                 </div>
-                <div class="item-card" onclick="selectFurniture('rug-kilim-multicolor')">
-                    <div class="item-preview" style="background: repeating-linear-gradient(0deg, #c41e3a 0px, #c41e3a 5px, #1a3a5c 5px, #1a3a5c 10px, #c9a227 10px, #c9a227 15px); border-radius: 2px;">🌈</div>
-                    <div class="item-name">Kilim Multicolor</div>
+                <div class="item-card" onclick="selectFurniture('rug-natte-african')">
+                    <div class="item-preview" style="background: repeating-conic-gradient(#ff1493 0% 25%, #00ced1 0% 50%) 50% / 8px 8px; border-radius: 2px;">🇸🇳</div>
+                    <div class="item-name">Natte Plastique</div>
                 </div>
                 <div class="item-card" onclick="selectFurniture('rug-checkered-pink')">
                     <div class="item-preview" style="background: repeating-conic-gradient(#e91e63 0% 25%, #f8bbd0 0% 50%) 50% / 10px 10px;">🩷</div>
@@ -2196,10 +2207,10 @@
             const mainRug = createLayeredRug(2.2, 1.8, 0xb71c1c);
             mainRug.position.set(0, 0, windowZ);
             group.add(mainRug);
-            const kilimRug = createKilimRug();
-            kilimRug.position.set(-0.2, 0.02, windowZ - 0.5);  // Moved back to stay inside room
-            kilimRug.rotation.y = 0.1;
-            group.add(kilimRug);
+            const africanNatte = createAfricanNatte();
+            africanNatte.position.set(-0.2, 0.02, windowZ - 0.5);  // Moved back to stay inside room
+            africanNatte.rotation.y = 0.1;
+            group.add(africanNatte);
 
             // Bean bags for listening - arranged in a cozy circle
             const beanCream = createTriangleBeanbag(0xf5f0e8);
@@ -2814,7 +2825,7 @@
                 // Rugs - Layered Persian & African
                 case 'rug-persian-red': item = createLayeredRug(3.5, 2.5, 0xb71c1c); break;
                 case 'rug-persian-cream': item = createLayeredRug(3.0, 2.2, 0xefebe9); break;
-                case 'rug-kilim-multicolor': item = createKilimRug(); break;
+                case 'rug-natte-african': item = createAfricanNatte(); break;
                 case 'rug-checkered-pink': item = createCheckeredRug(0xe91e63, 0xf8bbd0); break;
                 case 'rug-checkered-teal': item = createCheckeredRug(0x00897b, 0xb2dfdb); break;
                 case 'rug-wax-yellow': item = createWaxPrintRug(0xfdd835, 0xc41e3a); break;
@@ -3404,23 +3415,36 @@
             return (Math.floor(r) << 16) | (Math.floor(g) << 8) | Math.floor(b);
         }
 
-        function createKilimRug() {
+        // NATTE PLASTIQUE - Senegalese woven plastic mat (checkered pattern)
+        function createAfricanNatte() {
             const group = new THREE.Group();
-            const width = 2.5, depth = 1.8;
-            // Base
-            const baseMat = new THREE.MeshLambertMaterial({ color: 0xb71c1c });
-            const base = new THREE.Mesh(new THREE.BoxGeometry(width, 0.02, depth), baseMat);
-            base.position.set(0, 0.01, 0);
+            const width = 2.2, depth = 1.6;
+            // Base mat
+            const baseMat = new THREE.MeshLambertMaterial({ color: 0x1a1a1a });
+            const base = new THREE.Mesh(new THREE.BoxGeometry(width, 0.015, depth), baseMat);
+            base.position.set(0, 0.008, 0);
             group.add(base);
-            // Kilim stripes
-            const stripeColors = [0xfdd835, 0x1a3a5c, 0xf5f0e8, 0x4caf50, 0xff6b6b];
-            for (let i = 0; i < 8; i++) {
-                const stripe = new THREE.Mesh(
-                    new THREE.BoxGeometry(width * 0.9, 0.025, 0.12),
-                    new THREE.MeshLambertMaterial({ color: stripeColors[i % stripeColors.length] })
-                );
-                stripe.position.set(0, 0.012, -depth/2 + 0.2 + i * 0.2);
-                group.add(stripe);
+            // Checkered pattern (like Senegalese nattes plastiques)
+            const colors = [0xff1493, 0x00ced1, 0xffd700, 0xf5f0e8, 0xff6b6b, 0x32cd32];
+            const squareSize = 0.15;
+            const cols = Math.floor(width / squareSize);
+            const rows = Math.floor(depth / squareSize);
+            for (let x = 0; x < cols; x++) {
+                for (let z = 0; z < rows; z++) {
+                    if ((x + z) % 2 === 0) {
+                        const color = colors[(x + z * 2) % colors.length];
+                        const square = new THREE.Mesh(
+                            new THREE.BoxGeometry(squareSize * 0.9, 0.018, squareSize * 0.9),
+                            new THREE.MeshLambertMaterial({ color })
+                        );
+                        square.position.set(
+                            -width/2 + squareSize/2 + x * squareSize,
+                            0.01,
+                            -depth/2 + squareSize/2 + z * squareSize
+                        );
+                        group.add(square);
+                    }
+                }
             }
             return group;
         }
