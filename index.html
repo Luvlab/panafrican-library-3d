@@ -2394,132 +2394,100 @@
             group.add(ceilingS203);
 
             // ========== PANAFRICAN-INSPIRED FURNITURE - READING ROOM ==========
-            // Layout: Entry from NORTH (-Z), Windows on SOUTH (+Z)
-            // Left wall (WEST, -X) is shared with S202, Right wall (EAST, +X) is exterior
+            // Room: 4.465m wide (X) x 7.715m deep (Z)
+            // Door on NORTH wall (-Z) at x = -1.1m (left side)
+            // Windows on SOUTH wall (+Z)
+            // Left wall (WEST, -X) shared with S202, Right wall (EAST, +X) exterior
 
-            // === FLOOR LAYER 1: LAYERED RUGS ===
-            // Large Persian rug as base in center of room
-            const mainRug = createLayeredRug(3.2, 2.4, 0xb71c1c);
-            mainRug.position.set(0, 0, 0.5);
+            // CLEAR ZONES:
+            // - Entry path from door (x=-1.1, z=-3.8) into room - keep clear!
+            // - Window area at z > 3.0
+
+            // === RUGS: Center of room, not blocking entry ===
+            const mainRug = createLayeredRug(2.8, 2.0, 0xb71c1c);
+            mainRug.position.set(0.3, 0, 0);  // Slightly right of center
             group.add(mainRug);
-            // Kilim rug layered on top, slightly offset
-            const kilimRug = createKilimRug();
-            kilimRug.position.set(-0.3, 0.02, 0.3);
-            kilimRug.rotation.y = 0.15;
-            group.add(kilimRug);
 
-            // === SEATING ZONE: Center of room on the rugs ===
-            // Olive sofa against the LEFT WALL (shared wall with S202), facing center
+            // === SEATING ALONG WALLS ===
+            // Olive sofa against RIGHT WALL (east), facing center
             const oliveSofa = createOliveSofa();
-            oliveSofa.position.set(-ROOM_S203_WIDTH / 2 + 0.7, 0, 0.5);
-            oliveSofa.rotation.y = Math.PI / 2;  // Face into room
+            oliveSofa.position.set(ROOM_S203_WIDTH / 2 - 0.6, 0, 0);
+            oliveSofa.rotation.y = -Math.PI / 2;
             group.add(oliveSofa);
 
-            // Pink armchair near sofa, angled toward center
+            // Pink armchair in corner, angled
             const pinkChair = createPinkArmchair();
-            pinkChair.position.set(-ROOM_S203_WIDTH / 2 + 0.8, 0, 1.5);
-            pinkChair.rotation.y = Math.PI / 4;
+            pinkChair.position.set(ROOM_S203_WIDTH / 2 - 0.5, 0, 1.5);
+            pinkChair.rotation.y = -Math.PI / 3;
             group.add(pinkChair);
 
-            // Triangle bean bags in seating area - ON THE FLOOR (y=0)
+            // === BEAN BAGS: In seating area on the rug ===
             const beanCream = createTriangleBeanbag(0xf5f0e8);
-            beanCream.position.set(0.5, 0, 0.8);
-            beanCream.rotation.y = -0.3;
+            beanCream.position.set(-0.3, 0, 0.3);
             group.add(beanCream);
             const beanOrange = createTriangleBeanbag(0xfd7e14);
-            beanOrange.position.set(-0.3, 0, 1.2);
-            beanOrange.rotation.y = 0.4;
+            beanOrange.position.set(0.4, 0, 0.8);
             group.add(beanOrange);
             const beanMagenta = createTriangleBeanbag(0xc2185b);
-            beanMagenta.position.set(0.8, 0, 1.6);
-            beanMagenta.rotation.y = -0.5;
+            beanMagenta.position.set(-0.5, 0, 1.0);
             group.add(beanMagenta);
 
-            // Cushions scattered around seating area
-            const cushionPositions = [
-                { x: -0.6, z: 0.6, color: [0xc41e3a, 0xfdd835], type: 'ethnic' },
-                { x: 0.2, z: 0.4, color: [0x00897b, 0xf5f0e8], type: 'ethnic' },
-                { x: 1.2, z: 1.0, color: 0x9c27b0, type: 'velvet' },
-                { x: -0.1, z: 1.8, color: 0xfdd835, type: 'velvet' },
-                { x: 0.6, z: 0.3, color: 0xf5f0e8, type: 'pebble' }
-            ];
-            cushionPositions.forEach(c => {
-                let cushion;
-                if (c.type === 'ethnic') cushion = createEthnicCushion(c.color);
-                else if (c.type === 'velvet') cushion = createVelvetCushion(c.color);
-                else cushion = createPebbleCushion(c.color);
-                cushion.position.set(c.x, 0, c.z);
-                group.add(cushion);
-            });
+            // === CUSHIONS: Around bean bags ===
+            const cushion1 = createEthnicCushion([0xc41e3a, 0xfdd835]);
+            cushion1.position.set(0.1, 0, 0.5);
+            group.add(cushion1);
+            const cushion2 = createVelvetCushion(0x00897b);
+            cushion2.position.set(-0.2, 0, 1.3);
+            group.add(cushion2);
+            const cushion3 = createPebbleCushion(0x9c27b0);
+            cushion3.position.set(0.6, 0, 0.2);
+            group.add(cushion3);
 
-            // === BOOK DISPLAYS: Against BACK WALL (NORTH, -Z) ===
-            // Wall bookcase against back wall, away from door
+            // === BOOK DISPLAYS: RIGHT side of back wall (door is on LEFT) ===
             const wallBookcase = createWallBookcase();
-            wallBookcase.position.set(0.8, 0, -ROOM_S203_DEPTH / 2 + 0.2);
+            wallBookcase.position.set(1.2, 0, -ROOM_S203_DEPTH / 2 + 0.2);
             group.add(wallBookcase);
 
-            // Book cubby next to bookcase
+            // Book cubby against RIGHT WALL
             const bookCubby = createBookCubby();
-            bookCubby.position.set(-0.5, 0, -ROOM_S203_DEPTH / 2 + 0.25);
+            bookCubby.position.set(ROOM_S203_WIDTH / 2 - 0.2, 0, -1.5);
+            bookCubby.rotation.y = -Math.PI / 2;
             group.add(bookCubby);
 
-            // === RIGHT WALL (EAST, +X): Leaning shelf and decor ===
-            const leaningShelf = createLeaningShelf();
-            leaningShelf.position.set(ROOM_S203_WIDTH / 2 - 0.3, 0, -1.0);
-            leaningShelf.rotation.y = -Math.PI / 2;  // Lean against wall
-            group.add(leaningShelf);
-
-            // Book stacks near seating
-            const stack1 = createBookStack();
-            stack1.position.set(-0.8, 0, 0.9);
-            group.add(stack1);
-            const stack2 = createBookStack();
-            stack2.position.set(1.0, 0, 0.5);
-            group.add(stack2);
-
-            // === DECOR: Pottery, baskets, sculptures ===
-            // Woven basket in corner
+            // === DECOR: In corners ===
             const basket = createWovenBasket();
-            basket.position.set(ROOM_S203_WIDTH / 2 - 0.35, 0, 1.8);
+            basket.position.set(ROOM_S203_WIDTH / 2 - 0.3, 0, 2.5);
             group.add(basket);
-            // African pottery near window
             const pottery = createAfricanPottery();
-            pottery.position.set(-ROOM_S203_WIDTH / 2 + 0.35, 0, 2.5);
+            pottery.position.set(-ROOM_S203_WIDTH / 2 + 0.3, 0, 2.0);
             group.add(pottery);
-            // Wood sculpture in corner
             const sculpture = createWoodSculpture();
-            sculpture.position.set(ROOM_S203_WIDTH / 2 - 0.35, 0, -2.5);
+            sculpture.position.set(ROOM_S203_WIDTH / 2 - 0.3, 0, -2.8);
             group.add(sculpture);
 
-            // === PLANTS: Corners and near windows ===
+            // === PLANTS: Corners near windows ===
             const palm1 = createPalmPlant();
-            palm1.position.set(ROOM_S203_WIDTH / 2 - 0.4, 0, 2.8);
+            palm1.position.set(ROOM_S203_WIDTH / 2 - 0.35, 0, 3.2);
             group.add(palm1);
             const palm2 = createPalmPlant();
-            palm2.position.set(-ROOM_S203_WIDTH / 2 + 0.4, 0, 2.8);
+            palm2.position.set(-ROOM_S203_WIDTH / 2 + 0.35, 0, 3.2);
             group.add(palm2);
 
-            // Hanging plants from ceiling
+            // Hanging plants
             const hangingPlant1 = createHangingPlant();
-            hangingPlant1.position.set(-1.0, CEILING_HEIGHT - 0.3, 2.0);
+            hangingPlant1.position.set(1.0, CEILING_HEIGHT - 0.3, 2.5);
             group.add(hangingPlant1);
-            const hangingPlant2 = createHangingPlant();
-            hangingPlant2.position.set(1.2, CEILING_HEIGHT - 0.3, 1.5);
-            group.add(hangingPlant2);
 
-            // === LIGHTING: Ethiopian lamps and disco balls ===
-            // Disco ball cluster - center of room
+            // === LIGHTING ===
             const discoBalls = createDiscoBallCluster();
-            discoBalls.position.set(0, CEILING_HEIGHT - 0.4, 0.8);
+            discoBalls.position.set(0, CEILING_HEIGHT - 0.4, 0.5);
             group.add(discoBalls);
 
-            // Ethiopian lamp over seating area
             const ethLamp1 = createEthiopianLamp();
-            ethLamp1.position.set(-0.8, CEILING_HEIGHT - 0.5, 0.5);
+            ethLamp1.position.set(-0.5, CEILING_HEIGHT - 0.5, 0);
             group.add(ethLamp1);
-            // Second lamp near windows
             const ethLamp2 = createEthiopianLamp();
-            ethLamp2.position.set(0.5, CEILING_HEIGHT - 0.5, 2.0);
+            ethLamp2.position.set(0.8, CEILING_HEIGHT - 0.5, 2.0);
             group.add(ethLamp2);
 
             // String lights along window wall
@@ -3100,19 +3068,12 @@
         // TRIANGLE BEAN BAGS - Large triangular floor cushions
         function createTriangleBeanbag(color) {
             const group = new THREE.Group();
-            // Create triangular prism shape using custom geometry
-            const shape = new THREE.Shape();
-            shape.moveTo(0, 0.8);    // Top point
-            shape.lineTo(-0.6, -0.4); // Bottom left
-            shape.lineTo(0.6, -0.4);  // Bottom right
-            shape.lineTo(0, 0.8);     // Back to top
-
-            const extrudeSettings = { depth: 0.7, bevelEnabled: true, bevelThickness: 0.1, bevelSize: 0.1 };
-            const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+            // Simple low triangular cushion that sits ON the floor
+            const geometry = new THREE.ConeGeometry(0.5, 0.35, 3);
             const material = new THREE.MeshLambertMaterial({ color });
             const bean = new THREE.Mesh(geometry, material);
-            bean.rotation.x = -Math.PI / 2;
-            bean.position.set(0, 0.35, 0);
+            bean.rotation.y = Math.PI / 6;  // Rotate so flat side faces forward
+            bean.position.set(0, 0.175, 0);  // Half height so bottom is at y=0
             group.add(bean);
             return group;
         }
