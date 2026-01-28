@@ -3973,22 +3973,98 @@
 
             if (intersectPoint) {
                 const item = createFurnitureItem(selectedFurnitureType);
-                item.position.copy(intersectPoint);
 
-                // Wall art needs to be placed on walls
-                if (item.userData.isWallArt) {
-                    item.position.y = 1.5;
+                // SNAP TO FLOOR - ensure Y is always 0 for floor items
+                intersectPoint.y = 0;
+
+                // ROOM BOUNDARY CHECK - constrain to valid room areas
+                const constrainedPos = constrainToRoom(intersectPoint);
+                if (constrainedPos) {
+                    item.position.copy(constrainedPos);
+
+                    // Wall art needs to be placed on walls
+                    if (item.userData.isWallArt) {
+                        item.position.y = 1.5;
+                    }
+
+                    scene.add(item);
+                    placedItems.push(item);
+                } else {
+                    console.log('Cannot place item outside room boundaries');
                 }
-
-                scene.add(item);
-                placedItems.push(item);
             }
         });
 
+        // ROOM BOUNDARY CONSTRAINT FUNCTION
+        // Ensures furniture stays inside room boundaries
+        function constrainToRoom(pos) {
+            const x = pos.x;
+            const z = pos.z;
+
+            // Room S202 boundaries (left room)
+            // ROOM_S202_X is center, width is ROOM_S202_WIDTH
+            const s202Left = ROOM_S202_X - ROOM_S202_WIDTH / 2 + 0.3;
+            const s202Right = ROOM_S202_X + ROOM_S202_WIDTH / 2 - 0.3;
+            const s202Front = ROOM_S202_DEPTH / 2 - 0.3;  // South (windows)
+            const s202Back = -ROOM_S202_DEPTH / 2 + 0.3;  // North (door)
+
+            // Room S203 boundaries (right room)
+            const s203Left = ROOM_S203_X - ROOM_S203_WIDTH / 2 + 0.3;
+            const s203Right = ROOM_S203_X + ROOM_S203_WIDTH / 2 - 0.3;
+            const s203Front = ROOM_S203_DEPTH / 2 - 0.3;
+            const s203Back = -ROOM_S203_DEPTH / 2 + 0.3;
+
+            // Check if in S202
+            if (x >= s202Left && x <= s202Right && z >= s202Back && z <= s202Front) {
+                // Clamp to room boundaries
+                return new THREE.Vector3(
+                    Math.max(s202Left, Math.min(s202Right, x)),
+                    0,
+                    Math.max(s202Back, Math.min(s202Front, z))
+                );
+            }
+
+            // Check if in S203
+            if (x >= s203Left && x <= s203Right && z >= s203Back && z <= s203Front) {
+                return new THREE.Vector3(
+                    Math.max(s203Left, Math.min(s203Right, x)),
+                    0,
+                    Math.max(s203Back, Math.min(s203Front, z))
+                );
+            }
+
+            // Not in any room - find closest room and snap to edge
+            const distToS202 = Math.abs(x - ROOM_S202_X);
+            const distToS203 = Math.abs(x - ROOM_S203_X);
+
+            if (distToS202 < distToS203) {
+                // Snap to S202
+                return new THREE.Vector3(
+                    Math.max(s202Left, Math.min(s202Right, x)),
+                    0,
+                    Math.max(s202Back, Math.min(s202Front, z))
+                );
+            } else {
+                // Snap to S203
+                return new THREE.Vector3(
+                    Math.max(s203Left, Math.min(s203Right, x)),
+                    0,
+                    Math.max(s203Back, Math.min(s203Front, z))
+                );
+            }
+        }
+
         window.moveItem = function(dx, dz) {
             if (selectedPlacedItem) {
-                selectedPlacedItem.position.x += dx;
-                selectedPlacedItem.position.z += dz;
+                const newPos = selectedPlacedItem.position.clone();
+                newPos.x += dx;
+                newPos.z += dz;
+                const constrained = constrainToRoom(newPos);
+                if (constrained) {
+                    selectedPlacedItem.position.x = constrained.x;
+                    selectedPlacedItem.position.z = constrained.z;
+                    selectedPlacedItem.position.y = 0; // Snap to floor
+                }
             }
         };
 
