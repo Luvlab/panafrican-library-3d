@@ -2393,107 +2393,135 @@
             ceilingS203.userData.isCeiling = true;
             group.add(ceilingS203);
 
-            // ========== PANAFRICAN-INSPIRED FURNITURE - READING ROOM ==========
+            // ========== FENG SHUI FURNITURE LAYOUT - READING ROOM S203 ==========
+            // FENG SHUI PRINCIPLES APPLIED:
+            // 1. COMMANDING POSITION: Main seating faces door but not directly in line
+            // 2. CLEAR CHI FLOW: Entry path kept clear, no blocking doorways
+            // 3. INTIMATE CONVERSATION: Seating arranged to face each other
+            // 4. GROUNDING: Heavy furniture against walls, not floating
+            // 5. BALANCE: Symmetry where possible, visual weight distributed
+
             // Room: 4.465m wide (X) x 7.715m deep (Z)
-            // Door on NORTH wall (-Z) at x = -1.1m (left side)
+            // Door on NORTH wall (-Z) at x = -1.1m (LEFT side of back wall)
             // Windows on SOUTH wall (+Z)
-            // Left wall (WEST, -X) shared with S202, Right wall (EAST, +X) exterior
+            // ROOM_S203_WIDTH = 4.465, ROOM_S203_DEPTH = 7.715
 
-            // CLEAR ZONES:
-            // - Entry path from door (x=-1.1, z=-3.8) into room - keep clear!
-            // - Window area at z > 3.0
+            // === ZONE 1: ENTRY AREA (back/north, z < -2) - KEEP CLEAR ===
+            // Door is at x=-1.1, so entry flows from left side toward center
 
-            // === RUGS: Center of room, not blocking entry ===
-            const mainRug = createLayeredRug(2.8, 2.0, 0xb71c1c);
-            mainRug.position.set(0.3, 0, 0);  // Slightly right of center
-            group.add(mainRug);
-
-            // === SEATING ALONG WALLS ===
-            // Olive sofa against RIGHT WALL (east), facing center
-            const oliveSofa = createOliveSofa();
-            oliveSofa.position.set(ROOM_S203_WIDTH / 2 - 0.6, 0, 0);
-            oliveSofa.rotation.y = -Math.PI / 2;
-            group.add(oliveSofa);
-
-            // Pink armchair in corner, angled
-            const pinkChair = createPinkArmchair();
-            pinkChair.position.set(ROOM_S203_WIDTH / 2 - 0.5, 0, 1.5);
-            pinkChair.rotation.y = -Math.PI / 3;
-            group.add(pinkChair);
-
-            // === BEAN BAGS: In seating area on the rug ===
-            const beanCream = createTriangleBeanbag(0xf5f0e8);
-            beanCream.position.set(-0.3, 0, 0.3);
-            group.add(beanCream);
-            const beanOrange = createTriangleBeanbag(0xfd7e14);
-            beanOrange.position.set(0.4, 0, 0.8);
-            group.add(beanOrange);
-            const beanMagenta = createTriangleBeanbag(0xc2185b);
-            beanMagenta.position.set(-0.5, 0, 1.0);
-            group.add(beanMagenta);
-
-            // === CUSHIONS: Around bean bags ===
-            const cushion1 = createEthnicCushion([0xc41e3a, 0xfdd835]);
-            cushion1.position.set(0.1, 0, 0.5);
-            group.add(cushion1);
-            const cushion2 = createVelvetCushion(0x00897b);
-            cushion2.position.set(-0.2, 0, 1.3);
-            group.add(cushion2);
-            const cushion3 = createPebbleCushion(0x9c27b0);
-            cushion3.position.set(0.6, 0, 0.2);
-            group.add(cushion3);
-
-            // === BOOK DISPLAYS: RIGHT side of back wall (door is on LEFT) ===
+            // Bookcase FLAT AGAINST back wall, FAR RIGHT (away from door!)
+            // Door is at x=-1.1, so put bookcase at x=1.5 (right side)
             const wallBookcase = createWallBookcase();
-            wallBookcase.position.set(1.2, 0, -ROOM_S203_DEPTH / 2 + 0.2);
+            wallBookcase.position.set(1.5, 0, -ROOM_S203_DEPTH / 2 + 0.35);  // Against back wall, right side
             group.add(wallBookcase);
 
-            // Book cubby against RIGHT WALL
-            const bookCubby = createBookCubby();
-            bookCubby.position.set(ROOM_S203_WIDTH / 2 - 0.2, 0, -1.5);
-            bookCubby.rotation.y = -Math.PI / 2;
-            group.add(bookCubby);
-
-            // === DECOR: In corners ===
-            const basket = createWovenBasket();
-            basket.position.set(ROOM_S203_WIDTH / 2 - 0.3, 0, 2.5);
-            group.add(basket);
-            const pottery = createAfricanPottery();
-            pottery.position.set(-ROOM_S203_WIDTH / 2 + 0.3, 0, 2.0);
-            group.add(pottery);
+            // Small sculpture near door as welcoming element (but not blocking)
             const sculpture = createWoodSculpture();
-            sculpture.position.set(ROOM_S203_WIDTH / 2 - 0.3, 0, -2.8);
+            sculpture.position.set(0.5, 0, -ROOM_S203_DEPTH / 2 + 0.5);  // Right of entry path
             group.add(sculpture);
 
-            // === PLANTS: Corners near windows ===
+            // === ZONE 2: MAIN SEATING AREA (center, -2 < z < 2) ===
+            // COMMANDING POSITION: Sofa against solid wall, facing door diagonally
+
+            // Main rug defines the conversation area - centered
+            const mainRug = createLayeredRug(2.5, 2.0, 0xb71c1c);
+            mainRug.position.set(0, 0, 0.5);  // Center of room
+            group.add(mainRug);
+
+            // Olive sofa against LEFT WALL (solid wall = security/support)
+            // Facing toward door and center - commanding position
+            const oliveSofa = createOliveSofa();
+            oliveSofa.position.set(-ROOM_S203_WIDTH / 2 + 0.55, 0, 0.5);
+            oliveSofa.rotation.y = Math.PI / 2;  // Faces right/center
+            group.add(oliveSofa);
+
+            // Pink armchair against RIGHT WALL, facing sofa (conversation layout)
+            const pinkChair = createPinkArmchair();
+            pinkChair.position.set(ROOM_S203_WIDTH / 2 - 0.5, 0, 0.3);
+            pinkChair.rotation.y = -Math.PI / 2;  // Faces left toward sofa
+            group.add(pinkChair);
+
+            // Bean bags ON THE RUG, arranged in conversation circle
+            // These face inward toward each other
+            const beanCream = createTriangleBeanbag(0xf5f0e8);
+            beanCream.position.set(-0.3, 0, -0.3);  // Back of rug
+            beanCream.rotation.y = 0.3;
+            group.add(beanCream);
+
+            const beanOrange = createTriangleBeanbag(0xfd7e14);
+            beanOrange.position.set(0.5, 0, 0.7);  // Front right of rug
+            beanOrange.rotation.y = -0.5;
+            group.add(beanOrange);
+
+            const beanMagenta = createTriangleBeanbag(0xc2185b);
+            beanMagenta.position.set(-0.2, 0, 1.2);  // Front of rug
+            beanMagenta.rotation.y = Math.PI;
+            group.add(beanMagenta);
+
+            // Floor cushions scattered naturally on/around rug
+            const cushion1 = createEthnicCushion([0xc41e3a, 0xfdd835]);
+            cushion1.position.set(0.2, 0, 0.2);
+            group.add(cushion1);
+            const cushion2 = createVelvetCushion(0x00897b);
+            cushion2.position.set(0.6, 0, 1.0);
+            group.add(cushion2);
+            const cushion3 = createPebbleCushion(0x9c27b0);
+            cushion3.position.set(-0.5, 0, 0.8);
+            group.add(cushion3);
+
+            // Low coffee table in center of seating area
+            const coffeeTable = createLowCoffeeTable();
+            coffeeTable.position.set(0.1, 0, 0.5);
+            group.add(coffeeTable);
+
+            // Book cubby against RIGHT WALL (between armchair and window area)
+            const bookCubby = createBookCubby();
+            bookCubby.position.set(ROOM_S203_WIDTH / 2 - 0.25, 0, 1.5);
+            bookCubby.rotation.y = -Math.PI / 2;  // Faces into room
+            group.add(bookCubby);
+
+            // === ZONE 3: WINDOW/READING AREA (front/south, z > 2) ===
+            // Light, airy zone near windows for reading
+
+            // Plants in corners (wood element, life energy)
             const palm1 = createPalmPlant();
-            palm1.position.set(ROOM_S203_WIDTH / 2 - 0.35, 0, 3.2);
+            palm1.position.set(ROOM_S203_WIDTH / 2 - 0.4, 0, ROOM_S203_DEPTH / 2 - 0.5);
             group.add(palm1);
             const palm2 = createPalmPlant();
-            palm2.position.set(-ROOM_S203_WIDTH / 2 + 0.35, 0, 3.2);
+            palm2.position.set(-ROOM_S203_WIDTH / 2 + 0.4, 0, ROOM_S203_DEPTH / 2 - 0.5);
             group.add(palm2);
 
-            // Hanging plants
-            const hangingPlant1 = createHangingPlant();
-            hangingPlant1.position.set(1.0, CEILING_HEIGHT - 0.3, 2.5);
-            group.add(hangingPlant1);
+            // Decorative elements in corners (earth element)
+            const basket = createWovenBasket();
+            basket.position.set(ROOM_S203_WIDTH / 2 - 0.35, 0, 2.5);
+            group.add(basket);
+            const pottery = createAfricanPottery();
+            pottery.position.set(-ROOM_S203_WIDTH / 2 + 0.35, 0, 2.5);
+            group.add(pottery);
 
-            // === LIGHTING ===
+            // === LIGHTING: Balanced, warm ===
+            // Central disco ball cluster (reflects light/energy)
             const discoBalls = createDiscoBallCluster();
             discoBalls.position.set(0, CEILING_HEIGHT - 0.4, 0.5);
             group.add(discoBalls);
 
+            // Ethiopian lamps for warm ambient light
             const ethLamp1 = createEthiopianLamp();
-            ethLamp1.position.set(-0.5, CEILING_HEIGHT - 0.5, 0);
+            ethLamp1.position.set(-0.8, CEILING_HEIGHT - 0.5, -1.0);
             group.add(ethLamp1);
             const ethLamp2 = createEthiopianLamp();
             ethLamp2.position.set(0.8, CEILING_HEIGHT - 0.5, 2.0);
             group.add(ethLamp2);
 
-            // String lights along window wall
+            // String lights along window wall (festive, inviting)
             const stringLights = createStringLights();
             stringLights.position.set(0, CEILING_HEIGHT - 0.5, ROOM_S203_DEPTH / 2 - 0.3);
             group.add(stringLights);
+
+            // Hanging plant (brings life energy down)
+            const hangingPlant1 = createHangingPlant();
+            hangingPlant1.position.set(1.0, CEILING_HEIGHT - 0.3, 2.0);
+            group.add(hangingPlant1);
 
             return group;
         }
@@ -3068,12 +3096,15 @@
         // TRIANGLE BEAN BAGS - Large triangular floor cushions
         function createTriangleBeanbag(color) {
             const group = new THREE.Group();
-            // Simple low triangular cushion that sits ON the floor
-            const geometry = new THREE.ConeGeometry(0.5, 0.35, 3);
+            // Large triangular floor cushion/beanbag - FLAT on the floor
+            // Using a flattened cylinder (like a thick triangular cushion)
+            const height = 0.2;  // Low to the ground
+            const radius = 0.55;
+            const geometry = new THREE.CylinderGeometry(radius * 0.3, radius, height, 3);
             const material = new THREE.MeshLambertMaterial({ color });
             const bean = new THREE.Mesh(geometry, material);
-            bean.rotation.y = Math.PI / 6;  // Rotate so flat side faces forward
-            bean.position.set(0, 0.175, 0);  // Half height so bottom is at y=0
+            bean.rotation.y = Math.PI / 6;  // Rotate for visual interest
+            bean.position.set(0, height / 2, 0);  // Sits flat on floor (y=0)
             group.add(bean);
             return group;
         }
