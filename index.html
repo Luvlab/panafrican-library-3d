@@ -3334,52 +3334,55 @@
             audioStation.rotation.y = Math.PI / 2;  // Faces into room
             group.add(audioStation);
 
-            // === SPEAKERS ON STANDS - Near window wall, facing INTO room (toward door/north) ===
-            // Speakers are near the south wall (windows) and face north (toward center/door)
-            // rotation.y = Math.PI means facing -Z (north, into the room)
+            // === SPEAKERS ON STANDS - CORNERS near window wall ===
+            // Speakers in corners, facing diagonally into room center
+            // RULE: Speakers get corner positions, poufs stay 1m+ away
+            const speakerCornerOffset = 0.25;  // Distance from walls
             const speaker1 = createFloorSpeaker();
-            speaker1.position.set(-ROOM_S202_WIDTH / 2 + 0.4, 0, windowZ);
-            speaker1.rotation.y = Math.PI + Math.PI / 6;  // Face north-east (into room center)
+            speaker1.position.set(-ROOM_S202_WIDTH / 2 + speakerCornerOffset, 0, windowZ - speakerCornerOffset);
+            speaker1.rotation.y = Math.PI * 0.75;  // Face diagonally into room (NE)
             group.add(speaker1);
 
             const speaker2 = createFloorSpeaker();
-            speaker2.position.set(ROOM_S202_WIDTH / 2 - 0.4, 0, windowZ);
-            speaker2.rotation.y = Math.PI - Math.PI / 6;  // Face north-west (into room center)
+            speaker2.position.set(ROOM_S202_WIDTH / 2 - speakerCornerOffset, 0, windowZ - speakerCornerOffset);
+            speaker2.rotation.y = Math.PI * 1.25;  // Face diagonally into room (NW)
             group.add(speaker2);
 
             // === CENTRAL GATHERING AREA - Keep clear for performances ===
             // Single large woven mat defines the listening zone
             const listeningMat = createAfricanNatte();
-            listeningMat.position.set(0, 0.01, windowZ - 0.3);
+            listeningMat.position.set(0, 0.01, windowZ - 1.2);  // Moved north, away from speakers
             group.add(listeningMat);
 
-            // === LOW SEATING - Perimeter only, not blocking center ===
+            // === LOW SEATING - Perimeter only, NOT in speaker corners ===
+            // RULE: Poufs must be 1m+ from speaker positions
             // Floor cushions along walls, clustered loosely
-            // LEFT CLUSTER (near audio station)
+
+            // LEFT SIDE - between audio station and window (not in corner)
             const pouf1 = createSimplePouf(0x8b4513);  // Brown leather
-            pouf1.position.set(-ROOM_S202_WIDTH / 2 + 0.5, 0, windowZ);
+            pouf1.position.set(-ROOM_S202_WIDTH / 2 + 0.4, 0, windowZ - 1.5);  // Away from speaker corner
             group.add(pouf1);
 
             const pouf2 = createSimplePouf(0x2f4f4f);  // Dark gray
-            pouf2.position.set(-ROOM_S202_WIDTH / 2 + 0.5, 0, windowZ - 0.8);
+            pouf2.position.set(-ROOM_S202_WIDTH / 2 + 0.4, 0, windowZ - 2.2);
             group.add(pouf2);
 
-            // RIGHT CLUSTER (opposite wall)
+            // RIGHT SIDE - mirrored position
             const pouf3 = createSimplePouf(0x8b4513);
-            pouf3.position.set(ROOM_S202_WIDTH / 2 - 0.5, 0, windowZ);
+            pouf3.position.set(ROOM_S202_WIDTH / 2 - 0.4, 0, windowZ - 1.5);  // Away from speaker corner
             group.add(pouf3);
 
             const pouf4 = createSimplePouf(0x2f4f4f);
-            pouf4.position.set(ROOM_S202_WIDTH / 2 - 0.5, 0, windowZ - 0.8);
+            pouf4.position.set(ROOM_S202_WIDTH / 2 - 0.4, 0, windowZ - 2.2);
             group.add(pouf4);
 
-            // BACK CLUSTER (near vestibule, for observers)
-            const pouf5 = createSimplePouf(0x8b4513);
-            pouf5.position.set(-0.4, 0, mainRoomZ + 0.3);
+            // CENTER - on the listening mat
+            const pouf5 = createSimplePouf(0xc41e3a);  // Red accent
+            pouf5.position.set(-0.5, 0, windowZ - 1.2);
             group.add(pouf5);
 
-            const pouf6 = createSimplePouf(0x2f4f4f);
-            pouf6.position.set(0.4, 0, mainRoomZ + 0.3);
+            const pouf6 = createSimplePouf(0xc41e3a);
+            pouf6.position.set(0.5, 0, windowZ - 1.2);
             group.add(pouf6);
 
             // === HEADPHONE STATION - Against east wall ===
@@ -3387,6 +3390,23 @@
             headphoneStand.position.set(ROOM_S202_WIDTH / 2 - 0.35, 0, mainRoomZ);
             headphoneStand.rotation.y = -Math.PI / 2;
             group.add(headphoneStand);
+
+            // === AFRIKADAA WALL ART - West wall ===
+            // Magazine covers and editorial images on the wall
+            const afrikadaaPoster1 = createAfrikadaaPoster('AFRIKADAA', 0xc41e3a, 0.5, 0.7);
+            afrikadaaPoster1.position.set(-ROOM_S202_WIDTH / 2 + 0.02, 1.6, mainRoomZ + 0.5);
+            afrikadaaPoster1.rotation.y = Math.PI / 2;
+            group.add(afrikadaaPoster1);
+
+            const afrikadaaPoster2 = createAfrikadaaPoster('PANAFRICAN', 0xfdd835, 0.4, 0.5);
+            afrikadaaPoster2.position.set(-ROOM_S202_WIDTH / 2 + 0.02, 1.5, mainRoomZ - 0.3);
+            afrikadaaPoster2.rotation.y = Math.PI / 2;
+            group.add(afrikadaaPoster2);
+
+            const afrikadaaPoster3 = createAfrikadaaPoster('DIASPORA', 0x00897b, 0.45, 0.6);
+            afrikadaaPoster3.position.set(-ROOM_S202_WIDTH / 2 + 0.02, 1.7, mainRoomZ - 1.0);
+            afrikadaaPoster3.rotation.y = Math.PI / 2;
+            group.add(afrikadaaPoster3);
 
             // === MINIMAL LIGHTING - Functional, warm ===
             // Simple pendant light over audio station
@@ -3396,7 +3416,7 @@
 
             // Ambient light over listening area
             const pendantLight2 = createSimplePendant();
-            pendantLight2.position.set(0, CEILING_HEIGHT - 0.4, windowZ);
+            pendantLight2.position.set(0, CEILING_HEIGHT - 0.4, windowZ - 1.2);
             group.add(pendantLight2);
 
             return group;
@@ -3646,8 +3666,32 @@
             viewStool2.position.set(0.8, 0, 1.8);
             group.add(viewStool2);
 
-            // === LEFT WALL - Poster wall (keep clear) ===
-            // No furniture against left wall - posters are narrative surface
+            // === LEFT WALL - AFRIKADAA POSTER WALL ===
+            // Afrikadaa magazine covers as narrative surface
+            const posterA1 = createAfrikadaaPoster('AFRIKADAA', 0xd32f2f, 0.55, 0.75);
+            posterA1.position.set(-ROOM_S203_WIDTH / 2 + 0.02, 1.7, -1.8);
+            posterA1.rotation.y = Math.PI / 2;
+            group.add(posterA1);
+
+            const posterA2 = createAfrikadaaPoster('AFRICA', 0xfbc02d, 0.45, 0.6);
+            posterA2.position.set(-ROOM_S203_WIDTH / 2 + 0.02, 1.5, -0.8);
+            posterA2.rotation.y = Math.PI / 2;
+            group.add(posterA2);
+
+            const posterA3 = createAfrikadaaPoster('DIASPORA', 0x1976d2, 0.5, 0.65);
+            posterA3.position.set(-ROOM_S203_WIDTH / 2 + 0.02, 1.75, 0.3);
+            posterA3.rotation.y = Math.PI / 2;
+            group.add(posterA3);
+
+            const posterA4 = createAfrikadaaPoster('PANAFRICAN', 0x388e3c, 0.4, 0.55);
+            posterA4.position.set(-ROOM_S203_WIDTH / 2 + 0.02, 1.45, 1.4);
+            posterA4.rotation.y = Math.PI / 2;
+            group.add(posterA4);
+
+            const posterA5 = createAfrikadaaPoster('LIBRARY', 0x7b1fa2, 0.48, 0.68);
+            posterA5.position.set(-ROOM_S203_WIDTH / 2 + 0.02, 1.65, 2.5);
+            posterA5.rotation.y = Math.PI / 2;
+            group.add(posterA5);
 
             // === MINIMAL LIGHTING ===
             const pendant1 = createSimplePendant();
@@ -4678,48 +4722,132 @@
 
         // FLOOR SPEAKER - Exhibition audio
         function createFloorSpeaker() {
-            // Speaker on stand at ear level (~1.1m)
+            // Speaker on stand - cabinet sits DIRECTLY on stand top plate
             const group = new THREE.Group();
             const mat = new THREE.MeshLambertMaterial({ color: 0x1a1a1a });
             const metalMat = new THREE.MeshLambertMaterial({ color: 0x333333 });
 
             // Speaker Stand
-            const standHeight = 0.8;
-            // Base plate
-            const basePlate = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.02, 0.35), metalMat);
+            const standHeight = 0.75;  // Stand pole height
+            const topPlateY = standHeight + 0.02;  // Top of stand
+            const cabinetHeight = 0.4;  // Speaker cabinet height
+            const cabinetY = topPlateY + cabinetHeight / 2 + 0.01;  // Cabinet center (sits on top plate)
+
+            // Base plate (on floor)
+            const basePlate = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.02, 0.32), metalMat);
             basePlate.position.set(0, 0.01, 0);
             group.add(basePlate);
+
             // Center pole
-            const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, standHeight, 8), metalMat);
+            const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, standHeight, 8), metalMat);
             pole.position.set(0, standHeight / 2 + 0.02, 0);
             group.add(pole);
-            // Top plate
-            const topPlate = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.02, 0.25), metalMat);
-            topPlate.position.set(0, standHeight + 0.02, 0);
+
+            // Top plate (speaker sits here)
+            const topPlate = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.02, 0.22), metalMat);
+            topPlate.position.set(0, topPlateY, 0);
             group.add(topPlate);
 
-            // Speaker Cabinet (at ear level)
-            const cabinetY = standHeight + 0.35;
-            const cabinet = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.45, 0.25), mat);
+            // Speaker Cabinet - sits directly on top plate, NO gap
+            const cabinet = new THREE.Mesh(new THREE.BoxGeometry(0.24, cabinetHeight, 0.20), mat);
             cabinet.position.set(0, cabinetY, 0);
             group.add(cabinet);
 
-            // Woofer (driver faces +Z, so when rotated 180deg, faces into room)
-            const woofer = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.04, 16), new THREE.MeshLambertMaterial({ color: 0x444444 }));
+            // Woofer (driver faces +Z, when rotated 180deg faces into room)
+            const woofer = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.07, 0.07, 0.03, 16),
+                new THREE.MeshLambertMaterial({ color: 0x444444 })
+            );
             woofer.rotation.x = Math.PI / 2;
-            woofer.position.set(0, cabinetY - 0.08, 0.13);
+            woofer.position.set(0, cabinetY - 0.06, 0.11);
             group.add(woofer);
 
             // Tweeter
-            const tweeter = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.02, 12), new THREE.MeshLambertMaterial({ color: 0x666666 }));
+            const tweeter = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.025, 0.025, 0.02, 12),
+                new THREE.MeshLambertMaterial({ color: 0x666666 })
+            );
             tweeter.rotation.x = Math.PI / 2;
-            tweeter.position.set(0, cabinetY + 0.12, 0.13);
+            tweeter.position.set(0, cabinetY + 0.10, 0.11);
             group.add(tweeter);
 
             // LED indicator
-            const led = new THREE.Mesh(new THREE.SphereGeometry(0.01, 8, 8), new THREE.MeshLambertMaterial({ color: 0x00ff00, emissive: 0x00ff00 }));
-            led.position.set(0, cabinetY + 0.19, 0.13);
+            const led = new THREE.Mesh(
+                new THREE.SphereGeometry(0.008, 8, 8),
+                new THREE.MeshLambertMaterial({ color: 0x00ff00, emissive: 0x00ff00 })
+            );
+            led.position.set(0, cabinetY + 0.17, 0.11);
             group.add(led);
+
+            return group;
+        }
+
+        // AFRIKADAA WALL POSTER - Magazine cover style artwork
+        // Creates a framed poster with text overlay for wall decoration
+        function createAfrikadaaPoster(text, color, width, height) {
+            const group = new THREE.Group();
+
+            // Frame
+            const frameThickness = 0.025;
+            const frameDepth = 0.02;
+            const frameMat = new THREE.MeshLambertMaterial({ color: 0x1a1a1a });
+
+            // Frame sides
+            const topFrame = new THREE.Mesh(new THREE.BoxGeometry(width + frameThickness * 2, frameThickness, frameDepth), frameMat);
+            topFrame.position.set(0, height / 2 + frameThickness / 2, 0);
+            group.add(topFrame);
+
+            const bottomFrame = new THREE.Mesh(new THREE.BoxGeometry(width + frameThickness * 2, frameThickness, frameDepth), frameMat);
+            bottomFrame.position.set(0, -height / 2 - frameThickness / 2, 0);
+            group.add(bottomFrame);
+
+            const leftFrame = new THREE.Mesh(new THREE.BoxGeometry(frameThickness, height, frameDepth), frameMat);
+            leftFrame.position.set(-width / 2 - frameThickness / 2, 0, 0);
+            group.add(leftFrame);
+
+            const rightFrame = new THREE.Mesh(new THREE.BoxGeometry(frameThickness, height, frameDepth), frameMat);
+            rightFrame.position.set(width / 2 + frameThickness / 2, 0, 0);
+            group.add(rightFrame);
+
+            // Poster background (colored)
+            const posterMat = new THREE.MeshLambertMaterial({ color: color });
+            const poster = new THREE.Mesh(new THREE.PlaneGeometry(width, height), posterMat);
+            poster.position.set(0, 0, 0.005);
+            group.add(poster);
+
+            // Abstract geometric elements (Afrikadaa style - bold, graphic)
+            const accentMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
+            const darkMat = new THREE.MeshLambertMaterial({ color: 0x000000 });
+
+            // Diagonal stripe
+            const stripe = new THREE.Mesh(new THREE.PlaneGeometry(width * 0.15, height * 1.2), accentMat);
+            stripe.position.set(-width * 0.2, 0, 0.006);
+            stripe.rotation.z = Math.PI / 6;
+            group.add(stripe);
+
+            // Circle element
+            const circle = new THREE.Mesh(new THREE.CircleGeometry(width * 0.12, 24), darkMat);
+            circle.position.set(width * 0.25, height * 0.2, 0.007);
+            group.add(circle);
+
+            // Small accent squares
+            const sq1 = new THREE.Mesh(new THREE.PlaneGeometry(width * 0.08, width * 0.08), accentMat);
+            sq1.position.set(width * 0.3, -height * 0.3, 0.007);
+            group.add(sq1);
+
+            const sq2 = new THREE.Mesh(new THREE.PlaneGeometry(width * 0.05, width * 0.05), darkMat);
+            sq2.position.set(-width * 0.35, height * 0.35, 0.007);
+            group.add(sq2);
+
+            // Text bar at bottom (simulated text block)
+            const textBar = new THREE.Mesh(new THREE.PlaneGeometry(width * 0.7, height * 0.08), darkMat);
+            textBar.position.set(0, -height * 0.38, 0.008);
+            group.add(textBar);
+
+            // White text underline
+            const textLine = new THREE.Mesh(new THREE.PlaneGeometry(width * 0.5, height * 0.015), accentMat);
+            textLine.position.set(0, -height * 0.42, 0.009);
+            group.add(textLine);
 
             return group;
         }
