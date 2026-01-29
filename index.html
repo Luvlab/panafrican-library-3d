@@ -3475,20 +3475,21 @@
             addFurniture(headphoneStand, 'headphone-station');
 
             // === AFRIKADAA WALL ART ===
+            // Position posters ON the wall surface (wall is 0.152m thick, so +0.1 places them just inside room)
             const afrikadaaPoster1 = createAfrikadaaPoster('AFRIKADAA', 0xc41e3a, 0.5, 0.7);
-            afrikadaaPoster1.position.set(-ROOM_S202_WIDTH / 2 + 0.02, 1.6, mainRoomZ + 0.5);
+            afrikadaaPoster1.position.set(-ROOM_S202_WIDTH / 2 + 0.1, 1.6, mainRoomZ + 0.5);
             afrikadaaPoster1.rotation.y = Math.PI / 2;
             afrikadaaPoster1.userData.isWallArt = true;
             addFurniture(afrikadaaPoster1, 'poster-afrikadaa-1');
 
             const afrikadaaPoster2 = createAfrikadaaPoster('PANAFRICAN', 0xfdd835, 0.4, 0.5);
-            afrikadaaPoster2.position.set(-ROOM_S202_WIDTH / 2 + 0.02, 1.5, mainRoomZ - 0.3);
+            afrikadaaPoster2.position.set(-ROOM_S202_WIDTH / 2 + 0.1, 1.5, mainRoomZ - 0.3);
             afrikadaaPoster2.rotation.y = Math.PI / 2;
             afrikadaaPoster2.userData.isWallArt = true;
             addFurniture(afrikadaaPoster2, 'poster-afrikadaa-2');
 
             const afrikadaaPoster3 = createAfrikadaaPoster('DIASPORA', 0x00897b, 0.45, 0.6);
-            afrikadaaPoster3.position.set(-ROOM_S202_WIDTH / 2 + 0.02, 1.7, mainRoomZ - 1.0);
+            afrikadaaPoster3.position.set(-ROOM_S202_WIDTH / 2 + 0.1, 1.7, mainRoomZ - 1.0);
             afrikadaaPoster3.rotation.y = Math.PI / 2;
             afrikadaaPoster3.userData.isWallArt = true;
             addFurniture(afrikadaaPoster3, 'poster-afrikadaa-3');
