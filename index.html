@@ -3410,97 +3410,96 @@
             const mainRoomZ = VESTIBULE_DEPTH / 2 + 0.8;  // Center after vestibule
             const windowZ = ROOM_S202_DEPTH / 2 - 1.2;    // Near window wall (inside boundary)
 
+            // Helper to add furniture with proper marking
+            function addFurniture(item, name) {
+                item.userData.isFurniture = true;
+                item.userData.itemType = name;
+                item.name = name;
+                group.add(item);
+            }
+
             // === AUDIO STATION - West wall, near entry ===
-            // Audio console/DJ table against west wall
             const audioStation = createAudioStation();
             audioStation.position.set(-ROOM_S202_WIDTH / 2 + 0.5, 0, mainRoomZ - 1.0);
-            audioStation.rotation.y = Math.PI / 2;  // Faces into room
-            group.add(audioStation);
+            audioStation.rotation.y = Math.PI / 2;
+            addFurniture(audioStation, 'audio-station');
 
             // === SPEAKERS ON STANDS - CORNERS near window wall ===
-            // Speakers in corners, facing diagonally into room center
-            // RULE: Speakers get corner positions, poufs stay 1m+ away
-            const speakerCornerOffset = 0.25;  // Distance from walls
+            const speakerCornerOffset = 0.25;
             const speaker1 = createFloorSpeaker();
             speaker1.position.set(-ROOM_S202_WIDTH / 2 + speakerCornerOffset, 0, windowZ - speakerCornerOffset);
-            speaker1.rotation.y = Math.PI * 0.75;  // Face diagonally into room (NE)
-            group.add(speaker1);
+            speaker1.rotation.y = Math.PI * 0.75;
+            addFurniture(speaker1, 'speaker-left');
 
             const speaker2 = createFloorSpeaker();
             speaker2.position.set(ROOM_S202_WIDTH / 2 - speakerCornerOffset, 0, windowZ - speakerCornerOffset);
-            speaker2.rotation.y = Math.PI * 1.25;  // Face diagonally into room (NW)
-            group.add(speaker2);
+            speaker2.rotation.y = Math.PI * 1.25;
+            addFurniture(speaker2, 'speaker-right');
 
-            // === CENTRAL GATHERING AREA - Keep clear for performances ===
-            // Single large woven mat defines the listening zone
+            // === CENTRAL GATHERING AREA ===
             const listeningMat = createAfricanNatte();
-            listeningMat.position.set(0, 0.01, windowZ - 1.2);  // Moved north, away from speakers
-            group.add(listeningMat);
+            listeningMat.position.set(0, 0.01, windowZ - 1.2);
+            addFurniture(listeningMat, 'natte-mat');
 
-            // === LOW SEATING - Perimeter only, NOT in speaker corners ===
-            // RULE: Poufs must be 1m+ from speaker positions
-            // Floor cushions along walls, clustered loosely
+            // === LOW SEATING - Perimeter ===
+            const pouf1 = createSimplePouf(0x8b4513);
+            pouf1.position.set(-ROOM_S202_WIDTH / 2 + 0.4, 0, windowZ - 1.5);
+            addFurniture(pouf1, 'pouf-brown-1');
 
-            // LEFT SIDE - between audio station and window (not in corner)
-            const pouf1 = createSimplePouf(0x8b4513);  // Brown leather
-            pouf1.position.set(-ROOM_S202_WIDTH / 2 + 0.4, 0, windowZ - 1.5);  // Away from speaker corner
-            group.add(pouf1);
-
-            const pouf2 = createSimplePouf(0x2f4f4f);  // Dark gray
+            const pouf2 = createSimplePouf(0x2f4f4f);
             pouf2.position.set(-ROOM_S202_WIDTH / 2 + 0.4, 0, windowZ - 2.2);
-            group.add(pouf2);
+            addFurniture(pouf2, 'pouf-gray-1');
 
-            // RIGHT SIDE - mirrored position
             const pouf3 = createSimplePouf(0x8b4513);
-            pouf3.position.set(ROOM_S202_WIDTH / 2 - 0.4, 0, windowZ - 1.5);  // Away from speaker corner
-            group.add(pouf3);
+            pouf3.position.set(ROOM_S202_WIDTH / 2 - 0.4, 0, windowZ - 1.5);
+            addFurniture(pouf3, 'pouf-brown-2');
 
             const pouf4 = createSimplePouf(0x2f4f4f);
             pouf4.position.set(ROOM_S202_WIDTH / 2 - 0.4, 0, windowZ - 2.2);
-            group.add(pouf4);
+            addFurniture(pouf4, 'pouf-gray-2');
 
             // CENTER - on the listening mat
-            const pouf5 = createSimplePouf(0xc41e3a);  // Red accent
+            const pouf5 = createSimplePouf(0xc41e3a);
             pouf5.position.set(-0.5, 0, windowZ - 1.2);
-            group.add(pouf5);
+            addFurniture(pouf5, 'pouf-red-1');
 
             const pouf6 = createSimplePouf(0xc41e3a);
             pouf6.position.set(0.5, 0, windowZ - 1.2);
-            group.add(pouf6);
+            addFurniture(pouf6, 'pouf-red-2');
 
-            // === HEADPHONE STATION - Against east wall ===
+            // === HEADPHONE STATION ===
             const headphoneStand = createHeadphoneStation();
             headphoneStand.position.set(ROOM_S202_WIDTH / 2 - 0.35, 0, mainRoomZ);
             headphoneStand.rotation.y = -Math.PI / 2;
-            group.add(headphoneStand);
+            addFurniture(headphoneStand, 'headphone-station');
 
-            // === AFRIKADAA WALL ART - West wall ===
-            // Magazine covers and editorial images on the wall
+            // === AFRIKADAA WALL ART ===
             const afrikadaaPoster1 = createAfrikadaaPoster('AFRIKADAA', 0xc41e3a, 0.5, 0.7);
             afrikadaaPoster1.position.set(-ROOM_S202_WIDTH / 2 + 0.02, 1.6, mainRoomZ + 0.5);
             afrikadaaPoster1.rotation.y = Math.PI / 2;
-            group.add(afrikadaaPoster1);
+            afrikadaaPoster1.userData.isWallArt = true;
+            addFurniture(afrikadaaPoster1, 'poster-afrikadaa-1');
 
             const afrikadaaPoster2 = createAfrikadaaPoster('PANAFRICAN', 0xfdd835, 0.4, 0.5);
             afrikadaaPoster2.position.set(-ROOM_S202_WIDTH / 2 + 0.02, 1.5, mainRoomZ - 0.3);
             afrikadaaPoster2.rotation.y = Math.PI / 2;
-            group.add(afrikadaaPoster2);
+            afrikadaaPoster2.userData.isWallArt = true;
+            addFurniture(afrikadaaPoster2, 'poster-afrikadaa-2');
 
             const afrikadaaPoster3 = createAfrikadaaPoster('DIASPORA', 0x00897b, 0.45, 0.6);
             afrikadaaPoster3.position.set(-ROOM_S202_WIDTH / 2 + 0.02, 1.7, mainRoomZ - 1.0);
             afrikadaaPoster3.rotation.y = Math.PI / 2;
-            group.add(afrikadaaPoster3);
+            afrikadaaPoster3.userData.isWallArt = true;
+            addFurniture(afrikadaaPoster3, 'poster-afrikadaa-3');
 
-            // === MINIMAL LIGHTING - Functional, warm ===
-            // Simple pendant light over audio station
+            // === MINIMAL LIGHTING ===
             const pendantLight = createSimplePendant();
             pendantLight.position.set(-ROOM_S202_WIDTH / 2 + 0.5, CEILING_HEIGHT - 0.4, mainRoomZ - 1.0);
-            group.add(pendantLight);
+            addFurniture(pendantLight, 'pendant-light-1');
 
-            // Ambient light over listening area
             const pendantLight2 = createSimplePendant();
             pendantLight2.position.set(0, CEILING_HEIGHT - 0.4, windowZ - 1.2);
-            group.add(pendantLight2);
+            addFurniture(pendantLight2, 'pendant-light-2');
 
             return group;
         }
@@ -3658,132 +3657,121 @@
             // - 1.2m clearance from door
             // - NO domestic furniture (sofas, armchairs, coffee tables)
 
-            // Room: 4.465m wide (X) x 7.715m deep (Z)
-            // Door on NORTH wall (-Z) at x = -1.1m (offset toward LEFT)
-            // Windows on SOUTH wall (+Z)
-            const doorX = -ROOM_S203_WIDTH / 4;  // ~-1.1m
-            const doorClearance = 1.2;  // 120cm clearance in front of door
+            // Helper to add furniture with proper marking
+            function addFurniture(item, name, isWall = false) {
+                item.userData.isFurniture = true;
+                item.userData.itemType = name;
+                item.userData.isWallArt = isWall;
+                item.name = name;
+                group.add(item);
+            }
 
-            // === ZONE 1: ENTRY/CIRCULATION (z < -2.0) ===
-            // Keep 1.2m clear in front of door for circulation
-            // Door is at z = -ROOM_S203_DEPTH/2 = -3.86m
-
-            // === ZONE 2: READING AREA (center, -2 < z < 1.5) ===
-            // Long reading table - central, allows collective use
+            // === READING AREA ===
             const readingTable = createReadingTable();
-            readingTable.position.set(0, 0, -0.5);  // Center of room, away from door
-            group.add(readingTable);
+            readingTable.position.set(0, 0, -0.5);
+            addFurniture(readingTable, 'reading-table');
 
-            // Simple stackable chairs around table (4 chairs)
             const chair1 = createStackableChair();
             chair1.position.set(-0.6, 0, -1.0);
             chair1.rotation.y = 0;
-            group.add(chair1);
+            addFurniture(chair1, 'chair-1');
 
             const chair2 = createStackableChair();
             chair2.position.set(0.6, 0, -1.0);
             chair2.rotation.y = 0;
-            group.add(chair2);
+            addFurniture(chair2, 'chair-2');
 
             const chair3 = createStackableChair();
             chair3.position.set(-0.6, 0, 0);
             chair3.rotation.y = Math.PI;
-            group.add(chair3);
+            addFurniture(chair3, 'chair-3');
 
             const chair4 = createStackableChair();
             chair4.position.set(0.6, 0, 0);
             chair4.rotation.y = Math.PI;
-            group.add(chair4);
+            addFurniture(chair4, 'chair-4');
 
-            // === ARCHIVE WALL - Right wall (+X) ===
-            // Wall-mounted shelves for archives (doesn't block floor)
+            // === ARCHIVE WALL ===
             const archiveShelf1 = createWallShelf();
             archiveShelf1.position.set(ROOM_S203_WIDTH / 2 - 0.15, 1.2, -1.5);
             archiveShelf1.rotation.y = -Math.PI / 2;
-            group.add(archiveShelf1);
+            addFurniture(archiveShelf1, 'archive-shelf-1', true);
 
             const archiveShelf2 = createWallShelf();
             archiveShelf2.position.set(ROOM_S203_WIDTH / 2 - 0.15, 1.2, 0.5);
             archiveShelf2.rotation.y = -Math.PI / 2;
-            group.add(archiveShelf2);
+            addFurniture(archiveShelf2, 'archive-shelf-2', true);
 
-            // Low archive cabinet against right wall (below shelves)
             const archiveCabinet = createLowArchiveCabinet();
             archiveCabinet.position.set(ROOM_S203_WIDTH / 2 - 0.35, 0, -0.5);
             archiveCabinet.rotation.y = -Math.PI / 2;
-            group.add(archiveCabinet);
+            addFurniture(archiveCabinet, 'archive-cabinet');
 
-            // === BOOK DISPLAY - Back wall, right of door ===
-            // Wall shelf for curated publications (face-out display)
             const bookDisplay = createWallShelf();
             bookDisplay.position.set(1.0, 1.2, -ROOM_S203_DEPTH / 2 + 0.15);
-            group.add(bookDisplay);
+            addFurniture(bookDisplay, 'book-display', true);
 
-            // === ZONE 3: VIDEO/MEDIA AREA (z > 1.5) ===
-            // Screen stands near window wall, clear viewing direction
+            // === VIDEO/MEDIA AREA ===
             const screenStand1 = createScreenStand();
             screenStand1.position.set(-0.8, 0, 2.5);
-            screenStand1.rotation.y = Math.PI;  // Faces back into room
-            group.add(screenStand1);
+            screenStand1.rotation.y = Math.PI;
+            addFurniture(screenStand1, 'screen-stand-1');
 
             const screenStand2 = createScreenStand();
             screenStand2.position.set(0.8, 0, 2.5);
             screenStand2.rotation.y = Math.PI;
-            group.add(screenStand2);
+            addFurniture(screenStand2, 'screen-stand-2');
 
-            // Headphone stations next to screens
             const headphones1 = createHeadphoneStation();
             headphones1.position.set(-1.4, 0, 2.3);
-            group.add(headphones1);
+            addFurniture(headphones1, 'headphone-station-1');
 
             const headphones2 = createHeadphoneStation();
             headphones2.position.set(1.4, 0, 2.3);
-            group.add(headphones2);
+            addFurniture(headphones2, 'headphone-station-2');
 
-            // Simple stools for viewing (can be moved)
             const viewStool1 = createSimpleStool();
             viewStool1.position.set(-0.8, 0, 1.8);
-            group.add(viewStool1);
+            addFurniture(viewStool1, 'stool-1');
 
             const viewStool2 = createSimpleStool();
             viewStool2.position.set(0.8, 0, 1.8);
-            group.add(viewStool2);
+            addFurniture(viewStool2, 'stool-2');
 
-            // === LEFT WALL - AFRIKADAA POSTER WALL ===
-            // Afrikadaa magazine covers as narrative surface
+            // === AFRIKADAA POSTER WALL ===
             const posterA1 = createAfrikadaaPoster('AFRIKADAA', 0xd32f2f, 0.55, 0.75);
             posterA1.position.set(-ROOM_S203_WIDTH / 2 + 0.02, 1.7, -1.8);
             posterA1.rotation.y = Math.PI / 2;
-            group.add(posterA1);
+            addFurniture(posterA1, 'poster-s203-1', true);
 
             const posterA2 = createAfrikadaaPoster('AFRICA', 0xfbc02d, 0.45, 0.6);
             posterA2.position.set(-ROOM_S203_WIDTH / 2 + 0.02, 1.5, -0.8);
             posterA2.rotation.y = Math.PI / 2;
-            group.add(posterA2);
+            addFurniture(posterA2, 'poster-s203-2', true);
 
             const posterA3 = createAfrikadaaPoster('DIASPORA', 0x1976d2, 0.5, 0.65);
             posterA3.position.set(-ROOM_S203_WIDTH / 2 + 0.02, 1.75, 0.3);
             posterA3.rotation.y = Math.PI / 2;
-            group.add(posterA3);
+            addFurniture(posterA3, 'poster-s203-3', true);
 
             const posterA4 = createAfrikadaaPoster('PANAFRICAN', 0x388e3c, 0.4, 0.55);
             posterA4.position.set(-ROOM_S203_WIDTH / 2 + 0.02, 1.45, 1.4);
             posterA4.rotation.y = Math.PI / 2;
-            group.add(posterA4);
+            addFurniture(posterA4, 'poster-s203-4', true);
 
             const posterA5 = createAfrikadaaPoster('LIBRARY', 0x7b1fa2, 0.48, 0.68);
             posterA5.position.set(-ROOM_S203_WIDTH / 2 + 0.02, 1.65, 2.5);
             posterA5.rotation.y = Math.PI / 2;
-            group.add(posterA5);
+            addFurniture(posterA5, 'poster-s203-5', true);
 
             // === MINIMAL LIGHTING ===
             const pendant1 = createSimplePendant();
             pendant1.position.set(0, CEILING_HEIGHT - 0.4, -0.5);
-            group.add(pendant1);
+            addFurniture(pendant1, 'pendant-s203-1');
 
             const pendant2 = createSimplePendant();
             pendant2.position.set(0, CEILING_HEIGHT - 0.4, 2.0);
-            group.add(pendant2);
+            addFurniture(pendant2, 'pendant-s203-2');
 
             return group;
         }
@@ -3796,6 +3784,51 @@
         const roomS203 = createRoomS203();
         roomS203.position.set(ROOM_S203_X, 0, 0);
         scene.add(roomS203);
+
+        // ============================================================
+        // MAKE ALL DEFAULT FURNITURE EDITABLE
+        // Items marked with userData.isFurniture are moved to scene root
+        // and added to placedItems array for selection/editing
+        // ============================================================
+        function registerEditableFurniture() {
+            function processRoom(roomGroup) {
+                const furnitureToMove = [];
+
+                // Find all direct children marked as furniture
+                roomGroup.children.forEach(child => {
+                    if (child.userData.isFurniture) {
+                        furnitureToMove.push(child);
+                    }
+                });
+
+                // Move furniture from room group to scene directly
+                furnitureToMove.forEach(item => {
+                    // Calculate world position
+                    const worldPos = new THREE.Vector3();
+                    item.getWorldPosition(worldPos);
+                    const worldRot = item.rotation.clone();
+
+                    // Remove from room group
+                    roomGroup.remove(item);
+
+                    // Add to scene directly with world position
+                    item.position.copy(worldPos);
+                    item.rotation.copy(worldRot);
+                    item.userData.isPlacedItem = true;
+
+                    scene.add(item);
+                    placedItems.push(item);
+                });
+            }
+
+            processRoom(roomS202);
+            processRoom(roomS203);
+
+            console.log('Registered', placedItems.length, 'editable furniture items');
+        }
+
+        // Register furniture after a short delay to ensure scene is ready
+        setTimeout(registerEditableFurniture, 100);
 
         // Room labels
         function createLabel(text, position) {
