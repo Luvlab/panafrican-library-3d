@@ -6171,8 +6171,9 @@
             // BACK wall (corridor entry + poster wall) - hide when camera is behind
             if (roomS203Walls.back) roomS203Walls.back.visible = camZ > -ROOM_S203_DEPTH / 4;
 
-            // LEFT wall (solid shared wall with S202) - hide when camera is to the left
-            if (roomS203Walls.left) roomS203Walls.left.visible = camX > ROOM_S203_X - ROOM_S203_WIDTH / 2;
+            // LEFT wall (SHARED MIDDLE WALL with S202) - ALWAYS VISIBLE
+            // This is the dividing wall between the two rooms, never hide it
+            if (roomS203Walls.left) roomS203Walls.left.visible = true;
 
             // RIGHT wall (solid exterior) - hide when camera is to the right
             if (roomS203Walls.right) roomS203Walls.right.visible = camX < ROOM_S203_X + ROOM_S203_WIDTH / 2;
