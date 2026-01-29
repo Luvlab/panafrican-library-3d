@@ -3369,21 +3369,8 @@
             leftDoorHeader.position.set(leftWallX, DOOR_HEIGHT + (CEILING_HEIGHT - DOOR_HEIGHT) / 2, threeStarDoorCenterZ);
             leftWallGroup.add(leftDoorHeader);
 
-            // CLOSED DOOR to Three Star room (brown wood panel)
-            const threeStarDoor = new THREE.Mesh(
-                new THREE.BoxGeometry(0.05, DOOR_HEIGHT, DOOR_WIDTH),
-                new THREE.MeshLambertMaterial({ color: 0x8B4513 })
-            );
-            threeStarDoor.position.set(leftWallX + 0.03, DOOR_HEIGHT / 2, threeStarDoorCenterZ);
-            leftWallGroup.add(threeStarDoor);
-
-            // Door handle (silver)
-            const doorHandle = new THREE.Mesh(
-                new THREE.BoxGeometry(0.03, 0.12, 0.03),
-                new THREE.MeshLambertMaterial({ color: 0xC0C0C0 })
-            );
-            doorHandle.position.set(leftWallX + 0.07, DOOR_HEIGHT / 2, threeStarDoorCenterZ + doorHalfWidth - 0.15);
-            leftWallGroup.add(doorHandle);
+            // Door opening to Three Star room - NO DOOR, just the opening
+            // (Door and handle removed - just leaving the doorway)
 
             group.add(leftWallGroup);
             roomS202Walls.left = leftWallGroup;
@@ -3479,21 +3466,26 @@
             addFurniture(headphoneStand, 'headphone-station');
 
             // === AFRIKADAA WALL ART ===
-            // Position posters ON the wall surface (wall is 0.152m thick, so +0.1 places them just inside room)
+            // Position posters ON the wall surface and AWAY from door opening
+            // Wall is at X = -ROOM_S202_WIDTH/2, wall thickness is 0.152m
+            // Door opening is at Z ≈ 2.36 (spans ~1.84 to ~2.88)
+            // Position posters NORTH of the door opening (lower Z values)
+            const posterWallX = -ROOM_S202_WIDTH / 2 + 0.16;  // On wall surface (inside room)
+
             const afrikadaaPoster1 = createAfrikadaaPoster('AFRIKADAA', 0xc41e3a, 0.5, 0.7);
-            afrikadaaPoster1.position.set(-ROOM_S202_WIDTH / 2 + 0.1, 1.6, mainRoomZ + 0.5);
+            afrikadaaPoster1.position.set(posterWallX, 1.6, mainRoomZ - 0.5);  // North of door
             afrikadaaPoster1.rotation.y = Math.PI / 2;
             afrikadaaPoster1.userData.isWallArt = true;
             addFurniture(afrikadaaPoster1, 'poster-afrikadaa-1');
 
             const afrikadaaPoster2 = createAfrikadaaPoster('PANAFRICAN', 0xfdd835, 0.4, 0.5);
-            afrikadaaPoster2.position.set(-ROOM_S202_WIDTH / 2 + 0.1, 1.5, mainRoomZ - 0.3);
+            afrikadaaPoster2.position.set(posterWallX, 1.5, mainRoomZ - 1.3);  // Further north
             afrikadaaPoster2.rotation.y = Math.PI / 2;
             afrikadaaPoster2.userData.isWallArt = true;
             addFurniture(afrikadaaPoster2, 'poster-afrikadaa-2');
 
             const afrikadaaPoster3 = createAfrikadaaPoster('DIASPORA', 0x00897b, 0.45, 0.6);
-            afrikadaaPoster3.position.set(-ROOM_S202_WIDTH / 2 + 0.1, 1.7, mainRoomZ - 1.0);
+            afrikadaaPoster3.position.set(posterWallX, 1.7, mainRoomZ - 2.0);  // Furthest north
             afrikadaaPoster3.rotation.y = Math.PI / 2;
             afrikadaaPoster3.userData.isWallArt = true;
             addFurniture(afrikadaaPoster3, 'poster-afrikadaa-3');
