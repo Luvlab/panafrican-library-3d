@@ -1,29 +1,33 @@
 // Nano Banana (Gemini) AI Render API
 // Generates photorealistic renders from 3D scene screenshots
 
-export default async function handler(request, response) {
-  response.setHeader('Access-Control-Allow-Origin', '*');
-  response.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  response.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+module.exports = async function handler(req, res) {
+  // CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
-  if (request.method === 'OPTIONS') {
-    return response.status(200).end();
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
   }
 
-  if (request.method !== 'POST') {
-    return response.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    return response.status(500).json({ error: 'GEMINI_API_KEY not configured' });
+    return res.status(500).json({
+      error: 'GEMINI_API_KEY not configured',
+      help: 'Add GEMINI_API_KEY to Vercel Environment Variables: Settings > Environment Variables'
+    });
   }
 
   try {
-    const { imageBase64, prompt, style } = request.body;
+    const { imageBase64, prompt, style } = req.body;
 
     if (!imageBase64) {
-      return response.status(400).json({ error: 'Image data required' });
+      return res.status(400).json({ error: 'Image data required' });
     }
 
     // Build the prompt for photorealistic rendering
@@ -64,7 +68,7 @@ export default async function handler(request, response) {
     if (!geminiResponse.ok) {
       const errorData = await geminiResponse.text();
       console.error('Gemini API error:', errorData);
-      return response.status(geminiResponse.status).json({
+      return res.status(geminiResponse.status).json({
         error: 'Gemini API error',
         details: errorData
       });
@@ -76,7 +80,7 @@ export default async function handler(request, response) {
     if (data.candidates && data.candidates[0]?.content?.parts) {
       for (const part of data.candidates[0].content.parts) {
         if (part.inlineData) {
-          return response.status(200).json({
+          return res.status(200).json({
             success: true,
             image: `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`,
             text: data.candidates[0].content.parts.find(p => p.text)?.text || ''
@@ -87,7 +91,7 @@ export default async function handler(request, response) {
 
     // If no image was generated, return text response
     const textResponse = data.candidates?.[0]?.content?.parts?.find(p => p.text)?.text;
-    return response.status(200).json({
+    return res.status(200).json({
       success: false,
       error: 'No image generated',
       text: textResponse || 'Unknown error'
@@ -95,9 +99,9 @@ export default async function handler(request, response) {
 
   } catch (error) {
     console.error('Render error:', error);
-    return response.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
-}
+};
 
 function buildRenderPrompt(customPrompt, style) {
   const basePrompt = `Transform this 3D room visualization into a photorealistic architectural render.
