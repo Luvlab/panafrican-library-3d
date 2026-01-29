@@ -2374,16 +2374,33 @@
                 transformControls.setSize(0.75);
                 scene.add(transformControls);
 
-                // Snap to floor on transform
+                // STRICT: Snap to floor and enforce room boundaries
+                let lastValidPosition = null;
                 transformControls.addEventListener('objectChange', () => {
-                    if (selectedPlacedItem && !selectedPlacedItem.userData.isWallArt) {
-                        selectedPlacedItem.position.y = 0;
-                        // Constrain to room bounds
+                    if (selectedPlacedItem) {
+                        // Snap to floor (unless wall art)
+                        if (!selectedPlacedItem.userData.isWallArt) {
+                            selectedPlacedItem.position.y = 0;
+                        }
+
+                        // STRICT: Check if new position is valid
                         const constrained = constrainToRoom(selectedPlacedItem.position);
                         if (constrained) {
+                            // Valid position - update and save
                             selectedPlacedItem.position.x = constrained.x;
                             selectedPlacedItem.position.z = constrained.z;
+                            lastValidPosition = selectedPlacedItem.position.clone();
+                        } else if (lastValidPosition) {
+                            // INVALID - snap back to last valid position
+                            selectedPlacedItem.position.copy(lastValidPosition);
                         }
+                    }
+                });
+
+                // Save valid position when starting drag
+                transformControls.addEventListener('mouseDown', () => {
+                    if (selectedPlacedItem) {
+                        lastValidPosition = selectedPlacedItem.position.clone();
                     }
                 });
 
@@ -6099,7 +6116,8 @@
             }
         });
 
-        // Mousemove - drag selected item
+        // Mousemove - drag selected item (STRICT: only moves within room bounds)
+        let mouseDragLastValidPos = null;
         container.addEventListener('mousemove', function(event) {
             if (!decoratorMode || !isMouseDraggingItem || !selectedPlacedItem) return;
 
@@ -6117,12 +6135,15 @@
                 intersectPoint.y = 0;
                 const constrained = constrainToRoom(intersectPoint);
                 if (constrained) {
+                    // VALID position - move item
                     selectedPlacedItem.position.x = constrained.x;
                     selectedPlacedItem.position.z = constrained.z;
                     if (!selectedPlacedItem.userData.isWallArt) {
                         selectedPlacedItem.position.y = 0;
                     }
+                    mouseDragLastValidPos = selectedPlacedItem.position.clone();
                 }
+                // If constrained returns null, item stays at last valid position
             }
         });
 
@@ -6171,86 +6192,85 @@
         // Initialize canvas drag-drop on load
         setupCanvasDragDrop();
 
-        // ROOM BOUNDARY CONSTRAINT FUNCTION
-        // Ensures furniture stays inside room boundaries and away from doors
+        // ============================================================
+        // STRICT ROOM BOUNDARY RULES - NO EXCEPTIONS
+        // Items can ONLY be placed INSIDE rooms. Period.
+        // ============================================================
         function constrainToRoom(pos, assetId = null) {
             const x = pos.x;
             const z = pos.z;
 
-            // Room S202 boundaries (left room) - using validation system geometry
+            // STRICT Room S202 boundaries (left room)
             const s202Bounds = ROOM_GEOMETRY['S202'].bounds;
             const s202Door = ROOM_GEOMETRY['S202'].doorZone;
-            const s202Left = s202Bounds.minX + 0.3;
-            const s202Right = s202Bounds.maxX - 0.3;
-            const s202Front = s202Bounds.maxZ - 0.3;  // South (windows)
-            const s202Back = s202Bounds.minZ + 0.3;   // North (door)
+            const WALL_MARGIN = 0.3; // Keep items 30cm from walls
+            const s202Left = s202Bounds.minX + WALL_MARGIN;
+            const s202Right = s202Bounds.maxX - WALL_MARGIN;
+            const s202Front = s202Bounds.maxZ - WALL_MARGIN;
+            const s202Back = s202Bounds.minZ + WALL_MARGIN;
 
-            // Room S203 boundaries (right room)
+            // STRICT Room S203 boundaries (right room)
             const s203Bounds = ROOM_GEOMETRY['S203'].bounds;
             const s203Door = ROOM_GEOMETRY['S203'].doorZone;
-            const s203Left = s203Bounds.minX + 0.3;
-            const s203Right = s203Bounds.maxX - 0.3;
-            const s203Front = s203Bounds.maxZ - 0.3;
-            const s203Back = s203Bounds.minZ + 0.3;
+            const s203Left = s203Bounds.minX + WALL_MARGIN;
+            const s203Right = s203Bounds.maxX - WALL_MARGIN;
+            const s203Front = s203Bounds.maxZ - WALL_MARGIN;
+            const s203Back = s203Bounds.minZ + WALL_MARGIN;
 
-            // Helper: Check if position is in door zone
+            // STRICT CHECK: Is position INSIDE S202?
+            const inS202 = x >= s202Left && x <= s202Right &&
+                           z >= s202Back && z <= s202Front;
+
+            // STRICT CHECK: Is position INSIDE S203?
+            const inS203 = x >= s203Left && x <= s203Right &&
+                           z >= s203Back && z <= s203Front;
+
+            // RULE: If not inside ANY room, REJECT placement entirely
+            if (!inS202 && !inS203) {
+                console.warn('REJECTED: Placement outside room boundaries at', x.toFixed(2), z.toFixed(2));
+                return null; // REJECT - cannot place outside rooms
+            }
+
+            // Helper: Check if position is in door zone (blocked area)
             function isInDoorZone(px, pz, doorZone) {
-                return px >= doorZone.minX && px <= doorZone.maxX &&
-                       pz >= doorZone.minZ && pz <= doorZone.maxZ;
+                return px >= doorZone.minX - 0.2 && px <= doorZone.maxX + 0.2 &&
+                       pz >= doorZone.minZ && pz <= doorZone.maxZ + 0.3;
             }
 
-            // Helper: Push position out of door zone
-            function pushFromDoorZone(px, pz, doorZone, roomBack) {
-                if (isInDoorZone(px, pz, doorZone)) {
-                    // Push south (away from door at north wall)
-                    return { x: px, z: doorZone.maxZ + 0.1 };
+            // If in S202
+            if (inS202) {
+                // Check door zone - push away if too close
+                if (isInDoorZone(x, z, s202Door)) {
+                    // Push south away from door
+                    const safeZ = s202Door.maxZ + 0.4;
+                    if (safeZ <= s202Front) {
+                        return new THREE.Vector3(x, 0, safeZ);
+                    }
+                    // Can't place here at all
+                    console.warn('REJECTED: Too close to S202 door');
+                    return null;
                 }
-                return { x: px, z: pz };
+                return new THREE.Vector3(x, 0, z);
             }
 
-            // Check if in S202
-            if (x >= s202Left - 0.3 && x <= s202Right + 0.3 && z >= s202Back - 0.3 && z <= s202Front + 0.3) {
-                let finalX = Math.max(s202Left, Math.min(s202Right, x));
-                let finalZ = Math.max(s202Back, Math.min(s202Front, z));
-
-                // Check door clearance
-                const pushed = pushFromDoorZone(finalX, finalZ, s202Door, s202Back);
-                finalX = pushed.x;
-                finalZ = Math.max(s202Back, Math.min(s202Front, pushed.z));
-
-                return new THREE.Vector3(finalX, 0, finalZ);
+            // If in S203
+            if (inS203) {
+                // Check door zone - push away if too close
+                if (isInDoorZone(x, z, s203Door)) {
+                    // Push south away from door
+                    const safeZ = s203Door.maxZ + 0.4;
+                    if (safeZ <= s203Front) {
+                        return new THREE.Vector3(x, 0, safeZ);
+                    }
+                    // Can't place here at all
+                    console.warn('REJECTED: Too close to S203 door');
+                    return null;
+                }
+                return new THREE.Vector3(x, 0, z);
             }
 
-            // Check if in S203
-            if (x >= s203Left - 0.3 && x <= s203Right + 0.3 && z >= s203Back - 0.3 && z <= s203Front + 0.3) {
-                let finalX = Math.max(s203Left, Math.min(s203Right, x));
-                let finalZ = Math.max(s203Back, Math.min(s203Front, z));
-
-                // Check door clearance
-                const pushed = pushFromDoorZone(finalX, finalZ, s203Door, s203Back);
-                finalX = pushed.x;
-                finalZ = Math.max(s203Back, Math.min(s203Front, pushed.z));
-
-                return new THREE.Vector3(finalX, 0, finalZ);
-            }
-
-            // Not in any room - find closest room and snap to edge
-            const distToS202 = Math.abs(x - (s202Left + s202Right) / 2);
-            const distToS203 = Math.abs(x - (s203Left + s203Right) / 2);
-
-            if (distToS202 < distToS203) {
-                // Snap to S202
-                let finalX = Math.max(s202Left, Math.min(s202Right, x));
-                let finalZ = Math.max(s202Back, Math.min(s202Front, z));
-                const pushed = pushFromDoorZone(finalX, finalZ, s202Door, s202Back);
-                return new THREE.Vector3(pushed.x, 0, Math.max(s202Back, Math.min(s202Front, pushed.z)));
-            } else {
-                // Snap to S203
-                let finalX = Math.max(s203Left, Math.min(s203Right, x));
-                let finalZ = Math.max(s203Back, Math.min(s203Front, z));
-                const pushed = pushFromDoorZone(finalX, finalZ, s203Door, s203Back);
-                return new THREE.Vector3(pushed.x, 0, Math.max(s203Back, Math.min(s203Front, pushed.z)));
-            }
+            // Should never reach here, but safety fallback
+            return null;
         }
 
         // Check if a new placement would be valid (no collisions)
