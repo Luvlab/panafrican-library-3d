@@ -1603,6 +1603,400 @@
         const VESTIBULE_WIDTH = ROOM_S202_WIDTH;  // Same width as room
         const VESTIBULE_DEPTH = 1.5;  // ~5' deep vestibule/corridor
 
+        // ============================================================
+        // LAYOUT VALIDATION SYSTEM
+        // Prevents bad furniture placements from rendering
+        // ============================================================
+
+        // Asset Whitelist - Only these items can be placed
+        const ASSET_WHITELIST = {
+            // S202 - SOUND LIBRARY / RADIO ROOM
+            'audio_station': {
+                id: 'audio_station',
+                name: 'DJ / Audio Station',
+                footprint: { width: 1.2, depth: 0.6 },
+                clearance: { front: 0.8, back: 0.1, left: 0.2, right: 0.2 },
+                allowedRooms: ['S202'],
+                wallAnchor: 'west', // Must be against west wall
+                maxCount: 1
+            },
+            'floor_speaker': {
+                id: 'floor_speaker',
+                name: 'Floor Speaker',
+                footprint: { width: 0.35, depth: 0.35 },
+                clearance: { front: 0.5, back: 0.1, left: 0.1, right: 0.1 },
+                allowedRooms: ['S202'],
+                wallAnchor: null, // Corners preferred
+                maxCount: 4
+            },
+            'simple_pouf': {
+                id: 'simple_pouf',
+                name: 'Floor Pouf/Cushion',
+                footprint: { width: 0.6, depth: 0.6 },
+                clearance: { front: 0.3, back: 0.3, left: 0.3, right: 0.3 },
+                allowedRooms: ['S202'],
+                wallAnchor: null, // Perimeter seating
+                maxCount: 8
+            },
+            'headphone_station': {
+                id: 'headphone_station',
+                name: 'Headphone Listening Station',
+                footprint: { width: 0.5, depth: 0.5 },
+                clearance: { front: 0.6, back: 0.1, left: 0.3, right: 0.3 },
+                allowedRooms: ['S202'],
+                wallAnchor: 'east',
+                maxCount: 3
+            },
+            'african_natte': {
+                id: 'african_natte',
+                name: 'African Woven Mat',
+                footprint: { width: 2.0, depth: 1.5 },
+                clearance: { front: 0, back: 0, left: 0, right: 0 },
+                allowedRooms: ['S202'],
+                wallAnchor: null,
+                maxCount: 2
+            },
+
+            // S203 - PANAFRICAN LIBRARY / READING ROOM
+            'reading_table': {
+                id: 'reading_table',
+                name: 'Reading Table',
+                footprint: { width: 1.8, depth: 0.9 },
+                clearance: { front: 0.8, back: 0.8, left: 0.6, right: 0.6 },
+                allowedRooms: ['S203'],
+                wallAnchor: null, // Center of room
+                maxCount: 2
+            },
+            'stackable_chair': {
+                id: 'stackable_chair',
+                name: 'Stackable Chair',
+                footprint: { width: 0.45, depth: 0.45 },
+                clearance: { front: 0.5, back: 0.1, left: 0.1, right: 0.1 },
+                allowedRooms: ['S203'],
+                wallAnchor: null,
+                maxCount: 12
+            },
+            'wall_shelf': {
+                id: 'wall_shelf',
+                name: 'Wall-Mounted Archive Shelf',
+                footprint: { width: 1.2, depth: 0.3 },
+                clearance: { front: 0.6, back: 0, left: 0.1, right: 0.1 },
+                allowedRooms: ['S203'],
+                wallAnchor: 'any', // Must be on a wall
+                maxCount: 6
+            },
+            'archive_cabinet': {
+                id: 'archive_cabinet',
+                name: 'Low Archive Cabinet',
+                footprint: { width: 1.0, depth: 0.45 },
+                clearance: { front: 0.6, back: 0.1, left: 0.1, right: 0.1 },
+                allowedRooms: ['S203'],
+                wallAnchor: 'any',
+                maxCount: 4
+            },
+            'screen_stand': {
+                id: 'screen_stand',
+                name: 'Video Screen Stand',
+                footprint: { width: 0.6, depth: 0.4 },
+                clearance: { front: 1.5, back: 0.1, left: 0.3, right: 0.3 },
+                allowedRooms: ['S203'],
+                wallAnchor: null,
+                maxCount: 2
+            },
+            'simple_stool': {
+                id: 'simple_stool',
+                name: 'Simple Stool',
+                footprint: { width: 0.35, depth: 0.35 },
+                clearance: { front: 0.4, back: 0.2, left: 0.2, right: 0.2 },
+                allowedRooms: ['S203'],
+                wallAnchor: null,
+                maxCount: 6
+            },
+            'pendant_light': {
+                id: 'pendant_light',
+                name: 'Pendant Light',
+                footprint: { width: 0.4, depth: 0.4 },
+                clearance: { front: 0, back: 0, left: 0, right: 0 },
+                allowedRooms: ['S202', 'S203'],
+                wallAnchor: null, // Ceiling mounted
+                isCeilingMounted: true,
+                maxCount: 4
+            }
+        };
+
+        // Room Geometry - Defines boundaries and keep-out zones
+        const ROOM_GEOMETRY = {
+            'S202': {
+                id: 'S202',
+                name: 'Sound Library / Radio Room',
+                bounds: {
+                    minX: -ROOM_S202_WIDTH / 2 - ROOM_S203_WIDTH / 2 - WALL_THICKNESS / 2,
+                    maxX: -ROOM_S203_WIDTH / 2 - WALL_THICKNESS / 2,
+                    minZ: -ROOM_S202_DEPTH / 2,
+                    maxZ: ROOM_S202_DEPTH / 2
+                },
+                doorZone: {
+                    // 1.2m clearance in front of door (north wall, center)
+                    minX: -ROOM_S202_WIDTH / 2 - ROOM_S203_WIDTH / 2 - WALL_THICKNESS / 2 + ROOM_S202_WIDTH / 2 - DOOR_WIDTH,
+                    maxX: -ROOM_S202_WIDTH / 2 - ROOM_S203_WIDTH / 2 - WALL_THICKNESS / 2 + ROOM_S202_WIDTH / 2 + DOOR_WIDTH,
+                    minZ: -ROOM_S202_DEPTH / 2,
+                    maxZ: -ROOM_S202_DEPTH / 2 + 1.2
+                },
+                circulationZones: [
+                    // Main circulation path from door to window
+                    {
+                        minX: -ROOM_S202_WIDTH / 2 - ROOM_S203_WIDTH / 2 - WALL_THICKNESS / 2 + 0.8,
+                        maxX: -ROOM_S203_WIDTH / 2 - WALL_THICKNESS / 2 - 0.8,
+                        minZ: -ROOM_S202_DEPTH / 2 + 1.2,
+                        maxZ: ROOM_S202_DEPTH / 2 - 1.0
+                    }
+                ],
+                usableArea: null // Calculated at runtime
+            },
+            'S203': {
+                id: 'S203',
+                name: 'Panafrican Library / Reading Room',
+                bounds: {
+                    minX: WALL_THICKNESS / 2,
+                    maxX: ROOM_S203_WIDTH + WALL_THICKNESS / 2,
+                    minZ: -ROOM_S203_DEPTH / 2,
+                    maxZ: ROOM_S203_DEPTH / 2
+                },
+                doorZone: {
+                    // 1.2m clearance in front of door (north wall, center)
+                    minX: WALL_THICKNESS / 2 + ROOM_S203_WIDTH / 2 - DOOR_WIDTH,
+                    maxX: WALL_THICKNESS / 2 + ROOM_S203_WIDTH / 2 + DOOR_WIDTH,
+                    minZ: -ROOM_S203_DEPTH / 2,
+                    maxZ: -ROOM_S203_DEPTH / 2 + 1.2
+                },
+                circulationZones: [
+                    // Main circulation from door
+                    {
+                        minX: WALL_THICKNESS / 2 + 0.6,
+                        maxX: ROOM_S203_WIDTH + WALL_THICKNESS / 2 - 0.6,
+                        minZ: -ROOM_S203_DEPTH / 2 + 1.2,
+                        maxZ: -ROOM_S203_DEPTH / 2 + 2.5
+                    }
+                ],
+                usableArea: null
+            }
+        };
+
+        // Calculate usable areas (bounds minus door and circulation zones)
+        function calculateUsableAreas() {
+            for (const roomId in ROOM_GEOMETRY) {
+                const room = ROOM_GEOMETRY[roomId];
+                const bounds = room.bounds;
+                const door = room.doorZone;
+                // Usable area is the bounds with margin
+                room.usableArea = {
+                    minX: bounds.minX + 0.3,
+                    maxX: bounds.maxX - 0.3,
+                    minZ: bounds.minZ + 0.3,
+                    maxZ: bounds.maxZ - 0.3
+                };
+            }
+        }
+        calculateUsableAreas();
+
+        // 2D AABB Collision Detection
+        function getAABB(placement) {
+            const asset = ASSET_WHITELIST[placement.assetId];
+            if (!asset) return null;
+
+            const halfW = asset.footprint.width / 2;
+            const halfD = asset.footprint.depth / 2;
+
+            // Account for rotation (simplified - assumes 90 degree increments)
+            const rot = (placement.rotation || 0) % 360;
+            const rotated = (rot === 90 || rot === 270);
+            const w = rotated ? halfD : halfW;
+            const d = rotated ? halfW : halfD;
+
+            return {
+                minX: placement.x - w,
+                maxX: placement.x + w,
+                minZ: placement.z - d,
+                maxZ: placement.z + d
+            };
+        }
+
+        function aabbsOverlap(a, b) {
+            if (!a || !b) return false;
+            return !(a.maxX < b.minX || a.minX > b.maxX ||
+                     a.maxZ < b.minZ || a.minZ > b.maxZ);
+        }
+
+        function getAABBWithClearance(placement) {
+            const asset = ASSET_WHITELIST[placement.assetId];
+            if (!asset) return null;
+
+            const base = getAABB(placement);
+            if (!base) return null;
+
+            const cl = asset.clearance;
+            return {
+                minX: base.minX - cl.left,
+                maxX: base.maxX + cl.right,
+                minZ: base.minZ - cl.back,
+                maxZ: base.maxZ + cl.front
+            };
+        }
+
+        // Layout Validation Function
+        function validateLayout(placements) {
+            const errors = [];
+            const warnings = [];
+            const assetCounts = {};
+
+            for (let i = 0; i < placements.length; i++) {
+                const p = placements[i];
+                const asset = ASSET_WHITELIST[p.assetId];
+
+                // 1. Check if asset is in whitelist
+                if (!asset) {
+                    errors.push(`Unknown asset: ${p.assetId}`);
+                    continue;
+                }
+
+                // 2. Check room assignment
+                if (!asset.allowedRooms.includes(p.roomId)) {
+                    errors.push(`${asset.name} not allowed in room ${p.roomId}`);
+                }
+
+                // 3. Check max count
+                assetCounts[p.assetId] = (assetCounts[p.assetId] || 0) + 1;
+                if (assetCounts[p.assetId] > asset.maxCount) {
+                    errors.push(`Too many ${asset.name} (max ${asset.maxCount})`);
+                }
+
+                // 4. Check room boundaries
+                const room = ROOM_GEOMETRY[p.roomId];
+                if (room) {
+                    const aabb = getAABB(p);
+                    if (aabb) {
+                        const usable = room.usableArea;
+                        if (aabb.minX < usable.minX || aabb.maxX > usable.maxX ||
+                            aabb.minZ < usable.minZ || aabb.maxZ > usable.maxZ) {
+                            errors.push(`${asset.name} outside room boundaries`);
+                        }
+
+                        // 5. Check door zone collision
+                        if (aabbsOverlap(aabb, room.doorZone)) {
+                            errors.push(`${asset.name} blocks door in ${p.roomId}`);
+                        }
+                    }
+                }
+
+                // 6. Check wall anchor requirements
+                if (asset.wallAnchor && asset.wallAnchor !== 'any') {
+                    const room = ROOM_GEOMETRY[p.roomId];
+                    if (room) {
+                        const bounds = room.bounds;
+                        const wallMargin = 0.5;
+                        let anchored = false;
+
+                        if (asset.wallAnchor === 'west' && Math.abs(p.x - bounds.minX) < wallMargin) anchored = true;
+                        if (asset.wallAnchor === 'east' && Math.abs(p.x - bounds.maxX) < wallMargin) anchored = true;
+                        if (asset.wallAnchor === 'north' && Math.abs(p.z - bounds.minZ) < wallMargin) anchored = true;
+                        if (asset.wallAnchor === 'south' && Math.abs(p.z - bounds.maxZ) < wallMargin) anchored = true;
+
+                        if (!anchored) {
+                            warnings.push(`${asset.name} should be against ${asset.wallAnchor} wall`);
+                        }
+                    }
+                }
+
+                // 7. Check collision with other placements
+                for (let j = i + 1; j < placements.length; j++) {
+                    const other = placements[j];
+                    const aabb1 = getAABBWithClearance(p);
+                    const aabb2 = getAABBWithClearance(other);
+
+                    if (aabbsOverlap(aabb1, aabb2)) {
+                        const otherAsset = ASSET_WHITELIST[other.assetId];
+                        errors.push(`${asset.name} collides with ${otherAsset?.name || other.assetId}`);
+                    }
+                }
+            }
+
+            return {
+                valid: errors.length === 0,
+                errors: errors,
+                warnings: warnings
+            };
+        }
+
+        // Layout Scoring Function
+        function scoreLayout(placements) {
+            let score = 100;
+            const validation = validateLayout(placements);
+
+            // Hard failures
+            if (!validation.valid) {
+                return { score: 0, details: 'Invalid layout: ' + validation.errors.join(', ') };
+            }
+
+            // Deduct for warnings
+            score -= validation.warnings.length * 5;
+
+            // Check functional completeness
+            const hasAudioStation = placements.some(p => p.assetId === 'audio_station' && p.roomId === 'S202');
+            const hasReadingTable = placements.some(p => p.assetId === 'reading_table' && p.roomId === 'S203');
+            const hasSeating = placements.some(p =>
+                ['simple_pouf', 'stackable_chair', 'simple_stool'].includes(p.assetId)
+            );
+
+            if (!hasAudioStation) score -= 20;
+            if (!hasReadingTable) score -= 20;
+            if (!hasSeating) score -= 15;
+
+            // Bonus for good distribution
+            const s202Count = placements.filter(p => p.roomId === 'S202').length;
+            const s203Count = placements.filter(p => p.roomId === 'S203').length;
+            if (s202Count > 0 && s203Count > 0) score += 10;
+
+            return {
+                score: Math.max(0, Math.min(100, score)),
+                details: validation.warnings.length > 0 ?
+                    'Warnings: ' + validation.warnings.join(', ') : 'Good layout'
+            };
+        }
+
+        // Convert Three.js position to placement format
+        function objectToPlacement(obj, assetId, roomId) {
+            return {
+                assetId: assetId,
+                roomId: roomId,
+                x: obj.position.x,
+                z: obj.position.z,
+                rotation: (obj.rotation.y * 180 / Math.PI) % 360
+            };
+        }
+
+        // Determine which room an object is in
+        function getObjectRoom(obj) {
+            const x = obj.position.x;
+            const z = obj.position.z;
+
+            for (const roomId in ROOM_GEOMETRY) {
+                const room = ROOM_GEOMETRY[roomId];
+                const b = room.bounds;
+                if (x >= b.minX && x <= b.maxX && z >= b.minZ && z <= b.maxZ) {
+                    return roomId;
+                }
+            }
+            return null;
+        }
+
+        console.log('Layout validation system initialized');
+        console.log('Asset whitelist:', Object.keys(ASSET_WHITELIST).length, 'items');
+        console.log('Room geometries:', Object.keys(ROOM_GEOMETRY));
+
+        // ============================================================
+        // END LAYOUT VALIDATION SYSTEM
+        // ============================================================
+
         // Window dimensions (from reference photos - MoMA PS1 industrial windows)
         // Tall rectangular windows with white frames, grid pattern
         const PS1_WINDOW_WIDTH = 1.3;      // ~4.25 feet
@@ -4224,62 +4618,137 @@
         });
 
         // ROOM BOUNDARY CONSTRAINT FUNCTION
-        // Ensures furniture stays inside room boundaries
-        function constrainToRoom(pos) {
+        // Ensures furniture stays inside room boundaries and away from doors
+        function constrainToRoom(pos, assetId = null) {
             const x = pos.x;
             const z = pos.z;
 
-            // Room S202 boundaries (left room)
-            // ROOM_S202_X is center, width is ROOM_S202_WIDTH
-            const s202Left = ROOM_S202_X - ROOM_S202_WIDTH / 2 + 0.3;
-            const s202Right = ROOM_S202_X + ROOM_S202_WIDTH / 2 - 0.3;
-            const s202Front = ROOM_S202_DEPTH / 2 - 0.3;  // South (windows)
-            const s202Back = -ROOM_S202_DEPTH / 2 + 0.3;  // North (door)
+            // Room S202 boundaries (left room) - using validation system geometry
+            const s202Bounds = ROOM_GEOMETRY['S202'].bounds;
+            const s202Door = ROOM_GEOMETRY['S202'].doorZone;
+            const s202Left = s202Bounds.minX + 0.3;
+            const s202Right = s202Bounds.maxX - 0.3;
+            const s202Front = s202Bounds.maxZ - 0.3;  // South (windows)
+            const s202Back = s202Bounds.minZ + 0.3;   // North (door)
 
             // Room S203 boundaries (right room)
-            const s203Left = ROOM_S203_X - ROOM_S203_WIDTH / 2 + 0.3;
-            const s203Right = ROOM_S203_X + ROOM_S203_WIDTH / 2 - 0.3;
-            const s203Front = ROOM_S203_DEPTH / 2 - 0.3;
-            const s203Back = -ROOM_S203_DEPTH / 2 + 0.3;
+            const s203Bounds = ROOM_GEOMETRY['S203'].bounds;
+            const s203Door = ROOM_GEOMETRY['S203'].doorZone;
+            const s203Left = s203Bounds.minX + 0.3;
+            const s203Right = s203Bounds.maxX - 0.3;
+            const s203Front = s203Bounds.maxZ - 0.3;
+            const s203Back = s203Bounds.minZ + 0.3;
+
+            // Helper: Check if position is in door zone
+            function isInDoorZone(px, pz, doorZone) {
+                return px >= doorZone.minX && px <= doorZone.maxX &&
+                       pz >= doorZone.minZ && pz <= doorZone.maxZ;
+            }
+
+            // Helper: Push position out of door zone
+            function pushFromDoorZone(px, pz, doorZone, roomBack) {
+                if (isInDoorZone(px, pz, doorZone)) {
+                    // Push south (away from door at north wall)
+                    return { x: px, z: doorZone.maxZ + 0.1 };
+                }
+                return { x: px, z: pz };
+            }
 
             // Check if in S202
-            if (x >= s202Left && x <= s202Right && z >= s202Back && z <= s202Front) {
-                // Clamp to room boundaries
-                return new THREE.Vector3(
-                    Math.max(s202Left, Math.min(s202Right, x)),
-                    0,
-                    Math.max(s202Back, Math.min(s202Front, z))
-                );
+            if (x >= s202Left - 0.3 && x <= s202Right + 0.3 && z >= s202Back - 0.3 && z <= s202Front + 0.3) {
+                let finalX = Math.max(s202Left, Math.min(s202Right, x));
+                let finalZ = Math.max(s202Back, Math.min(s202Front, z));
+
+                // Check door clearance
+                const pushed = pushFromDoorZone(finalX, finalZ, s202Door, s202Back);
+                finalX = pushed.x;
+                finalZ = Math.max(s202Back, Math.min(s202Front, pushed.z));
+
+                return new THREE.Vector3(finalX, 0, finalZ);
             }
 
             // Check if in S203
-            if (x >= s203Left && x <= s203Right && z >= s203Back && z <= s203Front) {
-                return new THREE.Vector3(
-                    Math.max(s203Left, Math.min(s203Right, x)),
-                    0,
-                    Math.max(s203Back, Math.min(s203Front, z))
-                );
+            if (x >= s203Left - 0.3 && x <= s203Right + 0.3 && z >= s203Back - 0.3 && z <= s203Front + 0.3) {
+                let finalX = Math.max(s203Left, Math.min(s203Right, x));
+                let finalZ = Math.max(s203Back, Math.min(s203Front, z));
+
+                // Check door clearance
+                const pushed = pushFromDoorZone(finalX, finalZ, s203Door, s203Back);
+                finalX = pushed.x;
+                finalZ = Math.max(s203Back, Math.min(s203Front, pushed.z));
+
+                return new THREE.Vector3(finalX, 0, finalZ);
             }
 
             // Not in any room - find closest room and snap to edge
-            const distToS202 = Math.abs(x - ROOM_S202_X);
-            const distToS203 = Math.abs(x - ROOM_S203_X);
+            const distToS202 = Math.abs(x - (s202Left + s202Right) / 2);
+            const distToS203 = Math.abs(x - (s203Left + s203Right) / 2);
 
             if (distToS202 < distToS203) {
                 // Snap to S202
-                return new THREE.Vector3(
-                    Math.max(s202Left, Math.min(s202Right, x)),
-                    0,
-                    Math.max(s202Back, Math.min(s202Front, z))
-                );
+                let finalX = Math.max(s202Left, Math.min(s202Right, x));
+                let finalZ = Math.max(s202Back, Math.min(s202Front, z));
+                const pushed = pushFromDoorZone(finalX, finalZ, s202Door, s202Back);
+                return new THREE.Vector3(pushed.x, 0, Math.max(s202Back, Math.min(s202Front, pushed.z)));
             } else {
                 // Snap to S203
-                return new THREE.Vector3(
-                    Math.max(s203Left, Math.min(s203Right, x)),
-                    0,
-                    Math.max(s203Back, Math.min(s203Front, z))
-                );
+                let finalX = Math.max(s203Left, Math.min(s203Right, x));
+                let finalZ = Math.max(s203Back, Math.min(s203Front, z));
+                const pushed = pushFromDoorZone(finalX, finalZ, s203Door, s203Back);
+                return new THREE.Vector3(pushed.x, 0, Math.max(s203Back, Math.min(s203Front, pushed.z)));
             }
+        }
+
+        // Check if a new placement would be valid (no collisions)
+        function wouldCollideWithExisting(newPosition, newAssetId, excludeItem = null) {
+            const asset = ASSET_WHITELIST[newAssetId];
+            if (!asset) return false; // Unknown asset, allow placement
+
+            // Create temporary placement to check
+            const tempPlacement = {
+                assetId: newAssetId,
+                roomId: getObjectRoom({ position: newPosition }) || 'S203',
+                x: newPosition.x,
+                z: newPosition.z,
+                rotation: 0
+            };
+
+            const newAABB = getAABBWithClearance(tempPlacement);
+            if (!newAABB) return false;
+
+            // Check against all existing placed items
+            for (const item of placedItems) {
+                if (item === excludeItem) continue;
+
+                const itemAssetId = item.userData.assetId || 'unknown';
+                const itemPlacement = objectToPlacement(item, itemAssetId, getObjectRoom(item) || 'S203');
+                const existingAABB = getAABBWithClearance(itemPlacement);
+
+                if (existingAABB && aabbsOverlap(newAABB, existingAABB)) {
+                    console.log(`Collision detected: ${newAssetId} would collide with ${itemAssetId}`);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        // Visual feedback for invalid placement
+        let invalidPlacementTimeout = null;
+        function showInvalidPlacementFeedback(position) {
+            // Create a red indicator at the position
+            const indicator = new THREE.Mesh(
+                new THREE.RingGeometry(0.3, 0.5, 16),
+                new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.5 })
+            );
+            indicator.rotation.x = -Math.PI / 2;
+            indicator.position.set(position.x, 0.01, position.z);
+            scene.add(indicator);
+
+            // Remove after 1 second
+            setTimeout(() => {
+                scene.remove(indicator);
+            }, 1000);
         }
 
         window.moveItem = function(dx, dz) {
