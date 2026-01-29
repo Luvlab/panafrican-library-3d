@@ -580,11 +580,6 @@
             background: rgba(46,125,50,0.1);
         }
         @media (max-width: 768px) {
-            #capture-btn, #moodboard-btn {
-                transform: translateX(-50%);
-                bottom: 20px;
-            }
-            #moodboard-btn { bottom: 60px; }
             .modal-content { padding: 20px; }
             .moodboard-grid { grid-template-columns: 1fr; }
         }
@@ -836,7 +831,6 @@
             aspect-ratio: 4/3;
         }
         @media (max-width: 768px) {
-            #decorator-btn { transform: translateX(-50%); bottom: 100px; }
             #decorator-panel { width: 100%; right: -100%; }
         }
         /* Admin Mode Styles */
@@ -1185,13 +1179,66 @@
             vertical-align: middle;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Mobile Footer Actions - Fixed bottom bar on mobile */
+        #mobile-footer-actions {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 12px 10px;
+            padding-bottom: max(12px, env(safe-area-inset-bottom));
+            z-index: 200;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            justify-content: space-around;
+            align-items: center;
+            gap: 8px;
+        }
+        #mobile-footer-actions button {
+            flex: 1;
+            max-width: 60px;
+            padding: 10px 8px;
+            background: rgba(100, 149, 237, 0.3);
+            border: 1px solid cornflowerblue;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.2s ease;
+        }
+        #mobile-footer-actions button:active {
+            background: rgba(100, 149, 237, 0.6);
+            transform: scale(0.95);
+        }
+
         @media (max-width: 768px) {
-            #admin-btn { right: 10px; top: auto; bottom: 140px; }
-            #render-btn { transform: translateX(-50%); bottom: 180px; }
+            #admin-btn { display: none; }
+            #render-btn { display: none; }
+            #capture-btn { display: none; }
+            #moodboard-btn { display: none; }
+            #decorator-btn { display: none; }
+            #mobile-footer-actions { display: flex; }
             #admin-panel { width: 100%; left: -100%; }
             .render-preview { grid-template-columns: 1fr; }
             .render-options { grid-template-columns: 1fr; }
             .render-style-grid { grid-template-columns: repeat(2, 1fr); }
+            #toggle-btns {
+                bottom: 70px;
+                padding: 0 10px;
+            }
+            #help-text {
+                bottom: 110px;
+            }
+            #controls-panel {
+                bottom: 140px;
+                max-height: 30vh;
+            }
+            #credits {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -1202,8 +1249,8 @@
         <h1>The Panafrican Library Will Not Be Colonized</h1>
         <h2>Reading Room • Interactive 3D</h2>
         <p>A curatorial Reading Room conceived as a living archive of panafrican and diasporic publishing. A space to read, listen, and slow down.</p>
-        <button class="room-btn" onclick="focusRoom('roomS202')">Room S202 — Special Special</button>
-        <button class="room-btn" onclick="focusRoom('roomS203')">Room S203 — Reading Room</button>
+        <button class="room-btn" onclick="focusRoom('roomS202')">Room S202 — Three Star</button>
+        <button class="room-btn" onclick="focusRoom('roomS203')">Room S202 — Special Special</button>
     </div>
 
     <div id="controls-panel">
@@ -1213,14 +1260,14 @@
             <button class="control-btn" onclick="setView('floorPlan')"><span class="icon">📐</span>Floor Plan View</button>
         </div>
         <div class="control-section">
-            <div class="section-title">Room S202 - Special Special</div>
+            <div class="section-title">Room S202 - Three Star</div>
             <button class="control-btn" onclick="setView('roomS202Entry')"><span class="icon">🚪</span>Entry Vestibule</button>
             <button class="control-btn" onclick="setView('roomS202Inside')"><span class="icon">🔊</span>Inside View</button>
             <button class="control-btn" onclick="setView('roomS202Windows')"><span class="icon">🪟</span>Window Wall</button>
             <button class="control-btn" onclick="setView('roomS202Table')"><span class="icon">📚</span>Display Table</button>
         </div>
         <div class="control-section">
-            <div class="section-title">Room S203 - Reading Room</div>
+            <div class="section-title">Room S202 - Special Special</div>
             <button class="control-btn" onclick="setView('roomS203Entry')"><span class="icon">🚪</span>Entry (from door)</button>
             <button class="control-btn" onclick="setView('roomS203Inside')"><span class="icon">📖</span>Inside View</button>
             <button class="control-btn" onclick="setView('roomS203Windows')"><span class="icon">🪟</span>Arched Windows</button>
@@ -1235,19 +1282,19 @@
     <div id="dimensions-panel">
         <h3>Room Dimensions (from floor plan)</h3>
         <div class="dim-row">
-            <span class="dim-label">Room S202 (Special Special)</span>
+            <span class="dim-label">Room S202 (Three Star)</span>
             <span class="dim-value">11'-5⅝" × 25'-3¾" | 3.49m × 7.71m</span>
         </div>
         <div class="dim-row">
-            <span class="dim-label">Room S202 Area</span>
+            <span class="dim-label">Three Star Area</span>
             <span class="dim-value">289.4 sq ft | 26.9 m²</span>
         </div>
         <div class="dim-row">
-            <span class="dim-label">Room S203 (Reading Room)</span>
+            <span class="dim-label">Room S202 (Special Special)</span>
             <span class="dim-value">14'-7¾" × 25'-3¾" | 4.46m × 7.71m</span>
         </div>
         <div class="dim-row">
-            <span class="dim-label">Room S203 Area</span>
+            <span class="dim-label">Special Special Area</span>
             <span class="dim-value">369.5 sq ft | 34.3 m²</span>
         </div>
         <div class="dim-row">
@@ -1284,6 +1331,9 @@
 
     <button id="capture-btn" onclick="captureScreenshot()">📷 Capture</button>
     <button id="moodboard-btn" onclick="toggleMoodboard()">🎨 Mood Board</button>
+    <button id="decorator-btn" onclick="toggleDecorator()">🛋️ Decorator</button>
+    <button id="render-btn" onclick="openRenderModal()">✨ AI Render</button>
+    <button id="admin-btn" onclick="toggleAdminLogin()">🔐 Admin</button>
 
     <!-- Mood Board Modal -->
     <div id="moodboard-modal" class="modal-hidden">
@@ -1376,8 +1426,8 @@
                 <div class="moodboard-section">
                     <h3>📍 Room Functions</h3>
                     <div class="layout-info" style="font-size: 12px;">
-                        <p><strong>S202 - Sound Library:</strong> Radio Room for collective listening, DJ sets, performances</p>
-                        <p><strong>S203 - Reading Room:</strong> Panafrican Library with ~50 publications, archives, video viewing</p>
+                        <p><strong>Three Star (S202):</strong> Radio Room for collective listening, DJ sets, performances</p>
+                        <p><strong>Special Special (S202):</strong> Panafrican Library with ~50 publications, archives, video viewing</p>
                         <p><strong>Duration:</strong> 3-day art fair exhibition</p>
                     </div>
                 </div>
@@ -1625,6 +1675,113 @@
             </div>
             <div style="font-size:9px; color:#888; margin-top:8px;">
                 Keys: G=move, R=rotate, Del=delete, Esc=deselect
+            </div>
+        </div>
+
+        <!-- NEW PANAFRICAN LIBRARY FURNITURE -->
+        <div class="decorator-category" id="cat-banquette">
+            <h3 onclick="toggleCategory('cat-banquette')">📚 Banquette-Shelf Units</h3>
+            <div class="item-grid">
+                <div class="item-card" onclick="selectFurniture('banquette-shelf-short')">
+                    <div class="item-preview">🪑📖</div>
+                    <div class="item-name">Short (1.8m)</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('banquette-shelf-medium')">
+                    <div class="item-preview">🪑📚</div>
+                    <div class="item-name">Medium (2.4m)</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('banquette-shelf-long')">
+                    <div class="item-preview">🪑📚📚</div>
+                    <div class="item-name">Long (3.2m)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="decorator-category" id="cat-record-tables">
+            <h3 onclick="toggleCategory('cat-record-tables')">💿 Vinyl Record Tables</h3>
+            <div class="item-grid">
+                <div class="item-card" onclick="selectFurniture('record-table-ngoma')">
+                    <div class="item-preview">🔴</div>
+                    <div class="item-name">Ngoma (Red)</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('record-table-bantou')">
+                    <div class="item-preview">🔵</div>
+                    <div class="item-name">Ban Tou (Blue)</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('record-table-jazz')">
+                    <div class="item-preview">🟡</div>
+                    <div class="item-name">African Jazz</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('record-table-pathe')">
+                    <div class="item-preview">🟢</div>
+                    <div class="item-name">Pathé (Green)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="decorator-category" id="cat-cube-stools">
+            <h3 onclick="toggleCategory('cat-cube-stools')">📦 Cardboard Cube Stools</h3>
+            <div class="item-grid">
+                <div class="item-card" onclick="selectFurniture('cube-stool-branches')">
+                    <div class="item-preview">🌿</div>
+                    <div class="item-name">Branches Print</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('cube-stool-pattern')">
+                    <div class="item-preview">◼️</div>
+                    <div class="item-name">African Pattern</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('cube-stool-text')">
+                    <div class="item-preview">🔤</div>
+                    <div class="item-name">Text Print</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('cube-stool-benin')">
+                    <div class="item-preview">🗿</div>
+                    <div class="item-name">Benin Art</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="decorator-category" id="cat-poufs">
+            <h3 onclick="toggleCategory('cat-poufs')">🧶 African Print Poufs</h3>
+            <div class="item-grid">
+                <div class="item-card" onclick="selectFurniture('pouf-leopard')">
+                    <div class="item-preview">🐆</div>
+                    <div class="item-name">Leopard Print</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('pouf-wax-blue')">
+                    <div class="item-preview">💙</div>
+                    <div class="item-name">Wax Blue</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('pouf-wax-pink')">
+                    <div class="item-preview">💗</div>
+                    <div class="item-name">Wax Pink</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('pouf-kente')">
+                    <div class="item-preview">💛</div>
+                    <div class="item-name">Kente</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('pouf-mudcloth')">
+                    <div class="item-preview">🤎</div>
+                    <div class="item-name">Mudcloth</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="decorator-category" id="cat-sculptures">
+            <h3 onclick="toggleCategory('cat-sculptures')">🗿 African Sculptures</h3>
+            <div class="item-grid">
+                <div class="item-card" onclick="selectFurniture('sculpture-benin-head')">
+                    <div class="item-preview">👑</div>
+                    <div class="item-name">Benin Head</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('sculpture-wood')">
+                    <div class="item-preview">🪵</div>
+                    <div class="item-name">Wood Figure</div>
+                </div>
+                <div class="item-card" onclick="selectFurniture('pottery-african')">
+                    <div class="item-preview">🏺</div>
+                    <div class="item-name">African Pottery</div>
+                </div>
             </div>
         </div>
 
@@ -2419,8 +2576,8 @@
         // ============================================================
         // EXACT DIMENSIONS FROM FLOOR PLAN (converted to meters)
         // CORRECTED LAYOUT: Windows on FRONT (south), Doors on BACK (north)
-        // Room S202 "Special Special" is LEFT, Room S203 "Reading Room" is RIGHT
-        // Room S202 has an entry vestibule/corridor before main space
+        // Room S202 "Three Star" is LEFT, Room S202 "Special Special" is RIGHT
+        // Both rooms are part of S202 - Three Star has an entry vestibule/corridor
         // ============================================================
         const ROOM_S202_WIDTH = 3.496;  // 11'-5⅝" (X direction)
         const ROOM_S202_DEPTH = 7.715;  // 25'-3¾" (Z direction)
@@ -2442,7 +2599,7 @@
 
         // Asset Whitelist - Only these items can be placed
         const ASSET_WHITELIST = {
-            // S202 - SOUND LIBRARY / RADIO ROOM
+            // THREE STAR (S202 Left) - SOUND LIBRARY / RADIO ROOM
             'audio_station': {
                 id: 'audio_station',
                 name: 'DJ / Audio Station',
@@ -2489,7 +2646,7 @@
                 maxCount: 2
             },
 
-            // S203 - PANAFRICAN LIBRARY / READING ROOM
+            // SPECIAL SPECIAL (S202 Right) - PANAFRICAN LIBRARY
             'reading_table': {
                 id: 'reading_table',
                 name: 'Reading Table',
@@ -3148,8 +3305,8 @@
             return group;
         }
 
-        // ============ ROOM S202 - SPECIAL SPECIAL ============
-        // LAYOUT: Windows on FRONT (+Z), Door to corridor on BACK (-Z) via VESTIBULE, Door to S203 on RIGHT (+X)
+        // ============ ROOM S202 - THREE STAR ============
+        // LAYOUT: Windows on FRONT (+Z), Door to corridor on BACK (-Z) via VESTIBULE, Door to Special Special on RIGHT (+X)
         // Has an entry vestibule/corridor - a narrow enclosed passage before the main room
         function createRoomS202() {
             const group = new THREE.Group();
@@ -3388,7 +3545,7 @@
             ceilingS202.userData.isCeiling = true;
             group.add(ceilingS202);
 
-            // ========== S202 - SOUND LIBRARY / RADIO ROOM ==========
+            // ========== THREE STAR - SOUND LIBRARY / RADIO ROOM ==========
             // CURATORIAL BRIEF: Collective listening space for sound library, radio,
             // DJ sets, readings, performances, poetry, round tables
             //
@@ -3502,8 +3659,8 @@
             return group;
         }
 
-        // ============ ROOM S203 - READING ROOM ============
-        // LAYOUT: Windows on FRONT (+Z), Door to corridor on BACK (-Z), Door to S202 on LEFT (-X)
+        // ============ ROOM S202 - SPECIAL SPECIAL ============
+        // LAYOUT: Windows on FRONT (+Z), Door to corridor on BACK (-Z), Door to Three Star on LEFT (-X)
         function createRoomS203() {
             const group = new THREE.Group();
 
@@ -3641,7 +3798,7 @@
             ceilingS203.userData.isCeiling = true;
             group.add(ceilingS203);
 
-            // ========== S203 - PANAFRICAN LIBRARY / READING ROOM ==========
+            // ========== SPECIAL SPECIAL - PANAFRICAN LIBRARY ==========
             // CURATORIAL BRIEF: Reading room for ~50 publications, AABF archives,
             // video interviews, publishing network mapping
             //
@@ -3848,8 +4005,8 @@
             return sprite;
         }
 
-        labelsGroup.add(createLabel('ROOM S202 - SPECIAL SPECIAL', new THREE.Vector3(ROOM_S202_X, CEILING_HEIGHT + 0.5, 0)));
-        labelsGroup.add(createLabel('ROOM S203 - READING ROOM', new THREE.Vector3(ROOM_S203_X, CEILING_HEIGHT + 0.5, 0)));
+        labelsGroup.add(createLabel('ROOM S202 - THREE STAR', new THREE.Vector3(ROOM_S202_X, CEILING_HEIGHT + 0.5, 0)));
+        labelsGroup.add(createLabel('ROOM S202 - SPECIAL SPECIAL', new THREE.Vector3(ROOM_S203_X, CEILING_HEIGHT + 0.5, 0)));
         scene.add(labelsGroup);
 
         // Lighting
@@ -4585,6 +4742,29 @@
                 case 'poster-activist-1': item = createTextBanner('WE WANT TO LIVE FREE', 0x1a3a5c); break;
                 case 'poster-activist-2': item = createTextBanner('SOMOS PERSONAS', 0xf5f0e8, 0x1a1a1a); break;
                 case 'poster-activist-3': item = createWallPoster(0xc41e3a, 0.7, 0.9, 'Resistance'); break;
+                // NEW PANAFRICAN LIBRARY FURNITURE
+                // Banquette-shelf units (integrated seating + book display)
+                case 'banquette-shelf-short': item = createBanquetteShelfUnit(1.8); break;
+                case 'banquette-shelf-medium': item = createBanquetteShelfUnit(2.4); break;
+                case 'banquette-shelf-long': item = createBanquetteShelfUnit(3.2); break;
+                // Cardboard cube stools
+                case 'cube-stool-branches': item = createCardboardCubeStool('branches'); break;
+                case 'cube-stool-pattern': item = createCardboardCubeStool('african-pattern'); break;
+                case 'cube-stool-text': item = createCardboardCubeStool('text'); break;
+                case 'cube-stool-benin': item = createCardboardCubeStool('benin'); break;
+                // Vinyl record tables
+                case 'record-table-ngoma': item = createVinylRecordTable('ngoma'); break;
+                case 'record-table-bantou': item = createVinylRecordTable('bantou'); break;
+                case 'record-table-jazz': item = createVinylRecordTable('african-jazz'); break;
+                case 'record-table-pathe': item = createVinylRecordTable('pathe'); break;
+                // African print poufs
+                case 'pouf-leopard': item = createAfricanPrintPouf('leopard'); break;
+                case 'pouf-wax-blue': item = createAfricanPrintPouf('wax-blue'); break;
+                case 'pouf-wax-pink': item = createAfricanPrintPouf('wax-pink'); break;
+                case 'pouf-kente': item = createAfricanPrintPouf('kente'); break;
+                case 'pouf-mudcloth': item = createAfricanPrintPouf('mudcloth'); break;
+                // Sculptural elements
+                case 'sculpture-benin-head': item = createBeninHead(); break;
                 default:
                     // Check if it's a custom model
                     if (type && type.startsWith('custom-model-')) {
@@ -6116,6 +6296,430 @@
             return group;
         }
 
+        // ============ NEW PANAFRICAN LIBRARY FURNITURE ============
+
+        // BANQUETTE-SHELF UNIT - Integrated wall seating with book display
+        // Olive green cushioned bench with backrest and face-out shelf above
+        function createBanquetteShelfUnit(length = 2.4) {
+            const group = new THREE.Group();
+
+            // Materials
+            const whiteMat = new THREE.MeshLambertMaterial({ color: 0xf5f5f5 }); // White structure
+            const oliveMat = new THREE.MeshLambertMaterial({ color: 0x6b8e23 }); // Olive green cushions
+            const oliveDarkMat = new THREE.MeshLambertMaterial({ color: 0x556b2f }); // Darker olive for backrest
+
+            // Base/platform - white
+            const baseHeight = 0.08;
+            const base = new THREE.Mesh(
+                new THREE.BoxGeometry(length, baseHeight, 0.55),
+                whiteMat
+            );
+            base.position.set(0, baseHeight / 2, 0);
+            group.add(base);
+
+            // Seat cushion - olive green
+            const seatHeight = 0.12;
+            const seat = new THREE.Mesh(
+                new THREE.BoxGeometry(length - 0.04, seatHeight, 0.5),
+                oliveMat
+            );
+            seat.position.set(0, baseHeight + seatHeight / 2, 0);
+            group.add(seat);
+
+            // Backrest cushion - slightly darker olive
+            const backrestHeight = 0.4;
+            const backrest = new THREE.Mesh(
+                new THREE.BoxGeometry(length - 0.04, backrestHeight, 0.1),
+                oliveDarkMat
+            );
+            backrest.position.set(0, baseHeight + seatHeight + backrestHeight / 2, -0.22);
+            group.add(backrest);
+
+            // Shelf bracket/support - white vertical panel
+            const shelfSupportHeight = 0.5;
+            const shelfSupport = new THREE.Mesh(
+                new THREE.BoxGeometry(length, shelfSupportHeight, 0.03),
+                whiteMat
+            );
+            shelfSupport.position.set(0, baseHeight + seatHeight + backrestHeight + shelfSupportHeight / 2, -0.25);
+            group.add(shelfSupport);
+
+            // Main shelf for books - white
+            const shelfDepth = 0.25;
+            const shelf = new THREE.Mesh(
+                new THREE.BoxGeometry(length, 0.025, shelfDepth),
+                whiteMat
+            );
+            const shelfY = baseHeight + seatHeight + backrestHeight + 0.15;
+            shelf.position.set(0, shelfY, -0.12);
+            group.add(shelf);
+
+            // Add face-out books/magazines on shelf
+            const bookColors = [0xe74c3c, 0x3498db, 0x2ecc71, 0xf39c12, 0x9b59b6, 0x1abc9c, 0xe91e63, 0x00bcd4];
+            const numBooks = Math.floor(length / 0.22);
+            const bookSpacing = (length - 0.2) / numBooks;
+            const startX = -length / 2 + 0.15;
+
+            for (let i = 0; i < numBooks; i++) {
+                const bookColor = bookColors[i % bookColors.length];
+                const bookMat = new THREE.MeshLambertMaterial({ color: bookColor });
+
+                // Book/magazine - face out (thin, tall rectangle)
+                const bookWidth = 0.16;
+                const bookHeight = 0.22;
+                const bookDepth = 0.015;
+                const book = new THREE.Mesh(
+                    new THREE.BoxGeometry(bookWidth, bookHeight, bookDepth),
+                    bookMat
+                );
+                book.position.set(startX + i * bookSpacing, shelfY + 0.025 + bookHeight / 2, -0.05);
+                group.add(book);
+            }
+
+            // Small lip at front of shelf to hold books
+            const lip = new THREE.Mesh(
+                new THREE.BoxGeometry(length, 0.03, 0.02),
+                whiteMat
+            );
+            lip.position.set(0, shelfY + 0.015, 0.01);
+            group.add(lip);
+
+            return group;
+        }
+
+        // CARDBOARD CUBE STOOL - Cube covered with printed images
+        function createCardboardCubeStool(imageType = 'branches') {
+            const group = new THREE.Group();
+
+            // Base cardboard color
+            const cardboardMat = new THREE.MeshLambertMaterial({ color: 0xc4a76a }); // Tan cardboard
+
+            // Different "printed" patterns based on type
+            let topColor, sideColor;
+            switch(imageType) {
+                case 'branches':
+                    topColor = 0xd4c4a4; // Cream with brown branches pattern
+                    sideColor = 0x8b7355; // Brown tones
+                    break;
+                case 'african-pattern':
+                    topColor = 0x1a1a1a; // Black with white kente pattern
+                    sideColor = 0xf5f5f5; // White geometric
+                    break;
+                case 'text':
+                    topColor = 0xfdd835; // Yellow with black text
+                    sideColor = 0x1a1a1a; // Black text side
+                    break;
+                case 'benin':
+                    topColor = 0x8b4513; // Bronze color for Benin heads
+                    sideColor = 0x654321; // Darker bronze
+                    break;
+                default:
+                    topColor = 0xd4c4a4;
+                    sideColor = 0xc4a76a;
+            }
+
+            const topMat = new THREE.MeshLambertMaterial({ color: topColor });
+            const sideMat = new THREE.MeshLambertMaterial({ color: sideColor });
+
+            // Cube dimensions
+            const size = 0.4;
+
+            // Main cube body
+            const cube = new THREE.Mesh(
+                new THREE.BoxGeometry(size, size, size),
+                cardboardMat
+            );
+            cube.position.set(0, size / 2, 0);
+            group.add(cube);
+
+            // Top face with pattern
+            const topFace = new THREE.Mesh(
+                new THREE.PlaneGeometry(size - 0.01, size - 0.01),
+                topMat
+            );
+            topFace.rotation.x = -Math.PI / 2;
+            topFace.position.set(0, size + 0.001, 0);
+            group.add(topFace);
+
+            // Front face with pattern
+            const frontFace = new THREE.Mesh(
+                new THREE.PlaneGeometry(size - 0.01, size - 0.01),
+                sideMat
+            );
+            frontFace.position.set(0, size / 2, size / 2 + 0.001);
+            group.add(frontFace);
+
+            // Add subtle edge lines to show cardboard construction
+            const edgeMat = new THREE.MeshLambertMaterial({ color: 0x8b7355 });
+            const edgeSize = 0.01;
+
+            // Top edges
+            const edgeTop1 = new THREE.Mesh(new THREE.BoxGeometry(size, edgeSize, edgeSize), edgeMat);
+            edgeTop1.position.set(0, size, size / 2);
+            group.add(edgeTop1);
+
+            const edgeTop2 = new THREE.Mesh(new THREE.BoxGeometry(size, edgeSize, edgeSize), edgeMat);
+            edgeTop2.position.set(0, size, -size / 2);
+            group.add(edgeTop2);
+
+            return group;
+        }
+
+        // VINYL RECORD TABLE - Square table with African record label graphic
+        function createVinylRecordTable(labelType = 'ngoma') {
+            const group = new THREE.Group();
+
+            // White pedestal base
+            const whiteMat = new THREE.MeshLambertMaterial({ color: 0xf5f5f5 });
+
+            // Base foot
+            const baseWidth = 0.35;
+            const base = new THREE.Mesh(
+                new THREE.BoxGeometry(baseWidth, 0.04, baseWidth),
+                whiteMat
+            );
+            base.position.set(0, 0.02, 0);
+            group.add(base);
+
+            // Pedestal column
+            const columnHeight = 0.65;
+            const column = new THREE.Mesh(
+                new THREE.BoxGeometry(0.08, columnHeight, 0.08),
+                whiteMat
+            );
+            column.position.set(0, 0.04 + columnHeight / 2, 0);
+            group.add(column);
+
+            // Tabletop - square
+            const topSize = 0.6;
+            const topThickness = 0.03;
+            const tabletop = new THREE.Mesh(
+                new THREE.BoxGeometry(topSize, topThickness, topSize),
+                whiteMat
+            );
+            tabletop.position.set(0, 0.04 + columnHeight + topThickness / 2, 0);
+            group.add(tabletop);
+
+            // Vinyl record graphic on top
+            // Different colors based on label type
+            let labelColor, innerColor;
+            switch(labelType) {
+                case 'ngoma':
+                    labelColor = 0xc41e3a; // Red Ngoma label
+                    innerColor = 0x1a1a1a;
+                    break;
+                case 'bantou':
+                    labelColor = 0x1a3a5c; // Blue Ban Tou label
+                    innerColor = 0xf5f5f5;
+                    break;
+                case 'african-jazz':
+                    labelColor = 0xfdd835; // Yellow
+                    innerColor = 0x1a1a1a;
+                    break;
+                case 'pathe':
+                    labelColor = 0x2e7d32; // Green
+                    innerColor = 0xf5f5f5;
+                    break;
+                default:
+                    labelColor = 0x1a1a1a;
+                    innerColor = 0xc41e3a;
+            }
+
+            const recordMat = new THREE.MeshLambertMaterial({ color: 0x1a1a1a }); // Black vinyl
+            const labelMat = new THREE.MeshLambertMaterial({ color: labelColor });
+            const innerMat = new THREE.MeshLambertMaterial({ color: innerColor });
+
+            // Record disc
+            const recordRadius = 0.25;
+            const record = new THREE.Mesh(
+                new THREE.CylinderGeometry(recordRadius, recordRadius, 0.005, 32),
+                recordMat
+            );
+            record.position.set(0, 0.04 + columnHeight + topThickness + 0.003, 0);
+            group.add(record);
+
+            // Label circle in center
+            const labelRadius = 0.1;
+            const label = new THREE.Mesh(
+                new THREE.CylinderGeometry(labelRadius, labelRadius, 0.006, 32),
+                labelMat
+            );
+            label.position.set(0, 0.04 + columnHeight + topThickness + 0.005, 0);
+            group.add(label);
+
+            // Inner hole
+            const holeRadius = 0.015;
+            const hole = new THREE.Mesh(
+                new THREE.CylinderGeometry(holeRadius, holeRadius, 0.008, 16),
+                innerMat
+            );
+            hole.position.set(0, 0.04 + columnHeight + topThickness + 0.006, 0);
+            group.add(hole);
+
+            // Grooves on record (subtle rings)
+            for (let r = 0.12; r < recordRadius; r += 0.025) {
+                const groove = new THREE.Mesh(
+                    new THREE.TorusGeometry(r, 0.001, 4, 32),
+                    new THREE.MeshLambertMaterial({ color: 0x2a2a2a })
+                );
+                groove.rotation.x = Math.PI / 2;
+                groove.position.set(0, 0.04 + columnHeight + topThickness + 0.006, 0);
+                group.add(groove);
+            }
+
+            return group;
+        }
+
+        // AFRICAN PRINT FABRIC POUF - Soft cube with colorful pattern
+        function createAfricanPrintPouf(patternType = 'leopard') {
+            const group = new THREE.Group();
+
+            let color1, color2;
+            switch(patternType) {
+                case 'leopard':
+                    color1 = 0xd4a76a; // Tan
+                    color2 = 0x4a3728; // Brown spots
+                    break;
+                case 'wax-blue':
+                    color1 = 0x1a3a5c; // Deep blue
+                    color2 = 0xfdd835; // Yellow accents
+                    break;
+                case 'wax-pink':
+                    color1 = 0xc2185b; // Magenta
+                    color2 = 0xf5f5f5; // White
+                    break;
+                case 'kente':
+                    color1 = 0xfdd835; // Yellow
+                    color2 = 0x2e7d32; // Green
+                    break;
+                case 'mudcloth':
+                    color1 = 0xf5f0e8; // Cream
+                    color2 = 0x1a1a1a; // Black
+                    break;
+                default:
+                    color1 = 0xe91e63;
+                    color2 = 0xfdd835;
+            }
+
+            const mat1 = new THREE.MeshLambertMaterial({ color: color1 });
+            const mat2 = new THREE.MeshLambertMaterial({ color: color2 });
+
+            // Soft cube shape - slightly rounded edges
+            const size = 0.4;
+            const height = 0.38;
+
+            // Main body
+            const body = new THREE.Mesh(
+                new THREE.BoxGeometry(size, height, size),
+                mat1
+            );
+            body.position.set(0, height / 2, 0);
+            group.add(body);
+
+            // Top cushion (slightly domed)
+            const top = new THREE.Mesh(
+                new THREE.BoxGeometry(size - 0.02, 0.04, size - 0.02),
+                mat1
+            );
+            top.position.set(0, height + 0.02, 0);
+            group.add(top);
+
+            // Pattern stripes/accents
+            const stripeWidth = 0.05;
+            for (let i = -1; i <= 1; i += 2) {
+                const stripe = new THREE.Mesh(
+                    new THREE.BoxGeometry(stripeWidth, height + 0.01, size + 0.01),
+                    mat2
+                );
+                stripe.position.set(i * (size / 3), height / 2, 0);
+                group.add(stripe);
+            }
+
+            return group;
+        }
+
+        // BENIN BRONZE HEAD SCULPTURE
+        function createBeninHead() {
+            const group = new THREE.Group();
+
+            const bronzeMat = new THREE.MeshLambertMaterial({ color: 0x8b4513 }); // Bronze color
+            const darkBronzeMat = new THREE.MeshLambertMaterial({ color: 0x654321 });
+
+            // Base pedestal
+            const baseSize = 0.15;
+            const base = new THREE.Mesh(
+                new THREE.BoxGeometry(baseSize, 0.05, baseSize),
+                darkBronzeMat
+            );
+            base.position.set(0, 0.025, 0);
+            group.add(base);
+
+            // Neck/collar
+            const neck = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.06, 0.07, 0.1, 12),
+                bronzeMat
+            );
+            neck.position.set(0, 0.1, 0);
+            group.add(neck);
+
+            // Head - elongated oval
+            const head = new THREE.Mesh(
+                new THREE.SphereGeometry(0.08, 16, 16),
+                bronzeMat
+            );
+            head.scale.set(0.85, 1.2, 0.9);
+            head.position.set(0, 0.24, 0);
+            group.add(head);
+
+            // Crown/headdress
+            const crown = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.05, 0.08, 0.08, 12),
+                darkBronzeMat
+            );
+            crown.position.set(0, 0.35, 0);
+            group.add(crown);
+
+            // Crown top ornament
+            const ornament = new THREE.Mesh(
+                new THREE.SphereGeometry(0.025, 8, 8),
+                bronzeMat
+            );
+            ornament.position.set(0, 0.41, 0);
+            group.add(ornament);
+
+            // Eyes (indented)
+            const eyeMat = new THREE.MeshLambertMaterial({ color: 0x3a2a1a });
+            [-0.025, 0.025].forEach(x => {
+                const eye = new THREE.Mesh(
+                    new THREE.SphereGeometry(0.012, 8, 8),
+                    eyeMat
+                );
+                eye.position.set(x, 0.26, 0.065);
+                group.add(eye);
+            });
+
+            // Nose
+            const nose = new THREE.Mesh(
+                new THREE.BoxGeometry(0.015, 0.03, 0.02),
+                bronzeMat
+            );
+            nose.position.set(0, 0.23, 0.07);
+            group.add(nose);
+
+            // Collar rings
+            for (let y = 0.06; y < 0.14; y += 0.015) {
+                const ring = new THREE.Mesh(
+                    new THREE.TorusGeometry(0.065, 0.004, 6, 24),
+                    darkBronzeMat
+                );
+                ring.rotation.x = Math.PI / 2;
+                ring.position.set(0, y, 0);
+                group.add(ring);
+            }
+
+            return group;
+        }
+
         // ============ MOUSE INTERACTION FOR DECORATOR ============
         let isMouseDraggingItem = false;
         let mouseDownTime = 0;
@@ -7223,5 +7827,14 @@
         };
 
     </script>
+
+    <!-- Mobile Footer Actions - Only visible on mobile -->
+    <div id="mobile-footer-actions">
+        <button onclick="captureScreenshot()" aria-label="Capture">📷</button>
+        <button onclick="toggleMoodboard()" aria-label="Mood Board">🎨</button>
+        <button onclick="toggleDecorator()" aria-label="Decorator">🛋️</button>
+        <button onclick="openRenderModal()" aria-label="AI Render">✨</button>
+        <button onclick="toggleAdminLogin()" aria-label="Admin">🔐</button>
+    </div>
 </body>
 </html>
