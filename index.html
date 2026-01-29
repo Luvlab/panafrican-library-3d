@@ -3758,12 +3758,13 @@
         // Camera controls
         let isMouseDown = false;
         let mouseX = 0, mouseY = 0;
-        let targetRotationX = 0, targetRotationY = 0.4;
-        let currentRotationX = 0, currentRotationY = 0.4;
-        let cameraDistance = 18;
-        let cameraTarget = new THREE.Vector3(0, 2, 0);
+        let targetRotationX = -Math.PI / 2, targetRotationY = 0.15;
+        let currentRotationX = -Math.PI / 2, currentRotationY = 0.15;
+        let cameraDistance = 3;
+        // Default view: Inside S202, near east wall, looking at Afrikadaa posters on west wall
+        let cameraTarget = new THREE.Vector3(ROOM_S202_X - 0.5, 1.5, 0);
 
-        camera.position.set(0, 12, 18);
+        camera.position.set(ROOM_S202_X + 1.2, 1.6, 0);
         camera.lookAt(cameraTarget);
 
         container.addEventListener('mousedown', (e) => { isMouseDown = true; mouseX = e.clientX; mouseY = e.clientY; });
