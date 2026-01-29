@@ -720,13 +720,16 @@
             background: rgba(255,255,255,0.08);
             border-radius: 6px;
             padding: 8px;
-            cursor: pointer;
+            cursor: grab;
             text-align: center;
             transition: all 0.2s;
             border: 2px solid transparent;
+            user-select: none;
         }
         .item-card:hover { background: rgba(255,255,255,0.15); }
         .item-card.selected { border-color: #20c997; background: rgba(32,201,151,0.2); }
+        .item-card:active { cursor: grabbing; }
+        .item-card.dragging { opacity: 0.5; transform: scale(0.95); }
         .item-preview {
             width: 100%;
             aspect-ratio: 1;
@@ -761,7 +764,36 @@
         }
         .decorator-action-btn.primary { background: #20c997; color: #fff; }
         .decorator-action-btn.secondary { background: rgba(255,255,255,0.1); color: #fff; }
+        .decorator-action-btn.danger { background: #dc3545; color: #fff; flex: 1 1 100%; }
         .decorator-action-btn:hover { opacity: 0.8; }
+        .decorator-help {
+            padding: 12px 15px;
+            background: rgba(32,201,151,0.1);
+            border-top: 1px solid rgba(32,201,151,0.3);
+            font-size: 10px;
+            color: #aaa;
+            line-height: 1.6;
+        }
+        .decorator-help strong { color: #20c997; }
+        #canvas-container.drag-over {
+            outline: 3px dashed #20c997;
+            outline-offset: -3px;
+        }
+        #canvas-container.drag-over::after {
+            content: 'Drop to place';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(32,201,151,0.9);
+            color: #fff;
+            padding: 20px 40px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            pointer-events: none;
+            z-index: 1000;
+        }
         .decorator-instructions {
             padding: 15px;
             background: rgba(0,0,0,0.3);
@@ -1579,20 +1611,19 @@
             <button class="decorator-close" onclick="toggleDecorator()">✕</button>
         </div>
 
-        <div class="decorator-instructions">
-            <strong>How to use:</strong> Select an item below, then click in the room to place it. Click placed items to select them for editing.
-        </div>
-
         <div id="selected-item-info">
             <h4>Selected: <span id="selected-name">None</span></h4>
             <div class="item-controls">
-                <button class="item-control-btn" onclick="moveItem(-0.2, 0)">← Move</button>
-                <button class="item-control-btn" onclick="moveItem(0.2, 0)">Move →</button>
-                <button class="item-control-btn" onclick="moveItem(0, -0.2)">↑ Move</button>
-                <button class="item-control-btn" onclick="moveItem(0, 0.2)">Move ↓</button>
-                <button class="item-control-btn" onclick="rotateItem(15)">↻ Rotate</button>
-                <button class="item-control-btn" onclick="rotateItem(-15)">↺ Rotate</button>
-                <button class="item-control-btn danger" onclick="deleteItem()">🗑️ Delete</button>
+                <button class="item-control-btn" onclick="moveItem(-0.2, 0)">← X</button>
+                <button class="item-control-btn" onclick="moveItem(0.2, 0)">X →</button>
+                <button class="item-control-btn" onclick="moveItem(0, -0.2)">↑ Z</button>
+                <button class="item-control-btn" onclick="moveItem(0, 0.2)">Z ↓</button>
+                <button class="item-control-btn" onclick="rotateItem(15)">↻ 15°</button>
+                <button class="item-control-btn" onclick="rotateItem(-15)">↺ 15°</button>
+                <button class="item-control-btn danger" onclick="deleteItem()">🗑️</button>
+            </div>
+            <div style="font-size:9px; color:#888; margin-top:8px;">
+                Keys: G=move, R=rotate, Del=delete, Esc=deselect
             </div>
         </div>
 
@@ -1874,16 +1905,23 @@
         </div>
 
         <div class="decorator-actions">
-            <button class="decorator-action-btn primary" onclick="saveLayout()">💾 Save Layout</button>
-            <button class="decorator-action-btn secondary" onclick="loadLayout()">📂 Load Layout</button>
-            <button class="decorator-action-btn secondary" onclick="resetLayout()">🔄 Reset</button>
-            <button class="decorator-action-btn secondary" onclick="exportLayout()">📤 Export JSON</button>
+            <button class="decorator-action-btn danger" onclick="resetLayout()">🔄 Clear All</button>
+        </div>
+
+        <div class="decorator-help">
+            <strong>How to use:</strong><br>
+            • Drag items from library → drop in 3D view<br>
+            • Or click item, then click in room to place<br>
+            • Drag 3D files (GLB/OBJ) from Finder → drop on canvas<br>
+            • Click placed items to select, then drag to move<br>
+            • Use controls above for rotate/delete
         </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/TransformControls.js"></script>
     <script>
         // ============ INDEXEDDB FOR 3D MODEL STORAGE ============
         const DB_NAME = 'PanafricanLibrary3D';
@@ -2327,6 +2365,34 @@
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         container.appendChild(renderer.domElement);
+
+        // TransformControls for visual move/rotate gizmos
+        let transformControls = null;
+        function initTransformControls() {
+            if (typeof THREE.TransformControls !== 'undefined') {
+                transformControls = new THREE.TransformControls(camera, renderer.domElement);
+                transformControls.setSize(0.75);
+                scene.add(transformControls);
+
+                // Snap to floor on transform
+                transformControls.addEventListener('objectChange', () => {
+                    if (selectedPlacedItem && !selectedPlacedItem.userData.isWallArt) {
+                        selectedPlacedItem.position.y = 0;
+                        // Constrain to room bounds
+                        const constrained = constrainToRoom(selectedPlacedItem.position);
+                        if (constrained) {
+                            selectedPlacedItem.position.x = constrained.x;
+                            selectedPlacedItem.position.z = constrained.z;
+                        }
+                    }
+                });
+
+                // Disable camera drag while transforming
+                transformControls.addEventListener('dragging-changed', (event) => {
+                    isMouseDown = !event.value;
+                });
+            }
+        }
 
         // ============================================================
         // EXACT DIMENSIONS FROM FLOOR PLAN (converted to meters)
@@ -4167,6 +4233,8 @@
         let selectedFurnitureType = null;
         let selectedPlacedItem = null;
         let placedItems = [];
+        let isDraggingItem = false;
+        let draggedLibraryItem = null;
         const raycaster = new THREE.Raycaster();
         const mouse = new THREE.Vector2();
 
@@ -4176,8 +4244,181 @@
             decoratorMode = panel.classList.contains('open');
             if (!decoratorMode) {
                 deselectAll();
+            } else {
+                // Setup drag-drop for library items when decorator opens
+                setupLibraryDragDrop();
             }
         };
+
+        // Setup drag-drop for all library item cards
+        function setupLibraryDragDrop() {
+            document.querySelectorAll('.item-card').forEach(card => {
+                if (card.dataset.dragSetup) return; // Already setup
+                card.dataset.dragSetup = 'true';
+                card.draggable = true;
+
+                card.addEventListener('dragstart', (e) => {
+                    const type = card.onclick?.toString().match(/selectFurniture\('([^']+)'\)/)?.[1];
+                    if (type) {
+                        draggedLibraryItem = type;
+                        e.dataTransfer.setData('text/plain', type);
+                        e.dataTransfer.effectAllowed = 'copy';
+                        card.classList.add('dragging');
+                    }
+                });
+
+                card.addEventListener('dragend', () => {
+                    card.classList.remove('dragging');
+                    draggedLibraryItem = null;
+                });
+            });
+        }
+
+        // Canvas drop zone for library items and 3D files from Finder
+        function setupCanvasDragDrop() {
+            const canvas = document.getElementById('canvas-container');
+
+            canvas.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'copy';
+                canvas.classList.add('drag-over');
+            });
+
+            canvas.addEventListener('dragleave', (e) => {
+                // Only remove if leaving the container entirely
+                if (!canvas.contains(e.relatedTarget)) {
+                    canvas.classList.remove('drag-over');
+                }
+            });
+
+            canvas.addEventListener('drop', async (e) => {
+                e.preventDefault();
+                canvas.classList.remove('drag-over');
+
+                const rect = canvas.getBoundingClientRect();
+                const dropX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+                const dropY = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+                // Check for 3D file from Finder
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    const file = files[0];
+                    const ext = file.name.split('.').pop().toLowerCase();
+                    if (['glb', 'gltf', 'obj'].includes(ext)) {
+                        await handleDropped3DFile(file, dropX, dropY);
+                        return;
+                    }
+                }
+
+                // Check for library item
+                const furnitureType = e.dataTransfer.getData('text/plain');
+                if (furnitureType) {
+                    placeItemAtScreenPos(furnitureType, dropX, dropY);
+                }
+            });
+        }
+
+        // Handle 3D file dropped from Finder
+        async function handleDropped3DFile(file, screenX, screenY) {
+            const ext = file.name.split('.').pop().toLowerCase();
+            const name = file.name.replace(/\.[^.]+$/, '');
+
+            initLoaders();
+
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                const blob = new Blob([arrayBuffer]);
+                const url = URL.createObjectURL(blob);
+
+                let object = null;
+
+                if (ext === 'glb' || ext === 'gltf') {
+                    if (!gltfLoader) {
+                        alert('GLTF loader not available');
+                        return;
+                    }
+                    object = await new Promise((resolve, reject) => {
+                        gltfLoader.load(url, (gltf) => resolve(gltf.scene), undefined, reject);
+                    });
+                } else if (ext === 'obj') {
+                    if (!objLoader) {
+                        alert('OBJ loader not available');
+                        return;
+                    }
+                    object = await new Promise((resolve, reject) => {
+                        objLoader.load(url, resolve, undefined, reject);
+                    });
+                }
+
+                URL.revokeObjectURL(url);
+
+                if (object) {
+                    // Auto-scale to reasonable size
+                    const box = new THREE.Box3().setFromObject(object);
+                    const size = box.getSize(new THREE.Vector3());
+                    const maxDim = Math.max(size.x, size.y, size.z);
+                    if (maxDim > 2) {
+                        object.scale.multiplyScalar(1.5 / maxDim);
+                    } else if (maxDim < 0.1) {
+                        object.scale.multiplyScalar(0.5 / maxDim);
+                    }
+
+                    // Recalculate bounds after scaling
+                    const newBox = new THREE.Box3().setFromObject(object);
+                    object.position.y = -newBox.min.y; // Sit on floor
+
+                    // Wrap in group for consistent handling
+                    const group = new THREE.Group();
+                    group.add(object);
+                    group.userData.itemType = 'custom-' + name;
+                    group.userData.isPlacedItem = true;
+
+                    // Place at drop position
+                    placeObjectAtScreenPos(group, screenX, screenY);
+                }
+            } catch (err) {
+                console.error('Error loading dropped 3D file:', err);
+                alert('Failed to load 3D file: ' + err.message);
+            }
+        }
+
+        // Place furniture item at screen position
+        function placeItemAtScreenPos(type, screenX, screenY) {
+            const item = createFurnitureItem(type);
+            placeObjectAtScreenPos(item, screenX, screenY);
+        }
+
+        // Place any object at screen position
+        function placeObjectAtScreenPos(item, screenX, screenY) {
+            mouse.x = screenX;
+            mouse.y = screenY;
+            raycaster.setFromCamera(mouse, camera);
+
+            const floorPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+            const intersectPoint = new THREE.Vector3();
+            raycaster.ray.intersectPlane(floorPlane, intersectPoint);
+
+            if (intersectPoint) {
+                intersectPoint.y = 0;
+                const constrainedPos = constrainToRoom(intersectPoint);
+                if (constrainedPos) {
+                    item.position.copy(constrainedPos);
+                    if (item.userData.isWallArt) {
+                        item.position.y = 1.5;
+                    }
+                    scene.add(item);
+                    placedItems.push(item);
+
+                    // Select the newly placed item
+                    selectedPlacedItem = item;
+                    selectedFurnitureType = null;
+                    document.querySelectorAll('.item-card').forEach(c => c.classList.remove('selected'));
+                    updateSelectedInfo();
+                } else {
+                    console.log('Cannot place item outside room boundaries');
+                }
+            }
+        }
 
         window.toggleCategory = function(catId) {
             document.getElementById(catId).classList.toggle('collapsed');
@@ -4206,11 +4447,23 @@
             if (selectedPlacedItem) {
                 info.classList.add('visible');
                 nameSpan.textContent = selectedPlacedItem.userData.itemType || 'Item';
+                // Attach transform controls gizmo
+                if (transformControls) {
+                    transformControls.attach(selectedPlacedItem);
+                }
             } else if (selectedFurnitureType) {
                 info.classList.add('visible');
                 nameSpan.textContent = selectedFurnitureType + ' (click to place)';
+                // Detach transform controls
+                if (transformControls) {
+                    transformControls.detach();
+                }
             } else {
                 info.classList.remove('visible');
+                // Detach transform controls
+                if (transformControls) {
+                    transformControls.detach();
+                }
             }
         }
 
@@ -5809,9 +6062,18 @@
             return group;
         }
 
-        // Place item in scene
-        container.addEventListener('click', function(event) {
-            if (!decoratorMode || !selectedFurnitureType) return;
+        // ============ MOUSE INTERACTION FOR DECORATOR ============
+        let isMouseDraggingItem = false;
+        let mouseDownTime = 0;
+        let mouseDownPos = { x: 0, y: 0 };
+
+        // Mousedown - start potential drag or selection
+        container.addEventListener('mousedown', function(event) {
+            if (!decoratorMode) return;
+            if (event.button !== 0) return; // Left click only
+
+            mouseDownTime = Date.now();
+            mouseDownPos = { x: event.clientX, y: event.clientY };
 
             const rect = container.getBoundingClientRect();
             mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
@@ -5819,7 +6081,7 @@
 
             raycaster.setFromCamera(mouse, camera);
 
-            // Check if clicking on existing item
+            // Check if clicking on existing placed item
             const itemIntersects = raycaster.intersectObjects(placedItems, true);
             if (itemIntersects.length > 0) {
                 let obj = itemIntersects[0].object;
@@ -5829,38 +6091,85 @@
                     selectedFurnitureType = null;
                     document.querySelectorAll('.item-card').forEach(c => c.classList.remove('selected'));
                     updateSelectedInfo();
+                    isMouseDraggingItem = true;
+                    container.style.cursor = 'grabbing';
+                    event.preventDefault();
                     return;
                 }
             }
+        });
 
-            // Place new item on floor
+        // Mousemove - drag selected item
+        container.addEventListener('mousemove', function(event) {
+            if (!decoratorMode || !isMouseDraggingItem || !selectedPlacedItem) return;
+
+            const rect = container.getBoundingClientRect();
+            mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+            mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+
             const floorPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
             const intersectPoint = new THREE.Vector3();
             raycaster.ray.intersectPlane(floorPlane, intersectPoint);
 
             if (intersectPoint) {
-                const item = createFurnitureItem(selectedFurnitureType);
-
-                // SNAP TO FLOOR - ensure Y is always 0 for floor items
                 intersectPoint.y = 0;
-
-                // ROOM BOUNDARY CHECK - constrain to valid room areas
-                const constrainedPos = constrainToRoom(intersectPoint);
-                if (constrainedPos) {
-                    item.position.copy(constrainedPos);
-
-                    // Wall art needs to be placed on walls
-                    if (item.userData.isWallArt) {
-                        item.position.y = 1.5;
+                const constrained = constrainToRoom(intersectPoint);
+                if (constrained) {
+                    selectedPlacedItem.position.x = constrained.x;
+                    selectedPlacedItem.position.z = constrained.z;
+                    if (!selectedPlacedItem.userData.isWallArt) {
+                        selectedPlacedItem.position.y = 0;
                     }
-
-                    scene.add(item);
-                    placedItems.push(item);
-                } else {
-                    console.log('Cannot place item outside room boundaries');
                 }
             }
         });
+
+        // Mouseup - end drag or click to place new item
+        container.addEventListener('mouseup', function(event) {
+            const wasDragging = isMouseDraggingItem;
+            const clickDuration = Date.now() - mouseDownTime;
+            const moveDistance = Math.sqrt(
+                Math.pow(event.clientX - mouseDownPos.x, 2) +
+                Math.pow(event.clientY - mouseDownPos.y, 2)
+            );
+
+            isMouseDraggingItem = false;
+            container.style.cursor = '';
+
+            // If we were dragging an item, don't place a new one
+            if (wasDragging) return;
+
+            // Short click with minimal movement = place new item
+            if (clickDuration < 300 && moveDistance < 10 && selectedFurnitureType) {
+                const rect = container.getBoundingClientRect();
+                const screenX = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+                const screenY = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+                placeItemAtScreenPos(selectedFurnitureType, screenX, screenY);
+            }
+        });
+
+        // Click on empty space to deselect
+        container.addEventListener('click', function(event) {
+            if (!decoratorMode) return;
+
+            const rect = container.getBoundingClientRect();
+            mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+            mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+
+            // If click didn't hit any placed item and we have no furniture selected, deselect
+            const itemIntersects = raycaster.intersectObjects(placedItems, true);
+            if (itemIntersects.length === 0 && !selectedFurnitureType) {
+                selectedPlacedItem = null;
+                updateSelectedInfo();
+            }
+        });
+
+        // Initialize canvas drag-drop on load
+        setupCanvasDragDrop();
 
         // ROOM BOUNDARY CONSTRAINT FUNCTION
         // Ensures furniture stays inside room boundaries and away from doors
@@ -6018,12 +6327,38 @@
 
         window.deleteItem = function() {
             if (selectedPlacedItem) {
+                if (transformControls) transformControls.detach();
                 scene.remove(selectedPlacedItem);
                 placedItems = placedItems.filter(i => i !== selectedPlacedItem);
                 selectedPlacedItem = null;
                 updateSelectedInfo();
             }
         };
+
+        // Keyboard shortcuts for transform modes (when decorator mode active)
+        document.addEventListener('keydown', (e) => {
+            if (!decoratorMode || !transformControls) return;
+
+            switch(e.key.toLowerCase()) {
+                case 'g': // Grab/translate mode
+                case 't':
+                    transformControls.setMode('translate');
+                    break;
+                case 'r': // Rotate mode
+                    transformControls.setMode('rotate');
+                    break;
+                case 'delete':
+                case 'backspace':
+                    if (selectedPlacedItem) {
+                        e.preventDefault();
+                        deleteItem();
+                    }
+                    break;
+                case 'escape':
+                    deselectAll();
+                    break;
+            }
+        });
 
         window.saveLayout = async function() {
             const layout = placedItems.map(item => ({
@@ -6215,6 +6550,13 @@
             renderer.render(scene, camera);
         }
         animate();
+
+        // Initialize transform controls for visual editing gizmos
+        initTransformControls();
+
+        // Initialize drag-drop systems
+        setupCanvasDragDrop();
+        setupLibraryDragDrop();
 
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
