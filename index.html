@@ -2367,6 +2367,9 @@
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         container.appendChild(renderer.domElement);
 
+        // Camera orbit blocking flag - declared early for TransformControls use
+        let isCameraOrbitBlocked = false;
+
         // TransformControls for visual move/rotate gizmos
         let transformControls = null;
         function initTransformControls() {
@@ -2405,9 +2408,10 @@
                     }
                 });
 
-                // Disable camera drag while transforming
+                // Disable camera orbit while transforming with gizmo
                 transformControls.addEventListener('dragging-changed', (event) => {
-                    isMouseDown = !event.value;
+                    isCameraOrbitBlocked = event.value; // Block when dragging starts, unblock when ends
+                    isMouseDown = false; // Also reset mouse state
                 });
             }
         }
@@ -3885,12 +3889,18 @@
         camera.position.set(ROOM_S202_X + 1.2, 1.6, 0);
         camera.lookAt(cameraTarget);
 
-        container.addEventListener('mousedown', (e) => { isMouseDown = true; mouseX = e.clientX; mouseY = e.clientY; });
+        container.addEventListener('mousedown', (e) => {
+            if (!isCameraOrbitBlocked) {
+                isMouseDown = true;
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            }
+        });
         container.addEventListener('mouseup', () => isMouseDown = false);
         container.addEventListener('mouseleave', () => isMouseDown = false);
 
         container.addEventListener('mousemove', (e) => {
-            if (!isMouseDown) return;
+            if (!isMouseDown || isCameraOrbitBlocked) return;
             targetRotationX += (e.clientX - mouseX) * 0.005;
             targetRotationY += (e.clientY - mouseY) * 0.005;
             targetRotationY = Math.max(-0.5, Math.min(1.2, targetRotationY));
@@ -6144,8 +6154,10 @@
                     document.querySelectorAll('.item-card').forEach(c => c.classList.remove('selected'));
                     updateSelectedInfo();
                     isMouseDraggingItem = true;
+                    isCameraOrbitBlocked = true; // BLOCK camera orbit while dragging furniture
                     container.style.cursor = 'grabbing';
                     event.preventDefault();
+                    event.stopPropagation();
                     return;
                 }
             }
@@ -6192,6 +6204,7 @@
             );
 
             isMouseDraggingItem = false;
+            isCameraOrbitBlocked = false; // UNBLOCK camera orbit
             container.style.cursor = '';
 
             // If we were dragging an item, don't place a new one
