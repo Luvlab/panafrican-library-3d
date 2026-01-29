@@ -389,6 +389,196 @@
             color: #ccc;
             margin-bottom: 10px;
         }
+        /* Mood Board Image Gallery */
+        .moodboard-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .moodboard-image-item {
+            position: relative;
+            border-radius: 6px;
+            overflow: hidden;
+            cursor: pointer;
+            aspect-ratio: 4/3;
+            background: #333;
+        }
+        .moodboard-image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s, opacity 0.3s;
+        }
+        .moodboard-image-item:hover img {
+            transform: scale(1.05);
+        }
+        .moodboard-image-item .image-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 20px 8px 8px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .moodboard-image-item:hover .image-overlay {
+            opacity: 1;
+        }
+        .moodboard-image-item .image-title {
+            font-size: 10px;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .moodboard-image-item.editing .image-actions {
+            display: flex;
+        }
+        .image-actions {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            display: none;
+            gap: 4px;
+        }
+        .image-action-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .image-action-btn.delete { background: #e53935; color: #fff; }
+        .image-action-btn.move { background: #555; color: #fff; cursor: grab; }
+        .image-action-btn:hover { opacity: 0.8; }
+        /* Slideshow Modal */
+        #slideshow-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 2000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        #slideshow-modal.active { display: flex; }
+        .slideshow-image-container {
+            max-width: 90vw;
+            max-height: 75vh;
+            position: relative;
+        }
+        .slideshow-image-container img {
+            max-width: 100%;
+            max-height: 75vh;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        .slideshow-controls {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+            align-items: center;
+        }
+        .slideshow-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.2s;
+        }
+        .slideshow-btn:hover { background: rgba(255,255,255,0.2); }
+        .slideshow-btn.nav { padding: 12px 20px; font-size: 20px; }
+        .slideshow-info {
+            color: #888;
+            font-size: 14px;
+        }
+        .slideshow-caption {
+            color: #fff;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 16px;
+            max-width: 600px;
+        }
+        .slideshow-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 32px;
+            cursor: pointer;
+        }
+        /* Mood Board Edit Mode */
+        .moodboard-toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .moodboard-toolbar-btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.2s;
+        }
+        .moodboard-toolbar-btn:hover { background: rgba(255,255,255,0.15); }
+        .moodboard-toolbar-btn.active { background: #8b2942; border-color: #8b2942; }
+        .moodboard-toolbar-btn.primary { background: #2e7d32; border-color: #2e7d32; }
+        .add-image-form {
+            display: none;
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .add-image-form.active { display: block; }
+        .add-image-form input, .add-image-form select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.3);
+            color: #fff;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+        .add-image-form input::placeholder { color: #888; }
+        .drop-zone {
+            border: 2px dashed rgba(255,255,255,0.3);
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            color: #888;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .drop-zone:hover, .drop-zone.dragover {
+            border-color: #8b2942;
+            background: rgba(139,41,66,0.1);
+        }
+        .drop-zone.has-file {
+            border-color: #2e7d32;
+            background: rgba(46,125,50,0.1);
+        }
         @media (max-width: 768px) {
             #capture-btn, #moodboard-btn {
                 transform: translateX(-50%);
@@ -761,6 +951,21 @@
             cursor: pointer;
         }
         .saved-config-btn.danger { background: rgba(220,53,69,0.5); }
+        .saved-config-btn.edit { background: rgba(255,193,7,0.5); }
+        .saved-config-btn.move { cursor: grab; background: rgba(108,117,125,0.5); }
+        .saved-config-item.dragging { opacity: 0.5; border: 1px dashed #8b2942; }
+        .saved-config-item.drag-over { border-top: 2px solid #8b2942; }
+        .saved-config-info { flex: 1; }
+        .edit-inline-input {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            width: 100%;
+            margin-bottom: 5px;
+        }
         /* Render Modal */
         #render-modal {
             position: fixed;
@@ -993,6 +1198,45 @@
             <button class="modal-close" onclick="toggleMoodboard()">✕</button>
             <h2>Reference Images & Mood Board</h2>
             <p>Design inspiration for The Panafrican Library Reading Room — Afrikadaa × Coolhunt Paris</p>
+
+            <!-- Toolbar -->
+            <div class="moodboard-toolbar">
+                <button class="moodboard-toolbar-btn" onclick="toggleMoodboardEdit()" id="edit-mode-btn">✏️ Edit Mode</button>
+                <button class="moodboard-toolbar-btn primary" onclick="toggleAddImageForm()" id="add-image-btn">➕ Add Image</button>
+                <button class="moodboard-toolbar-btn" onclick="filterMoodboard('all')" data-filter="all">All</button>
+                <button class="moodboard-toolbar-btn" onclick="filterMoodboard('furniture')" data-filter="furniture">Furniture</button>
+                <button class="moodboard-toolbar-btn" onclick="filterMoodboard('ambiance')" data-filter="ambiance">Ambiance</button>
+                <button class="moodboard-toolbar-btn" onclick="filterMoodboard('inspiration')" data-filter="inspiration">Inspiration</button>
+            </div>
+
+            <!-- Add Image Form -->
+            <div class="add-image-form" id="add-image-form">
+                <div class="drop-zone" id="drop-zone" onclick="document.getElementById('image-file-input').click()">
+                    📷 Drag & drop image here or click to browse
+                </div>
+                <input type="file" id="image-file-input" accept="image/*" style="display:none" onchange="handleImageSelect(event)">
+                <input type="text" id="new-image-url" placeholder="Or paste image URL...">
+                <input type="text" id="new-image-title" placeholder="Image title / description">
+                <select id="new-image-category">
+                    <option value="furniture">Furniture Style</option>
+                    <option value="ambiance">Ambiance</option>
+                    <option value="inspiration">Inspiration</option>
+                    <option value="pattern">Patterns & Textiles</option>
+                </select>
+                <div style="display: flex; gap: 10px;">
+                    <button class="moodboard-toolbar-btn primary" onclick="addMoodboardImage()" style="flex:1">Add Image</button>
+                    <button class="moodboard-toolbar-btn" onclick="toggleAddImageForm()" style="flex:1">Cancel</button>
+                </div>
+            </div>
+
+            <!-- Reference Images Gallery -->
+            <div class="moodboard-section" style="grid-column: 1 / -1;">
+                <h3>📸 Reference Images <span id="image-count" style="color:#888; font-weight:normal;"></span></h3>
+                <div class="moodboard-images" id="moodboard-gallery">
+                    <!-- Images will be populated by JavaScript -->
+                </div>
+            </div>
+
             <div class="moodboard-grid">
                 <div class="moodboard-section">
                     <h3>🎨 Color Palette</h3>
@@ -1025,60 +1269,40 @@
                     <p style="font-size: 10px; color: #888; margin-top: 6px;">Ankara • Kente • Adinkra • Mud Cloth</p>
                 </div>
                 <div class="moodboard-section">
-                    <h3>🛋️ Key Furniture (African-Inspired)</h3>
+                    <h3>🛋️ Key Furniture</h3>
                     <ul class="design-list" style="font-size: 12px;">
-                        <li>△ Large flat bean bags (cream, magenta, orange)</li>
-                        <li>🧵 Nattes plastiques (Senegalese woven mats)</li>
-                        <li>🟫 Built-in wooden platforms for seating</li>
-                        <li>💎 Colorful floor cushions & poufs</li>
-                        <li>🪑 Wooden folding chairs in circle</li>
-                        <li>📚 Books displayed flat on long tables</li>
-                        <li>🛏️ Ochre tufted floor mattress</li>
+                        <li>🎧 DJ/Audio station (west wall)</li>
+                        <li>🔊 Floor speakers in corners</li>
+                        <li>🧘 Floor poufs for listening</li>
+                        <li>🎵 Headphone stations</li>
+                        <li>📖 Reading tables with chairs</li>
+                        <li>📚 Wall-mounted archive shelves</li>
+                        <li>📺 Video screen stands</li>
                     </ul>
                 </div>
                 <div class="moodboard-section">
-                    <h3>💡 Lighting & Decor</h3>
-                    <ul class="design-list" style="font-size: 12px;">
-                        <li>🪔 Ethiopian hanging lamps with beaded fringe</li>
-                        <li>🪩 Disco ball clusters at varying heights</li>
-                        <li>💫 String lights with colored bulbs</li>
-                        <li>🏺 African pottery & woven baskets</li>
-                        <li>🪴 Hanging plants in macramé holders</li>
-                        <li>🖼️ Poster-covered walls (solidarity, art)</li>
-                        <li>🧣 Tie-dye tablecloths on display tables</li>
-                    </ul>
-                </div>
-                <div class="moodboard-section">
-                    <h3>🎭 Design Elements</h3>
-                    <ul class="design-list" style="font-size: 12px;">
-                        <li>🪟 Tall industrial windows with white frames</li>
-                        <li>🏛️ White fluted columns between windows</li>
-                        <li>📰 African diaspora magazines (Afrikadaa)</li>
-                        <li>✊ Pan-African solidarity posters</li>
-                        <li>🎨 Bold color mixing (no fear of clash)</li>
-                        <li>🌍 Global South aesthetic fusion</li>
-                    </ul>
-                </div>
-                <div class="moodboard-section">
-                    <h3>📍 Room Layout</h3>
+                    <h3>📍 Room Functions</h3>
                     <div class="layout-info" style="font-size: 12px;">
-                        <p><strong>S202 - Special Special:</strong> Entry vestibule, display table with tie-dye cloth, listening corner with bean bags</p>
-                        <p><strong>S203 - Reading Room:</strong> Poster-covered walls, nattes on floor, floor cushion seating, book displays</p>
-                        <p><strong>Inspiration:</strong> Library of Muyinga (Burundi), Senegalese nattes, Wax prints</p>
-                    </div>
-                </div>
-                <div class="moodboard-section">
-                    <h3>📸 Reference Images</h3>
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px;">
-                        <img src="photos refs reading room/Style mobilier/569a10d902522e95d504c7964c67310e.jpg" style="width: 100%; height: 60px; object-fit: cover; border-radius: 4px;" title="Ochre floor mattress with cushions">
-                        <img src="photos refs reading room/ambiance/352102ea74fd486ae6c0906204724e6d.jpg" style="width: 100%; height: 60px; object-fit: cover; border-radius: 4px;" title="Layered rugs, disco balls, wooden chairs">
-                        <img src="photos refs reading room/Style mobilier/-natte-plastique-thies.jpg" style="width: 100%; height: 60px; object-fit: cover; border-radius: 4px;" title="Senegalese plastic woven mats (nattes)">
-                        <img src="photos refs reading room/inspiration afrique/The-Library-of-Muyinga-by-BC-architects_dezeen_8.jpg" style="width: 100%; height: 60px; object-fit: cover; border-radius: 4px;" title="Library of Muyinga - wooden platforms">
-                        <img src="photos refs reading room/ambiance/_M5C0020.jpg" style="width: 100%; height: 60px; object-fit: cover; border-radius: 4px;" title="Colorful bean bags and poufs">
-                        <img src="photos refs reading room/Style mobilier/tissu-wax.webp" style="width: 100%; height: 60px; object-fit: cover; border-radius: 4px;" title="African wax print fabric">
+                        <p><strong>S202 - Sound Library:</strong> Radio Room for collective listening, DJ sets, performances</p>
+                        <p><strong>S203 - Reading Room:</strong> Panafrican Library with ~50 publications, archives, video viewing</p>
+                        <p><strong>Duration:</strong> 3-day art fair exhibition</p>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Slideshow Modal -->
+    <div id="slideshow-modal">
+        <button class="slideshow-close" onclick="closeSlideshow()">✕</button>
+        <div class="slideshow-image-container">
+            <img id="slideshow-image" src="" alt="Reference image">
+        </div>
+        <div class="slideshow-caption" id="slideshow-caption"></div>
+        <div class="slideshow-controls">
+            <button class="slideshow-btn nav" onclick="slideshowNav(-1)">←</button>
+            <span class="slideshow-info" id="slideshow-info">1 / 6</span>
+            <button class="slideshow-btn nav" onclick="slideshowNav(1)">→</button>
         </div>
     </div>
 
@@ -1122,14 +1346,21 @@
                     <label>Configuration Name</label>
                     <input type="text" class="admin-input" id="layout-name" placeholder="e.g., Opening Night Setup">
                 </div>
+                <div class="admin-input-group">
+                    <label>Description (optional)</label>
+                    <input type="text" class="admin-input" id="layout-description" placeholder="e.g., With all furniture in place">
+                </div>
                 <button class="admin-btn admin-btn-primary" onclick="saveAdminLayout()">💾 Save Layout</button>
                 <button class="admin-btn admin-btn-secondary" onclick="exportLayoutFile()">📤 Export JSON</button>
+                <button class="admin-btn admin-btn-secondary" onclick="importLayoutFile()">📥 Import JSON</button>
+                <input type="file" id="import-layout-input" accept=".json" style="display:none" onchange="handleLayoutImport(event)">
             </div>
 
             <div class="admin-section">
-                <h3>Saved Layouts</h3>
+                <h3>Saved Layouts <span id="layouts-count" style="color:#888; font-weight:normal;"></span></h3>
+                <p style="font-size: 10px; color: #666; margin-bottom: 10px;">Drag to reorder • Click to load</p>
                 <div class="saved-config-list" id="saved-layouts-list">
-                    <div style="color: #666; font-size: 12px; padding: 10px;">Loading...</div>
+                    <div style="color: #666; font-size: 12px; padding: 10px;">No layouts saved yet</div>
                 </div>
             </div>
         </div>
@@ -1142,16 +1373,17 @@
                     <input type="text" class="admin-input" id="view-name" placeholder="e.g., Window Corner">
                 </div>
                 <div class="admin-input-group">
-                    <label>Description</label>
+                    <label>Description (optional)</label>
                     <input type="text" class="admin-input" id="view-description" placeholder="Brief description">
                 </div>
                 <button class="admin-btn admin-btn-primary" onclick="saveAdminView()">📍 Save Current View</button>
             </div>
 
             <div class="admin-section">
-                <h3>Saved Views</h3>
+                <h3>Saved Views <span id="views-count" style="color:#888; font-weight:normal;"></span></h3>
+                <p style="font-size: 10px; color: #666; margin-bottom: 10px;">Drag to reorder • Click to apply</p>
                 <div class="saved-config-list" id="saved-views-list">
-                    <div style="color: #666; font-size: 12px; padding: 10px;">Loading...</div>
+                    <div style="color: #666; font-size: 12px; padding: 10px;">No views saved yet</div>
                 </div>
             </div>
 
@@ -1161,6 +1393,7 @@
                     Position: (0, 0, 0)<br>
                     Target: (0, 0, 0)
                 </div>
+                <button class="admin-btn admin-btn-secondary" style="margin-top:10px; width:100%;" onclick="updateCameraDisplay()">🔄 Refresh Position</button>
             </div>
         </div>
 
@@ -2556,15 +2789,11 @@
             group.add(leftWallGroup);
             roomS202Walls.left = leftWallGroup;
 
-            // ========== RIGHT WALL (+X) - SOLID WALL shared with Room S203 ==========
-            // NO door or passage between rooms - just a solid shared wall
-            const rightWall = new THREE.Mesh(
-                new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, ROOM_S202_DEPTH),
-                wallMaterial
-            );
-            rightWall.position.set(ROOM_S202_WIDTH / 2, CEILING_HEIGHT / 2, 0);
-            group.add(rightWall);
-            roomS202Walls.right = rightWall;
+            // ========== RIGHT WALL (+X) - SHARED with Room S203 ==========
+            // REMOVED: This wall is now created ONLY by Room S203 as its left wall
+            // to prevent duplicate walls and z-fighting/jumping issues
+            // The shared wall is positioned at the exact boundary between rooms
+            roomS202Walls.right = null;  // No wall here - S203's left wall serves both rooms
 
             // ========== CEILING ==========
             const ceilingS202 = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_S202_WIDTH, ROOM_S202_DEPTH), ceilingMaterial);
@@ -2594,15 +2823,17 @@
             audioStation.rotation.y = Math.PI / 2;  // Faces into room
             group.add(audioStation);
 
-            // === SPEAKERS - Corners, facing inward ===
+            // === SPEAKERS ON STANDS - Near window wall, facing INTO room (toward door/north) ===
+            // Speakers are near the south wall (windows) and face north (toward center/door)
+            // rotation.y = Math.PI means facing -Z (north, into the room)
             const speaker1 = createFloorSpeaker();
-            speaker1.position.set(-ROOM_S202_WIDTH / 2 + 0.3, 0, windowZ + 0.5);
-            speaker1.rotation.y = Math.PI / 4;  // Angled toward center
+            speaker1.position.set(-ROOM_S202_WIDTH / 2 + 0.4, 0, windowZ);
+            speaker1.rotation.y = Math.PI + Math.PI / 6;  // Face north-east (into room center)
             group.add(speaker1);
 
             const speaker2 = createFloorSpeaker();
-            speaker2.position.set(ROOM_S202_WIDTH / 2 - 0.3, 0, windowZ + 0.5);
-            speaker2.rotation.y = -Math.PI / 4;
+            speaker2.position.set(ROOM_S202_WIDTH / 2 - 0.4, 0, windowZ);
+            speaker2.rotation.y = Math.PI - Math.PI / 6;  // Face north-west (into room center)
             group.add(speaker2);
 
             // === CENTRAL GATHERING AREA - Keep clear for performances ===
@@ -2774,13 +3005,15 @@
             group.add(frontWallGroup);
             roomS203Walls.front = frontWallGroup;
 
-            // LEFT WALL (-X) - SOLID WALL shared with Room S202
-            // NO door or passage between rooms - just a solid shared wall
+            // LEFT WALL (-X) - SHARED WALL with Room S202
+            // This is the ONLY dividing wall between rooms (S202 does not create a right wall)
+            // Position it at the left edge of S203, centered on the wall thickness
             const leftWall = new THREE.Mesh(
                 new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, ROOM_S203_DEPTH),
                 brickMaterial
             );
-            leftWall.position.set(-ROOM_S203_WIDTH / 2, CEILING_HEIGHT / 2, 0);
+            // Position exactly at room edge minus half wall thickness so it's centered between rooms
+            leftWall.position.set(-ROOM_S203_WIDTH / 2 - WALL_THICKNESS / 2, CEILING_HEIGHT / 2, 0);
             group.add(leftWall);
             roomS203Walls.left = leftWall;
 
@@ -3117,7 +3350,232 @@
         window.toggleMoodboard = function() {
             const modal = document.getElementById('moodboard-modal');
             modal.classList.toggle('modal-hidden');
+            if (!modal.classList.contains('modal-hidden')) {
+                renderMoodboardGallery();
+            }
         };
+
+        // ============ MOOD BOARD MANAGEMENT ============
+        let moodboardEditMode = false;
+        let currentSlideIndex = 0;
+        let currentFilter = 'all';
+        let draggedImageIndex = null;
+
+        // Default mood board images
+        let moodboardImages = JSON.parse(localStorage.getItem('moodboardImages')) || [
+            { src: 'photos refs reading room/Style mobilier/569a10d902522e95d504c7964c67310e.jpg', title: 'Ochre floor mattress with cushions', category: 'furniture' },
+            { src: 'photos refs reading room/ambiance/352102ea74fd486ae6c0906204724e6d.jpg', title: 'Layered rugs, disco balls, wooden chairs', category: 'ambiance' },
+            { src: 'photos refs reading room/Style mobilier/-natte-plastique-thies.jpg', title: 'Senegalese plastic woven mats (nattes)', category: 'furniture' },
+            { src: 'photos refs reading room/inspiration afrique/The-Library-of-Muyinga-by-BC-architects_dezeen_8.jpg', title: 'Library of Muyinga - wooden platforms', category: 'inspiration' },
+            { src: 'photos refs reading room/ambiance/_M5C0020.jpg', title: 'Colorful bean bags and poufs', category: 'ambiance' },
+            { src: 'photos refs reading room/Style mobilier/tissu-wax.webp', title: 'African wax print fabric', category: 'pattern' }
+        ];
+
+        function saveMoodboardImages() {
+            localStorage.setItem('moodboardImages', JSON.stringify(moodboardImages));
+        }
+
+        function getFilteredImages() {
+            if (currentFilter === 'all') return moodboardImages;
+            return moodboardImages.filter(img => img.category === currentFilter);
+        }
+
+        function renderMoodboardGallery() {
+            const gallery = document.getElementById('moodboard-gallery');
+            const countEl = document.getElementById('image-count');
+            const filtered = getFilteredImages();
+
+            countEl.textContent = `(${filtered.length} images)`;
+
+            gallery.innerHTML = filtered.map((img, idx) => `
+                <div class="moodboard-image-item ${moodboardEditMode ? 'editing' : ''}"
+                     data-index="${moodboardImages.indexOf(img)}"
+                     onclick="openSlideshow(${moodboardImages.indexOf(img)})"
+                     draggable="${moodboardEditMode}">
+                    <img src="${img.src}" alt="${img.title}" onerror="this.parentElement.style.display='none'">
+                    <div class="image-overlay">
+                        <div class="image-title">${img.title}</div>
+                    </div>
+                    <div class="image-actions">
+                        <button class="image-action-btn move" title="Drag to reorder" onclick="event.stopPropagation()">⋮⋮</button>
+                        <button class="image-action-btn delete" title="Remove" onclick="event.stopPropagation(); removeMoodboardImage(${moodboardImages.indexOf(img)})">✕</button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Add drag-drop for reordering
+            if (moodboardEditMode) {
+                setupDragDrop();
+            }
+        }
+
+        function setupDragDrop() {
+            const items = document.querySelectorAll('.moodboard-image-item');
+            items.forEach(item => {
+                item.addEventListener('dragstart', (e) => {
+                    draggedImageIndex = parseInt(item.dataset.index);
+                    e.dataTransfer.effectAllowed = 'move';
+                    item.style.opacity = '0.5';
+                });
+                item.addEventListener('dragend', () => {
+                    item.style.opacity = '1';
+                    draggedImageIndex = null;
+                });
+                item.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                });
+                item.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const targetIndex = parseInt(item.dataset.index);
+                    if (draggedImageIndex !== null && draggedImageIndex !== targetIndex) {
+                        reorderMoodboardImage(draggedImageIndex, targetIndex);
+                    }
+                });
+            });
+        }
+
+        window.toggleMoodboardEdit = function() {
+            moodboardEditMode = !moodboardEditMode;
+            document.getElementById('edit-mode-btn').classList.toggle('active', moodboardEditMode);
+            renderMoodboardGallery();
+        };
+
+        window.toggleAddImageForm = function() {
+            const form = document.getElementById('add-image-form');
+            form.classList.toggle('active');
+            document.getElementById('add-image-btn').classList.toggle('active', form.classList.contains('active'));
+        };
+
+        window.filterMoodboard = function(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('[data-filter]').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.filter === filter);
+            });
+            renderMoodboardGallery();
+        };
+
+        window.addMoodboardImage = function() {
+            const urlInput = document.getElementById('new-image-url');
+            const titleInput = document.getElementById('new-image-title');
+            const categorySelect = document.getElementById('new-image-category');
+            const dropZone = document.getElementById('drop-zone');
+
+            const src = urlInput.value.trim() || dropZone.dataset.imageSrc;
+            const title = titleInput.value.trim() || 'Untitled';
+            const category = categorySelect.value;
+
+            if (!src) {
+                alert('Please provide an image URL or upload a file');
+                return;
+            }
+
+            moodboardImages.push({ src, title, category });
+            saveMoodboardImages();
+
+            // Reset form
+            urlInput.value = '';
+            titleInput.value = '';
+            dropZone.classList.remove('has-file');
+            dropZone.innerHTML = '📷 Drag & drop image here or click to browse';
+            delete dropZone.dataset.imageSrc;
+            toggleAddImageForm();
+
+            renderMoodboardGallery();
+        };
+
+        window.removeMoodboardImage = function(index) {
+            if (confirm('Remove this image from the mood board?')) {
+                moodboardImages.splice(index, 1);
+                saveMoodboardImages();
+                renderMoodboardGallery();
+            }
+        };
+
+        function reorderMoodboardImage(fromIndex, toIndex) {
+            const item = moodboardImages.splice(fromIndex, 1)[0];
+            moodboardImages.splice(toIndex, 0, item);
+            saveMoodboardImages();
+            renderMoodboardGallery();
+        }
+
+        // Image upload handling
+        window.handleImageSelect = function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const dropZone = document.getElementById('drop-zone');
+                    dropZone.dataset.imageSrc = e.target.result;
+                    dropZone.classList.add('has-file');
+                    dropZone.innerHTML = `✓ ${file.name}`;
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        // Drop zone setup
+        document.addEventListener('DOMContentLoaded', () => {
+            const dropZone = document.getElementById('drop-zone');
+            if (dropZone) {
+                dropZone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    dropZone.classList.add('dragover');
+                });
+                dropZone.addEventListener('dragleave', () => {
+                    dropZone.classList.remove('dragover');
+                });
+                dropZone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    dropZone.classList.remove('dragover');
+                    const file = e.dataTransfer.files[0];
+                    if (file && file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = (ev) => {
+                            dropZone.dataset.imageSrc = ev.target.result;
+                            dropZone.classList.add('has-file');
+                            dropZone.innerHTML = `✓ ${file.name}`;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        });
+
+        // ============ SLIDESHOW ============
+        window.openSlideshow = function(index) {
+            if (moodboardEditMode) return; // Don't open slideshow in edit mode
+            currentSlideIndex = index;
+            updateSlideshow();
+            document.getElementById('slideshow-modal').classList.add('active');
+        };
+
+        window.closeSlideshow = function() {
+            document.getElementById('slideshow-modal').classList.remove('active');
+        };
+
+        window.slideshowNav = function(direction) {
+            currentSlideIndex += direction;
+            if (currentSlideIndex < 0) currentSlideIndex = moodboardImages.length - 1;
+            if (currentSlideIndex >= moodboardImages.length) currentSlideIndex = 0;
+            updateSlideshow();
+        };
+
+        function updateSlideshow() {
+            const img = moodboardImages[currentSlideIndex];
+            document.getElementById('slideshow-image').src = img.src;
+            document.getElementById('slideshow-caption').textContent = img.title;
+            document.getElementById('slideshow-info').textContent = `${currentSlideIndex + 1} / ${moodboardImages.length}`;
+        }
+
+        // Keyboard navigation for slideshow
+        document.addEventListener('keydown', (e) => {
+            if (document.getElementById('slideshow-modal').classList.contains('active')) {
+                if (e.key === 'ArrowLeft') slideshowNav(-1);
+                if (e.key === 'ArrowRight') slideshowNav(1);
+                if (e.key === 'Escape') closeSlideshow();
+            }
+        });
 
         // ============ DECORATOR MODE ============
         let decoratorMode = false;
@@ -3589,22 +4047,49 @@
 
         // FLOOR SPEAKER - Exhibition audio
         function createFloorSpeaker() {
+            // Speaker on stand at ear level (~1.1m)
             const group = new THREE.Group();
             const mat = new THREE.MeshLambertMaterial({ color: 0x1a1a1a });
-            // Cabinet
-            const cabinet = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.6, 0.3), mat);
-            cabinet.position.set(0, 0.3, 0);
+            const metalMat = new THREE.MeshLambertMaterial({ color: 0x333333 });
+
+            // Speaker Stand
+            const standHeight = 0.8;
+            // Base plate
+            const basePlate = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.02, 0.35), metalMat);
+            basePlate.position.set(0, 0.01, 0);
+            group.add(basePlate);
+            // Center pole
+            const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, standHeight, 8), metalMat);
+            pole.position.set(0, standHeight / 2 + 0.02, 0);
+            group.add(pole);
+            // Top plate
+            const topPlate = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.02, 0.25), metalMat);
+            topPlate.position.set(0, standHeight + 0.02, 0);
+            group.add(topPlate);
+
+            // Speaker Cabinet (at ear level)
+            const cabinetY = standHeight + 0.35;
+            const cabinet = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.45, 0.25), mat);
+            cabinet.position.set(0, cabinetY, 0);
             group.add(cabinet);
-            // Woofer
-            const woofer = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.05, 16), new THREE.MeshLambertMaterial({ color: 0x444444 }));
+
+            // Woofer (driver faces +Z, so when rotated 180deg, faces into room)
+            const woofer = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.04, 16), new THREE.MeshLambertMaterial({ color: 0x444444 }));
             woofer.rotation.x = Math.PI / 2;
-            woofer.position.set(0, 0.2, 0.16);
+            woofer.position.set(0, cabinetY - 0.08, 0.13);
             group.add(woofer);
+
             // Tweeter
-            const tweeter = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.03, 12), new THREE.MeshLambertMaterial({ color: 0x666666 }));
+            const tweeter = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.02, 12), new THREE.MeshLambertMaterial({ color: 0x666666 }));
             tweeter.rotation.x = Math.PI / 2;
-            tweeter.position.set(0, 0.45, 0.16);
+            tweeter.position.set(0, cabinetY + 0.12, 0.13);
             group.add(tweeter);
+
+            // LED indicator
+            const led = new THREE.Mesh(new THREE.SphereGeometry(0.01, 8, 8), new THREE.MeshLambertMaterial({ color: 0x00ff00, emissive: 0x00ff00 }));
+            led.position.set(0, cabinetY + 0.19, 0.13);
+            group.add(led);
+
             return group;
         }
 
@@ -5131,115 +5616,276 @@
             `).join('');
         }
 
-        window.saveAdminLayout = async function() {
+        // ============ LOCAL STORAGE BASED CONFIG MANAGEMENT ============
+        // Fallback to localStorage when API is unavailable
+
+        let savedLayouts = JSON.parse(localStorage.getItem('savedLayouts')) || [];
+        let savedViews = JSON.parse(localStorage.getItem('savedViews')) || [];
+        let draggedConfigIndex = null;
+        let draggedConfigType = null;
+
+        function saveLayoutsToStorage() {
+            localStorage.setItem('savedLayouts', JSON.stringify(savedLayouts));
+        }
+
+        function saveViewsToStorage() {
+            localStorage.setItem('savedViews', JSON.stringify(savedViews));
+        }
+
+        window.saveAdminLayout = function() {
             const name = document.getElementById('layout-name').value.trim();
+            const description = document.getElementById('layout-description')?.value.trim() || '';
             if (!name) { alert('Please enter a layout name'); return; }
+
             const layout = placedItems.map(item => ({
                 type: item.userData.itemType,
                 position: { x: item.position.x, y: item.position.y, z: item.position.z },
                 rotation: { y: item.rotation.y }
             }));
-            try {
-                const response = await fetch('/api/config', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ type: 'layout', name: name, data: layout, author: adminUser || 'Unknown' })
-                });
-                const result = await response.json();
-                if (result.success) {
-                    alert('Layout saved!');
-                    document.getElementById('layout-name').value = '';
-                    loadAdminConfigs();
-                }
-            } catch (err) { alert('Failed to save layout: ' + err.message); }
+
+            const layoutEntry = {
+                id: Date.now(),
+                name: name,
+                description: description,
+                data: layout,
+                author: adminUser || 'Admin',
+                createdAt: new Date().toISOString()
+            };
+
+            savedLayouts.push(layoutEntry);
+            saveLayoutsToStorage();
+
+            document.getElementById('layout-name').value = '';
+            if (document.getElementById('layout-description')) {
+                document.getElementById('layout-description').value = '';
+            }
+
+            renderLayoutsList();
+            alert('Layout saved!');
         };
 
-        window.saveAdminView = async function() {
+        window.saveAdminView = function() {
             const name = document.getElementById('view-name').value.trim();
             const description = document.getElementById('view-description').value.trim();
             if (!name) { alert('Please enter a view name'); return; }
-            const viewData = {
-                position: { x: camera.position.x, y: camera.position.y, z: camera.position.z },
-                target: { x: cameraTarget.x, y: cameraTarget.y, z: cameraTarget.z },
-                distance: cameraDistance,
-                rotationX: currentRotationX,
-                rotationY: currentRotationY,
-                description: description
+
+            const viewEntry = {
+                id: Date.now(),
+                name: name,
+                description: description,
+                data: {
+                    position: { x: camera.position.x, y: camera.position.y, z: camera.position.z },
+                    target: { x: cameraTarget.x, y: cameraTarget.y, z: cameraTarget.z },
+                    distance: cameraDistance,
+                    rotationX: currentRotationX,
+                    rotationY: currentRotationY
+                },
+                author: adminUser || 'Admin',
+                createdAt: new Date().toISOString()
             };
-            try {
-                const response = await fetch('/api/config', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ type: 'view', name: name, data: viewData, author: adminUser || 'Unknown' })
-                });
-                const result = await response.json();
-                if (result.success) {
-                    alert('View saved!');
-                    document.getElementById('view-name').value = '';
-                    document.getElementById('view-description').value = '';
-                    loadAdminConfigs();
-                }
-            } catch (err) { alert('Failed to save view: ' + err.message); }
+
+            savedViews.push(viewEntry);
+            saveViewsToStorage();
+
+            document.getElementById('view-name').value = '';
+            document.getElementById('view-description').value = '';
+
+            renderViewsList();
+            alert('View saved!');
         };
 
-        window.saveMoodEntry = async function() {
-            const title = document.getElementById('mood-title').value.trim();
-            const imageUrl = document.getElementById('mood-image-url').value.trim();
-            const description = document.getElementById('mood-description').value.trim();
-            const category = document.getElementById('mood-category').value;
-            if (!title) { alert('Please enter a title'); return; }
-            const moodData = { title, imageUrl, description, category };
-            try {
-                const response = await fetch('/api/config', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ type: 'mood', name: title, data: moodData, author: adminUser || 'Unknown' })
-                });
-                const result = await response.json();
-                if (result.success) {
-                    alert('Mood board entry added!');
-                    document.getElementById('mood-title').value = '';
-                    document.getElementById('mood-image-url').value = '';
-                    document.getElementById('mood-description').value = '';
-                    loadAdminConfigs();
-                }
-            } catch (err) { alert('Failed to save mood entry: ' + err.message); }
+        window.loadLayout = function(index) {
+            const layout = savedLayouts[index];
+            if (layout && layout.data) {
+                applyLayout(layout.data);
+                alert(`Layout "${layout.name}" loaded!`);
+            }
         };
 
-        window.loadConfig = async function(type, name) {
-            try {
-                const response = await fetch(`/api/config?type=${type}&name=${encodeURIComponent(name)}`);
-                const result = await response.json();
-                if (result.success && result.config) {
-                    const data = result.config.data;
-                    if (type === 'layout') {
-                        applyLayout(data);
-                        alert('Layout loaded!');
-                    } else if (type === 'view') {
-                        cameraTarget.set(data.target.x, data.target.y, data.target.z);
-                        cameraDistance = data.distance;
-                        targetRotationX = data.rotationX;
-                        targetRotationY = data.rotationY;
-                        currentRotationX = data.rotationX;
-                        currentRotationY = data.rotationY;
-                        alert('View loaded: ' + (data.description || name));
+        window.loadView = function(index) {
+            const view = savedViews[index];
+            if (view && view.data) {
+                const data = view.data;
+                cameraTarget.set(data.target.x, data.target.y, data.target.z);
+                cameraDistance = data.distance;
+                targetRotationX = data.rotationX;
+                targetRotationY = data.rotationY;
+                currentRotationX = data.rotationX;
+                currentRotationY = data.rotationY;
+                alert(`View "${view.name}" applied!`);
+            }
+        };
+
+        window.deleteLayout = function(index, event) {
+            event.stopPropagation();
+            const layout = savedLayouts[index];
+            if (confirm(`Delete layout "${layout.name}"?`)) {
+                savedLayouts.splice(index, 1);
+                saveLayoutsToStorage();
+                renderLayoutsList();
+            }
+        };
+
+        window.deleteView = function(index, event) {
+            event.stopPropagation();
+            const view = savedViews[index];
+            if (confirm(`Delete view "${view.name}"?`)) {
+                savedViews.splice(index, 1);
+                saveViewsToStorage();
+                renderViewsList();
+            }
+        };
+
+        window.editLayout = function(index, event) {
+            event.stopPropagation();
+            const layout = savedLayouts[index];
+            const newName = prompt('Edit layout name:', layout.name);
+            if (newName && newName.trim()) {
+                const newDesc = prompt('Edit description:', layout.description || '');
+                savedLayouts[index].name = newName.trim();
+                savedLayouts[index].description = newDesc || '';
+                saveLayoutsToStorage();
+                renderLayoutsList();
+            }
+        };
+
+        window.editView = function(index, event) {
+            event.stopPropagation();
+            const view = savedViews[index];
+            const newName = prompt('Edit view name:', view.name);
+            if (newName && newName.trim()) {
+                const newDesc = prompt('Edit description:', view.description || '');
+                savedViews[index].name = newName.trim();
+                savedViews[index].description = newDesc || '';
+                saveViewsToStorage();
+                renderViewsList();
+            }
+        };
+
+        window.updateViewPosition = function(index, event) {
+            event.stopPropagation();
+            const view = savedViews[index];
+            if (confirm(`Update "${view.name}" with current camera position?`)) {
+                savedViews[index].data = {
+                    position: { x: camera.position.x, y: camera.position.y, z: camera.position.z },
+                    target: { x: cameraTarget.x, y: cameraTarget.y, z: cameraTarget.z },
+                    distance: cameraDistance,
+                    rotationX: currentRotationX,
+                    rotationY: currentRotationY
+                };
+                saveViewsToStorage();
+                renderViewsList();
+                alert('View position updated!');
+            }
+        };
+
+        function renderLayoutsList() {
+            const container = document.getElementById('saved-layouts-list');
+            const countEl = document.getElementById('layouts-count');
+            if (countEl) countEl.textContent = `(${savedLayouts.length})`;
+
+            if (savedLayouts.length === 0) {
+                container.innerHTML = '<div style="color: #666; font-size: 12px; padding: 10px;">No layouts saved yet</div>';
+                return;
+            }
+
+            container.innerHTML = savedLayouts.map((layout, idx) => `
+                <div class="saved-config-item" draggable="true" data-index="${idx}" data-type="layout"
+                     onclick="loadLayout(${idx})">
+                    <div class="saved-config-info">
+                        <div class="saved-config-name">${layout.name}</div>
+                        <div class="saved-config-meta">${layout.description || ''} • ${new Date(layout.createdAt).toLocaleDateString()}</div>
+                    </div>
+                    <div class="saved-config-actions">
+                        <button class="saved-config-btn move" title="Drag to reorder">⋮⋮</button>
+                        <button class="saved-config-btn edit" onclick="editLayout(${idx}, event)" title="Edit">✏️</button>
+                        <button class="saved-config-btn danger" onclick="deleteLayout(${idx}, event)" title="Delete">✕</button>
+                    </div>
+                </div>
+            `).join('');
+
+            setupConfigDragDrop('layout');
+        }
+
+        function renderViewsList() {
+            const container = document.getElementById('saved-views-list');
+            const countEl = document.getElementById('views-count');
+            if (countEl) countEl.textContent = `(${savedViews.length})`;
+
+            if (savedViews.length === 0) {
+                container.innerHTML = '<div style="color: #666; font-size: 12px; padding: 10px;">No views saved yet</div>';
+                return;
+            }
+
+            container.innerHTML = savedViews.map((view, idx) => `
+                <div class="saved-config-item" draggable="true" data-index="${idx}" data-type="view"
+                     onclick="loadView(${idx})">
+                    <div class="saved-config-info">
+                        <div class="saved-config-name">${view.name}</div>
+                        <div class="saved-config-meta">${view.description || ''} • ${new Date(view.createdAt).toLocaleDateString()}</div>
+                    </div>
+                    <div class="saved-config-actions">
+                        <button class="saved-config-btn move" title="Drag to reorder">⋮⋮</button>
+                        <button class="saved-config-btn" onclick="updateViewPosition(${idx}, event)" title="Update to current">📍</button>
+                        <button class="saved-config-btn edit" onclick="editView(${idx}, event)" title="Edit">✏️</button>
+                        <button class="saved-config-btn danger" onclick="deleteView(${idx}, event)" title="Delete">✕</button>
+                    </div>
+                </div>
+            `).join('');
+
+            setupConfigDragDrop('view');
+        }
+
+        function setupConfigDragDrop(type) {
+            const container = document.getElementById(type === 'layout' ? 'saved-layouts-list' : 'saved-views-list');
+            const items = container.querySelectorAll('.saved-config-item');
+
+            items.forEach(item => {
+                item.addEventListener('dragstart', (e) => {
+                    draggedConfigIndex = parseInt(item.dataset.index);
+                    draggedConfigType = type;
+                    item.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
+                });
+
+                item.addEventListener('dragend', () => {
+                    item.classList.remove('dragging');
+                    draggedConfigIndex = null;
+                    draggedConfigType = null;
+                    items.forEach(i => i.classList.remove('drag-over'));
+                });
+
+                item.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                    items.forEach(i => i.classList.remove('drag-over'));
+                    item.classList.add('drag-over');
+                });
+
+                item.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const targetIndex = parseInt(item.dataset.index);
+                    if (draggedConfigIndex !== null && draggedConfigIndex !== targetIndex && draggedConfigType === type) {
+                        reorderConfig(type, draggedConfigIndex, targetIndex);
                     }
-                }
-            } catch (err) { alert('Failed to load config: ' + err.message); }
-        };
-
-        window.deleteConfig = async function(type, name) {
-            if (!confirm(`Delete ${type} "${name}"?`)) return;
-            try {
-                const response = await fetch('/api/config', {
-                    method: 'DELETE',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ type, name })
+                    items.forEach(i => i.classList.remove('drag-over'));
                 });
-                const result = await response.json();
-                if (result.success) loadAdminConfigs();
-            } catch (err) { alert('Failed to delete: ' + err.message); }
-        };
+            });
+        }
+
+        function reorderConfig(type, fromIndex, toIndex) {
+            const arr = type === 'layout' ? savedLayouts : savedViews;
+            const item = arr.splice(fromIndex, 1)[0];
+            arr.splice(toIndex, 0, item);
+
+            if (type === 'layout') {
+                saveLayoutsToStorage();
+                renderLayoutsList();
+            } else {
+                saveViewsToStorage();
+                renderViewsList();
+            }
+        }
 
         window.exportLayoutFile = function() {
             const layout = placedItems.map(item => ({
@@ -5253,6 +5899,85 @@
             a.href = url;
             a.download = 'panafrican-library-layout-' + new Date().toISOString().slice(0,10) + '.json';
             a.click();
+        };
+
+        window.importLayoutFile = function() {
+            document.getElementById('import-layout-input').click();
+        };
+
+        window.handleLayoutImport = function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (Array.isArray(data)) {
+                        const name = prompt('Name for imported layout:', file.name.replace('.json', ''));
+                        if (name) {
+                            savedLayouts.push({
+                                id: Date.now(),
+                                name: name,
+                                description: 'Imported from file',
+                                data: data,
+                                author: adminUser || 'Admin',
+                                createdAt: new Date().toISOString()
+                            });
+                            saveLayoutsToStorage();
+                            renderLayoutsList();
+                            alert('Layout imported successfully!');
+                        }
+                    } else {
+                        alert('Invalid layout file format');
+                    }
+                } catch (err) {
+                    alert('Failed to parse layout file: ' + err.message);
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = ''; // Reset file input
+        };
+
+        window.updateCameraDisplay = function() {
+            const display = document.getElementById('camera-position-display');
+            if (display) {
+                display.innerHTML = `
+                    Position: (${camera.position.x.toFixed(2)}, ${camera.position.y.toFixed(2)}, ${camera.position.z.toFixed(2)})<br>
+                    Target: (${cameraTarget.x.toFixed(2)}, ${cameraTarget.y.toFixed(2)}, ${cameraTarget.z.toFixed(2)})<br>
+                    Distance: ${cameraDistance.toFixed(2)}<br>
+                    RotX: ${currentRotationX.toFixed(3)} | RotY: ${currentRotationY.toFixed(3)}
+                `;
+            }
+        };
+
+        // Initialize lists on admin panel open
+        function initAdminLists() {
+            renderLayoutsList();
+            renderViewsList();
+            updateCameraDisplay();
+        }
+
+        window.saveMoodEntry = async function() {
+            const title = document.getElementById('mood-title').value.trim();
+            const imageUrl = document.getElementById('mood-image-url').value.trim();
+            const description = document.getElementById('mood-description').value.trim();
+            const category = document.getElementById('mood-category').value;
+            if (!title || !imageUrl) { alert('Please enter a title and image URL'); return; }
+
+            // Add to moodboard images array
+            moodboardImages.push({
+                src: imageUrl,
+                title: title + (description ? ' - ' + description : ''),
+                category: category
+            });
+            saveMoodboardImages();
+
+            document.getElementById('mood-title').value = '';
+            document.getElementById('mood-image-url').value = '';
+            document.getElementById('mood-description').value = '';
+
+            alert('Added to mood board!');
         };
 
         // ========== AI RENDER SYSTEM ==========
