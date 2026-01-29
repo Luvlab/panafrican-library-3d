@@ -651,6 +651,66 @@
         .decorator-category h3::after { content: '▼'; font-size: 8px; }
         .decorator-category.collapsed h3::after { content: '▶'; }
         .decorator-category.collapsed .item-grid { display: none; }
+        .decorator-category.collapsed .upload-section { display: none; }
+        /* 3D File Upload Styles */
+        .upload-section {
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .file-drop-zone {
+            border: 2px dashed rgba(255,255,255,0.3);
+            border-radius: 8px;
+            padding: 20px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 10px;
+        }
+        .file-drop-zone:hover, .file-drop-zone.dragover {
+            border-color: #20c997;
+            background: rgba(32,201,151,0.1);
+        }
+        .file-drop-zone.has-file {
+            border-color: #20c997;
+            background: rgba(32,201,151,0.15);
+        }
+        .file-drop-zone .drop-icon { font-size: 28px; margin-bottom: 8px; }
+        .file-drop-zone .drop-text { font-size: 11px; color: #888; }
+        .file-drop-zone .drop-formats { font-size: 9px; color: #666; margin-top: 5px; }
+        .uploaded-models-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .uploaded-model-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .uploaded-model-item:hover { background: rgba(255,255,255,0.1); }
+        .uploaded-model-item.selected { background: rgba(32,201,151,0.2); border: 1px solid #20c997; }
+        .uploaded-model-info { flex: 1; min-width: 0; }
+        .uploaded-model-name { font-size: 11px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .uploaded-model-meta { font-size: 9px; color: #888; }
+        .uploaded-model-actions { display: flex; gap: 5px; }
+        .model-action-btn {
+            width: 24px;
+            height: 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .model-action-btn.delete { background: rgba(220,53,69,0.5); color: #fff; }
+        .model-action-btn.place { background: rgba(32,201,151,0.5); color: #fff; }
         .item-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -1794,6 +1854,25 @@
             </div>
         </div>
 
+        <div class="decorator-category" id="cat-custom3d">
+            <h3 onclick="toggleCategory('cat-custom3d')">📦 Custom 3D Models</h3>
+            <div class="upload-section">
+                <div class="file-drop-zone" id="model-drop-zone" onclick="document.getElementById('model-file-input').click()">
+                    <div class="drop-icon">📦</div>
+                    <div class="drop-text">Drop 3D model file here or click to browse</div>
+                    <div class="drop-formats">Supports: GLB, GLTF, OBJ</div>
+                </div>
+                <input type="file" id="model-file-input" accept=".glb,.gltf,.obj" style="display:none" onchange="handleModelUpload(event)">
+                <input type="text" id="model-name-input" class="edit-inline-input" placeholder="Model name (optional)" style="margin-bottom: 8px;">
+                <div class="uploaded-models-list" id="uploaded-models-list">
+                    <!-- Uploaded models appear here -->
+                </div>
+            </div>
+            <div class="item-grid" id="custom-models-grid">
+                <!-- Custom model cards appear here -->
+            </div>
+        </div>
+
         <div class="decorator-actions">
             <button class="decorator-action-btn primary" onclick="saveLayout()">💾 Save Layout</button>
             <button class="decorator-action-btn secondary" onclick="loadLayout()">📂 Load Layout</button>
@@ -1803,7 +1882,439 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
     <script>
+        // ============ INDEXEDDB FOR 3D MODEL STORAGE ============
+        const DB_NAME = 'PanafricanLibrary3D';
+        const DB_VERSION = 1;
+        const MODELS_STORE = 'custom_models';
+        const IMAGES_STORE = 'moodboard_images';
+
+        let db = null;
+
+        function initDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => {
+                    db = request.result;
+                    resolve(db);
+                };
+
+                request.onupgradeneeded = (event) => {
+                    const database = event.target.result;
+
+                    // Store for 3D models
+                    if (!database.objectStoreNames.contains(MODELS_STORE)) {
+                        const modelsStore = database.createObjectStore(MODELS_STORE, { keyPath: 'id', autoIncrement: true });
+                        modelsStore.createIndex('name', 'name', { unique: false });
+                        modelsStore.createIndex('type', 'type', { unique: false });
+                    }
+
+                    // Store for mood board images
+                    if (!database.objectStoreNames.contains(IMAGES_STORE)) {
+                        const imagesStore = database.createObjectStore(IMAGES_STORE, { keyPath: 'id', autoIncrement: true });
+                        imagesStore.createIndex('category', 'category', { unique: false });
+                    }
+                };
+            });
+        }
+
+        // Save 3D model to IndexedDB
+        async function saveModelToDB(modelData) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([MODELS_STORE], 'readwrite');
+                const store = transaction.objectStore(MODELS_STORE);
+                const request = store.add(modelData);
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        // Get all models from IndexedDB
+        async function getAllModelsFromDB() {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([MODELS_STORE], 'readonly');
+                const store = transaction.objectStore(MODELS_STORE);
+                const request = store.getAll();
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        // Delete model from IndexedDB
+        async function deleteModelFromDB(id) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([MODELS_STORE], 'readwrite');
+                const store = transaction.objectStore(MODELS_STORE);
+                const request = store.delete(id);
+                request.onsuccess = () => resolve();
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        // Save image to IndexedDB
+        async function saveImageToDB(imageData) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([IMAGES_STORE], 'readwrite');
+                const store = transaction.objectStore(IMAGES_STORE);
+                const request = store.add(imageData);
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        // Get all images from IndexedDB
+        async function getAllImagesFromDB() {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([IMAGES_STORE], 'readonly');
+                const store = transaction.objectStore(IMAGES_STORE);
+                const request = store.getAll();
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        // Delete image from IndexedDB
+        async function deleteImageFromDB(id) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([IMAGES_STORE], 'readwrite');
+                const store = transaction.objectStore(IMAGES_STORE);
+                const request = store.delete(id);
+                request.onsuccess = () => resolve();
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        // Initialize DB on load
+        initDB().then(() => {
+            console.log('IndexedDB initialized for 3D models and images');
+            loadUploadedModels();
+            loadUploadedImages();
+        }).catch(err => {
+            console.error('Failed to initialize IndexedDB:', err);
+        });
+
+        // ============ 3D MODEL UPLOAD HANDLING ============
+        let uploadedModels = [];
+        let gltfLoader = null;
+        let objLoader = null;
+
+        // Initialize loaders after Three.js is ready
+        function initLoaders() {
+            if (typeof THREE.GLTFLoader !== 'undefined') {
+                gltfLoader = new THREE.GLTFLoader();
+            }
+            if (typeof THREE.OBJLoader !== 'undefined') {
+                objLoader = new THREE.OBJLoader();
+            }
+        }
+
+        // Handle 3D model file upload
+        window.handleModelUpload = async function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const dropZone = document.getElementById('model-drop-zone');
+            const nameInput = document.getElementById('model-name-input');
+            const customName = nameInput.value.trim() || file.name.replace(/\.[^/.]+$/, '');
+
+            // Check file type
+            const ext = file.name.split('.').pop().toLowerCase();
+            if (!['glb', 'gltf', 'obj'].includes(ext)) {
+                alert('Unsupported file format. Please use GLB, GLTF, or OBJ.');
+                return;
+            }
+
+            dropZone.classList.add('has-file');
+            dropZone.querySelector('.drop-text').textContent = 'Processing...';
+
+            try {
+                // Read file as ArrayBuffer
+                const arrayBuffer = await file.arrayBuffer();
+
+                const modelData = {
+                    name: customName,
+                    fileName: file.name,
+                    type: ext,
+                    size: file.size,
+                    data: arrayBuffer,
+                    createdAt: new Date().toISOString()
+                };
+
+                // Save to IndexedDB
+                const id = await saveModelToDB(modelData);
+                modelData.id = id;
+                uploadedModels.push(modelData);
+
+                // Update UI
+                nameInput.value = '';
+                dropZone.classList.remove('has-file');
+                dropZone.querySelector('.drop-text').textContent = 'Drop 3D model file here or click to browse';
+
+                renderUploadedModelsList();
+                alert(`Model "${customName}" uploaded successfully!`);
+
+            } catch (err) {
+                console.error('Error uploading model:', err);
+                alert('Failed to upload model: ' + err.message);
+                dropZone.classList.remove('has-file');
+                dropZone.querySelector('.drop-text').textContent = 'Drop 3D model file here or click to browse';
+            }
+
+            // Reset file input
+            event.target.value = '';
+        };
+
+        // Load models from IndexedDB on startup
+        async function loadUploadedModels() {
+            if (!db) return;
+            try {
+                uploadedModels = await getAllModelsFromDB();
+                renderUploadedModelsList();
+            } catch (err) {
+                console.error('Error loading models:', err);
+            }
+        }
+
+        // Render the uploaded models list
+        function renderUploadedModelsList() {
+            const container = document.getElementById('uploaded-models-list');
+            const grid = document.getElementById('custom-models-grid');
+
+            if (!container) return;
+
+            if (uploadedModels.length === 0) {
+                container.innerHTML = '<div style="color:#666; font-size:11px; text-align:center; padding:10px;">No custom models yet</div>';
+                if (grid) grid.innerHTML = '';
+                return;
+            }
+
+            // List view
+            container.innerHTML = uploadedModels.map(model => `
+                <div class="uploaded-model-item" onclick="selectCustomModel(${model.id})">
+                    <div class="uploaded-model-info">
+                        <div class="uploaded-model-name">📦 ${model.name}</div>
+                        <div class="uploaded-model-meta">${model.type.toUpperCase()} • ${formatFileSize(model.size)}</div>
+                    </div>
+                    <div class="uploaded-model-actions">
+                        <button class="model-action-btn place" onclick="event.stopPropagation(); placeCustomModel(${model.id})" title="Place in scene">+</button>
+                        <button class="model-action-btn delete" onclick="event.stopPropagation(); deleteCustomModel(${model.id})" title="Delete">✕</button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Grid view (item cards)
+            if (grid) {
+                grid.innerHTML = uploadedModels.map(model => `
+                    <div class="item-card" onclick="selectCustomModel(${model.id})">
+                        <div class="item-preview" style="background: linear-gradient(135deg, #4a90d9 0%, #2c5282 100%); font-size: 20px;">📦</div>
+                        <div class="item-name">${model.name}</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        }
+
+        // Select a custom model for placement
+        window.selectCustomModel = function(id) {
+            const model = uploadedModels.find(m => m.id === id);
+            if (model) {
+                selectedFurnitureType = `custom-model-${id}`;
+                document.querySelectorAll('.item-card').forEach(c => c.classList.remove('selected'));
+                document.querySelectorAll('.uploaded-model-item').forEach(c => c.classList.remove('selected'));
+                event.target.closest('.item-card, .uploaded-model-item')?.classList.add('selected');
+                updateSelectedInfo();
+            }
+        };
+
+        // Place custom model in scene
+        window.placeCustomModel = async function(id) {
+            const model = uploadedModels.find(m => m.id === id);
+            if (!model) return;
+
+            initLoaders();
+
+            try {
+                const blob = new Blob([model.data]);
+                const url = URL.createObjectURL(blob);
+
+                let object = null;
+
+                if (model.type === 'glb' || model.type === 'gltf') {
+                    if (!gltfLoader) {
+                        alert('GLTF Loader not available');
+                        return;
+                    }
+                    object = await new Promise((resolve, reject) => {
+                        gltfLoader.load(url, (gltf) => {
+                            resolve(gltf.scene);
+                        }, undefined, reject);
+                    });
+                } else if (model.type === 'obj') {
+                    if (!objLoader) {
+                        alert('OBJ Loader not available');
+                        return;
+                    }
+                    object = await new Promise((resolve, reject) => {
+                        objLoader.load(url, resolve, undefined, reject);
+                    });
+                }
+
+                URL.revokeObjectURL(url);
+
+                if (object) {
+                    // Auto-scale to reasonable size
+                    const box = new THREE.Box3().setFromObject(object);
+                    const size = box.getSize(new THREE.Vector3());
+                    const maxDim = Math.max(size.x, size.y, size.z);
+                    if (maxDim > 2) {
+                        const scale = 1.5 / maxDim;
+                        object.scale.multiplyScalar(scale);
+                    }
+
+                    // Center on floor
+                    const newBox = new THREE.Box3().setFromObject(object);
+                    object.position.y = -newBox.min.y;
+
+                    // Place at room center
+                    object.position.x = 0;
+                    object.position.z = 0;
+
+                    // Mark as placed item
+                    object.userData.isPlacedItem = true;
+                    object.userData.itemType = `custom-model-${id}`;
+                    object.userData.customModelId = id;
+                    object.userData.customModelName = model.name;
+
+                    scene.add(object);
+                    placedItems.push(object);
+
+                    alert(`Model "${model.name}" placed in scene!`);
+                }
+
+            } catch (err) {
+                console.error('Error loading model:', err);
+                alert('Failed to load model: ' + err.message);
+            }
+        };
+
+        // Delete custom model
+        window.deleteCustomModel = async function(id) {
+            const model = uploadedModels.find(m => m.id === id);
+            if (!model) return;
+
+            if (!confirm(`Delete model "${model.name}"? This cannot be undone.`)) return;
+
+            try {
+                await deleteModelFromDB(id);
+                uploadedModels = uploadedModels.filter(m => m.id !== id);
+                renderUploadedModelsList();
+            } catch (err) {
+                console.error('Error deleting model:', err);
+                alert('Failed to delete model: ' + err.message);
+            }
+        };
+
+        // Setup drag-drop for model upload
+        document.addEventListener('DOMContentLoaded', () => {
+            const dropZone = document.getElementById('model-drop-zone');
+            if (dropZone) {
+                dropZone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    dropZone.classList.add('dragover');
+                });
+                dropZone.addEventListener('dragleave', () => {
+                    dropZone.classList.remove('dragover');
+                });
+                dropZone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    dropZone.classList.remove('dragover');
+                    const file = e.dataTransfer.files[0];
+                    if (file) {
+                        // Trigger the file input handler
+                        const input = document.getElementById('model-file-input');
+                        const dt = new DataTransfer();
+                        dt.items.add(file);
+                        input.files = dt.files;
+                        handleModelUpload({ target: input });
+                    }
+                });
+            }
+        });
+
+        // ============ MOOD BOARD IMAGE UPLOAD TO INDEXEDDB ============
+        let uploadedImages = [];
+
+        async function loadUploadedImages() {
+            if (!db) return;
+            try {
+                uploadedImages = await getAllImagesFromDB();
+                // Merge with localStorage moodboard images
+                mergeUploadedImagesWithMoodboard();
+            } catch (err) {
+                console.error('Error loading images:', err);
+            }
+        }
+
+        function mergeUploadedImagesWithMoodboard() {
+            // Add uploaded images to moodboard if they exist
+            uploadedImages.forEach(img => {
+                const exists = moodboardImages.find(m => m.dbId === img.id);
+                if (!exists && img.dataUrl) {
+                    moodboardImages.push({
+                        src: img.dataUrl,
+                        title: img.name,
+                        category: img.category || 'inspiration',
+                        dbId: img.id,
+                        isUploaded: true
+                    });
+                }
+            });
+        }
+
+        // Enhanced image upload with IndexedDB storage
+        window.handleMoodboardImageUpload = async function(file) {
+            if (!file || !file.type.startsWith('image/')) return null;
+
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    const dataUrl = e.target.result;
+
+                    // Save to IndexedDB for persistence
+                    const imageData = {
+                        name: file.name.replace(/\.[^/.]+$/, ''),
+                        fileName: file.name,
+                        dataUrl: dataUrl,
+                        size: file.size,
+                        category: document.getElementById('new-image-category')?.value || 'inspiration',
+                        createdAt: new Date().toISOString()
+                    };
+
+                    try {
+                        const id = await saveImageToDB(imageData);
+                        imageData.id = id;
+                        uploadedImages.push(imageData);
+                        resolve(dataUrl);
+                    } catch (err) {
+                        console.error('Error saving image:', err);
+                        // Still return dataUrl even if DB save fails
+                        resolve(dataUrl);
+                    }
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        };
+
         // Scene setup
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x1a1a1a);
@@ -3499,18 +4010,34 @@
             renderMoodboardGallery();
         }
 
-        // Image upload handling
-        window.handleImageSelect = function(event) {
+        // Image upload handling - with IndexedDB persistence
+        window.handleImageSelect = async function(event) {
             const file = event.target.files[0];
             if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const dropZone = document.getElementById('drop-zone');
-                    dropZone.dataset.imageSrc = e.target.result;
-                    dropZone.classList.add('has-file');
-                    dropZone.innerHTML = `✓ ${file.name}`;
-                };
-                reader.readAsDataURL(file);
+                const dropZone = document.getElementById('drop-zone');
+                dropZone.innerHTML = '⏳ Processing...';
+
+                try {
+                    // Use enhanced handler that saves to IndexedDB
+                    const dataUrl = await handleMoodboardImageUpload(file);
+                    if (dataUrl) {
+                        dropZone.dataset.imageSrc = dataUrl;
+                        dropZone.dataset.fileName = file.name;
+                        dropZone.classList.add('has-file');
+                        dropZone.innerHTML = `✓ ${file.name}`;
+                    }
+                } catch (err) {
+                    console.error('Image upload error:', err);
+                    // Fallback to simple FileReader
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        dropZone.dataset.imageSrc = e.target.result;
+                        dropZone.dataset.fileName = file.name;
+                        dropZone.classList.add('has-file');
+                        dropZone.innerHTML = `✓ ${file.name}`;
+                    };
+                    reader.readAsDataURL(file);
+                }
             }
         };
 
@@ -3525,18 +4052,31 @@
                 dropZone.addEventListener('dragleave', () => {
                     dropZone.classList.remove('dragover');
                 });
-                dropZone.addEventListener('drop', (e) => {
+                dropZone.addEventListener('drop', async (e) => {
                     e.preventDefault();
                     dropZone.classList.remove('dragover');
                     const file = e.dataTransfer.files[0];
                     if (file && file.type.startsWith('image/')) {
-                        const reader = new FileReader();
-                        reader.onload = (ev) => {
-                            dropZone.dataset.imageSrc = ev.target.result;
-                            dropZone.classList.add('has-file');
-                            dropZone.innerHTML = `✓ ${file.name}`;
-                        };
-                        reader.readAsDataURL(file);
+                        dropZone.innerHTML = '⏳ Processing...';
+                        try {
+                            const dataUrl = await handleMoodboardImageUpload(file);
+                            if (dataUrl) {
+                                dropZone.dataset.imageSrc = dataUrl;
+                                dropZone.dataset.fileName = file.name;
+                                dropZone.classList.add('has-file');
+                                dropZone.innerHTML = `✓ ${file.name}`;
+                            }
+                        } catch (err) {
+                            // Fallback
+                            const reader = new FileReader();
+                            reader.onload = (ev) => {
+                                dropZone.dataset.imageSrc = ev.target.result;
+                                dropZone.dataset.fileName = file.name;
+                                dropZone.classList.add('has-file');
+                                dropZone.innerHTML = `✓ ${file.name}`;
+                            };
+                            reader.readAsDataURL(file);
+                        }
                     }
                 });
             }
@@ -3693,11 +4233,102 @@
                 case 'poster-activist-1': item = createTextBanner('WE WANT TO LIVE FREE', 0x1a3a5c); break;
                 case 'poster-activist-2': item = createTextBanner('SOMOS PERSONAS', 0xf5f0e8, 0x1a1a1a); break;
                 case 'poster-activist-3': item = createWallPoster(0xc41e3a, 0.7, 0.9, 'Resistance'); break;
-                default: item = createFloorCushion(0x888888, 0.5);
+                default:
+                    // Check if it's a custom model
+                    if (type && type.startsWith('custom-model-')) {
+                        const modelId = parseInt(type.replace('custom-model-', ''));
+                        // Return a placeholder - actual model loading happens async
+                        item = createCustomModelPlaceholder(modelId);
+                    } else {
+                        item = createFloorCushion(0x888888, 0.5);
+                    }
             }
             item.userData.itemType = type;
             item.userData.isPlacedItem = true;
             return item;
+        }
+
+        // Placeholder for custom models while loading
+        function createCustomModelPlaceholder(modelId) {
+            const group = new THREE.Group();
+            const geo = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+            const mat = new THREE.MeshLambertMaterial({
+                color: 0x4a90d9,
+                transparent: true,
+                opacity: 0.5
+            });
+            const box = new THREE.Mesh(geo, mat);
+            box.position.y = 0.25;
+            group.add(box);
+
+            // Add loading indicator
+            const edges = new THREE.EdgesGeometry(geo);
+            const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0xffffff }));
+            line.position.y = 0.25;
+            group.add(line);
+
+            group.userData.isPlaceholder = true;
+            group.userData.customModelId = modelId;
+
+            // Async load the actual model and replace placeholder
+            loadAndReplaceCustomModel(group, modelId);
+
+            return group;
+        }
+
+        // Load custom model and replace placeholder
+        async function loadAndReplaceCustomModel(placeholder, modelId) {
+            const model = uploadedModels.find(m => m.id === modelId);
+            if (!model) return;
+
+            initLoaders();
+
+            try {
+                const blob = new Blob([model.data]);
+                const url = URL.createObjectURL(blob);
+
+                let object = null;
+
+                if (model.type === 'glb' || model.type === 'gltf') {
+                    if (!gltfLoader) return;
+                    object = await new Promise((resolve, reject) => {
+                        gltfLoader.load(url, (gltf) => resolve(gltf.scene), undefined, reject);
+                    });
+                } else if (model.type === 'obj') {
+                    if (!objLoader) return;
+                    object = await new Promise((resolve, reject) => {
+                        objLoader.load(url, resolve, undefined, reject);
+                    });
+                }
+
+                URL.revokeObjectURL(url);
+
+                if (object) {
+                    // Auto-scale
+                    const box = new THREE.Box3().setFromObject(object);
+                    const size = box.getSize(new THREE.Vector3());
+                    const maxDim = Math.max(size.x, size.y, size.z);
+                    if (maxDim > 2) {
+                        object.scale.multiplyScalar(1.5 / maxDim);
+                    }
+
+                    // Center
+                    const newBox = new THREE.Box3().setFromObject(object);
+                    object.position.y = -newBox.min.y;
+
+                    // Clear placeholder contents
+                    while (placeholder.children.length > 0) {
+                        placeholder.remove(placeholder.children[0]);
+                    }
+
+                    // Add loaded model to placeholder group
+                    placeholder.add(object);
+                    placeholder.userData.isPlaceholder = false;
+                    placeholder.userData.customModelName = model.name;
+                }
+            } catch (err) {
+                console.error('Error loading custom model:', err);
+            }
         }
 
         // Additional furniture creation functions
