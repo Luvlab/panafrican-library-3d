@@ -1391,12 +1391,12 @@
         </div>
         <div class="room-descriptions">
             <div class="room-desc" id="desc-S202">
-                <strong>Pan-African Library</strong><br>
-                ~50 independent publications, AABF 10-year archives, video interviews with publishers, mapping African publishing networks
+                <strong>The Pan-African Library</strong><br>
+                Curatorial selection of ~50 independent publications — zines, fanzines, essays, archives, catalogues, and experimental editions. AABF 10-year archives with posters, visuals, documents, and manifestos. Video space with filmed interviews with publishers and activists. Mapping African publishing networks across the continent.
             </div>
             <div class="room-desc" id="desc-S203">
                 <strong>Sound Library</strong><br>
-                Audio/radio listening station, DJ table, collective listening sessions, readings, performances, poetry
+                Audio/radio listening station with speakers, headphones, DJ table & vinyl. Screens with media players. Floor cushions and woven mats. Sound works from Afrikadaa collective and Station of Commons radio. Collective listening and reading sessions, performances, poetry.
             </div>
         </div>
     </div>
@@ -2752,23 +2752,25 @@
         // ============================================================
         // EXACT DIMENSIONS FROM FLOOR PLAN (converted to meters)
         // CORRECTED LAYOUT: Windows on FRONT (south), Doors on BACK (north)
-        // THREE STAR (West) is LEFT/larger, SPECIAL SPECIAL (East) is RIGHT/smaller
-        // Both rooms are labeled S202 but have different functions
+        // THREE STAR (West) = Pan-African Library - larger room
+        // SPECIAL SPECIAL (East) = Sound Library - has entry corridor
+        // Both rooms are labeled S202
         // ============================================================
         // THREE STAR (West Room - Pan-African Library)
         const ROOM_S202_WIDTH = 5.29;   // 17'-4½" (X direction)
         const ROOM_S202_DEPTH = 7.715;  // 25'-3¾" (Z direction)
-        // SPECIAL SPECIAL (East Room - Sound Library)
+        // SPECIAL SPECIAL (East Room - Sound Library) - includes corridor
         const ROOM_S203_WIDTH = 3.496;  // 11'-5⅝" (X direction)
-        const ROOM_S203_DEPTH = 4.61;   // 15'-1½" (Z direction) - SHORTER room!
+        const ROOM_S203_DEPTH = 4.61;   // 15'-1½" (Z direction) main room
+        const ROOM_S203_CORRIDOR_DEPTH = 1.83; // ~6' corridor leading to main room
         const CEILING_HEIGHT = 3.66;   // 12' ceiling
         const WALL_THICKNESS = 0.152;  // 6"
         const DOOR_WIDTH = 1.044;      // 3'-5⅛"
         const DOOR_HEIGHT = 2.134;     // 7'-0"
 
-        // Entry vestibule dimensions for Room S202 (estimated from plan)
-        const VESTIBULE_WIDTH = ROOM_S202_WIDTH;  // Same width as room
-        const VESTIBULE_DEPTH = 1.5;  // ~5' deep vestibule/corridor
+        // Entry vestibule/corridor for SPECIAL SPECIAL (Sound Library)
+        const VESTIBULE_WIDTH = ROOM_S203_WIDTH;  // Same width as room
+        const VESTIBULE_DEPTH = ROOM_S203_CORRIDOR_DEPTH;  // Corridor depth
 
         // ============================================================
         // LAYOUT VALIDATION SYSTEM
@@ -3745,149 +3747,172 @@
                 group.add(item);
             }
 
-            // === AUDIO STATION - West wall, near entry ===
-            const audioStation = createAudioStation();
-            audioStation.position.set(-ROOM_S202_WIDTH / 2 + 0.5, 0, mainRoomZ - 1.0);
-            audioStation.rotation.y = Math.PI / 2;
-            addFurniture(audioStation, 'audio-station');
+            // === BANQUETTE-SHELF UNITS along walls ===
+            // Long banquette against left wall (west)
+            const banquetteLeft = createBanquetteShelfUnit(4.0);
+            banquetteLeft.position.set(-ROOM_S202_WIDTH / 2 + 0.3, 0, mainRoomZ);
+            banquetteLeft.rotation.y = Math.PI / 2;
+            addFurniture(banquetteLeft, 'banquette-left');
 
-            // === SPEAKERS ON STANDS - CORNERS near window wall ===
-            const speakerCornerOffset = 0.25;
-            const speaker1 = createFloorSpeaker();
-            speaker1.position.set(-ROOM_S202_WIDTH / 2 + speakerCornerOffset, 0, windowZ - speakerCornerOffset);
-            speaker1.rotation.y = Math.PI * 0.75;
-            addFurniture(speaker1, 'speaker-left');
+            // Banquette against right wall (east) - shorter to avoid door
+            const banquetteRight = createBanquetteShelfUnit(3.2);
+            banquetteRight.position.set(ROOM_S202_WIDTH / 2 - 0.3, 0, mainRoomZ + 0.5);
+            banquetteRight.rotation.y = -Math.PI / 2;
+            addFurniture(banquetteRight, 'banquette-right');
 
-            const speaker2 = createFloorSpeaker();
-            speaker2.position.set(ROOM_S202_WIDTH / 2 - speakerCornerOffset, 0, windowZ - speakerCornerOffset);
-            speaker2.rotation.y = Math.PI * 1.25;
-            addFurniture(speaker2, 'speaker-right');
+            // Banquette along back wall (near windows)
+            const banquetteBack = createBanquetteShelfUnit(3.5);
+            banquetteBack.position.set(0, 0, windowZ - 0.3);
+            banquetteBack.rotation.y = Math.PI;
+            addFurniture(banquetteBack, 'banquette-back');
 
-            // === CENTRAL GATHERING AREA ===
+            // === VINYL RECORD TABLES in center area ===
+            const recordTable1 = createVinylRecordTable('ngoma');
+            recordTable1.position.set(-1.2, 0, mainRoomZ);
+            addFurniture(recordTable1, 'table-ngoma');
+
+            const recordTable2 = createVinylRecordTable('bantou');
+            recordTable2.position.set(0, 0, mainRoomZ - 1.0);
+            addFurniture(recordTable2, 'table-bantou');
+
+            const recordTable3 = createVinylRecordTable('african-jazz');
+            recordTable3.position.set(1.2, 0, mainRoomZ);
+            addFurniture(recordTable3, 'table-jazz');
+
+            const recordTable4 = createVinylRecordTable('pathe');
+            recordTable4.position.set(0, 0, mainRoomZ + 1.0);
+            addFurniture(recordTable4, 'table-pathe');
+
+            // === CARDBOARD CUBE STOOLS scattered around tables ===
+            const cubeStool1 = createCardboardCubeStool('branches');
+            cubeStool1.position.set(-1.6, 0, mainRoomZ - 0.5);
+            addFurniture(cubeStool1, 'stool-branches-1');
+
+            const cubeStool2 = createCardboardCubeStool('african-pattern');
+            cubeStool2.position.set(-0.6, 0, mainRoomZ - 1.5);
+            addFurniture(cubeStool2, 'stool-pattern-1');
+
+            const cubeStool3 = createCardboardCubeStool('benin');
+            cubeStool3.position.set(0.6, 0, mainRoomZ - 1.5);
+            addFurniture(cubeStool3, 'stool-benin-1');
+
+            const cubeStool4 = createCardboardCubeStool('text');
+            cubeStool4.position.set(1.6, 0, mainRoomZ - 0.5);
+            addFurniture(cubeStool4, 'stool-text-1');
+
+            const cubeStool5 = createCardboardCubeStool('branches');
+            cubeStool5.position.set(-0.8, 0, mainRoomZ + 0.5);
+            addFurniture(cubeStool5, 'stool-branches-2');
+
+            const cubeStool6 = createCardboardCubeStool('african-pattern');
+            cubeStool6.position.set(0.8, 0, mainRoomZ + 0.5);
+            addFurniture(cubeStool6, 'stool-pattern-2');
+
+            // === WOVEN MATS on floor ===
             const listeningMat = createAfricanNatte();
-            listeningMat.position.set(0, 0.01, windowZ - 1.2);
+            listeningMat.position.set(0, 0.01, mainRoomZ);
             addFurniture(listeningMat, 'natte-mat');
 
-            // === LOW SEATING - Perimeter ===
-            const pouf1 = createSimplePouf(0x8b4513);
-            pouf1.position.set(-ROOM_S202_WIDTH / 2 + 0.4, 0, windowZ - 1.5);
-            addFurniture(pouf1, 'pouf-brown-1');
-
-            const pouf2 = createSimplePouf(0x2f4f4f);
-            pouf2.position.set(-ROOM_S202_WIDTH / 2 + 0.4, 0, windowZ - 2.2);
-            addFurniture(pouf2, 'pouf-gray-1');
-
-            const pouf3 = createSimplePouf(0x8b4513);
-            pouf3.position.set(ROOM_S202_WIDTH / 2 - 0.4, 0, windowZ - 1.5);
-            addFurniture(pouf3, 'pouf-brown-2');
-
-            const pouf4 = createSimplePouf(0x2f4f4f);
-            pouf4.position.set(ROOM_S202_WIDTH / 2 - 0.4, 0, windowZ - 2.2);
-            addFurniture(pouf4, 'pouf-gray-2');
-
-            // CENTER - on the listening mat
-            const pouf5 = createSimplePouf(0xc41e3a);
-            pouf5.position.set(-0.5, 0, windowZ - 1.2);
-            addFurniture(pouf5, 'pouf-red-1');
-
-            const pouf6 = createSimplePouf(0xc41e3a);
-            pouf6.position.set(0.5, 0, windowZ - 1.2);
-            addFurniture(pouf6, 'pouf-red-2');
-
-            // === HEADPHONE STATION ===
-            const headphoneStand = createHeadphoneStation();
-            headphoneStand.position.set(ROOM_S202_WIDTH / 2 - 0.35, 0, mainRoomZ);
-            headphoneStand.rotation.y = -Math.PI / 2;
-            addFurniture(headphoneStand, 'headphone-station');
-
-            // === AFRIKADAA WALL ART ===
-            // Position posters ON the wall surface and AWAY from door opening
-            // Wall is at X = -ROOM_S202_WIDTH/2, wall thickness is 0.152m
-            // Door opening is at Z ≈ 2.36 (spans ~1.84 to ~2.88)
-            // Position posters NORTH of the door opening (lower Z values)
-            const posterWallX = -ROOM_S202_WIDTH / 2 + 0.16;  // On wall surface (inside room)
+            // === AFRIKADAA WALL ART (on walls not covered by banquettes) ===
+            const posterWallX = -ROOM_S202_WIDTH / 2 + 0.16;
 
             const afrikadaaPoster1 = createAfrikadaaPoster('AFRIKADAA', 0xc41e3a, 0.5, 0.7);
-            afrikadaaPoster1.position.set(posterWallX, 1.6, mainRoomZ - 0.5);  // North of door
+            afrikadaaPoster1.position.set(posterWallX, 2.2, mainRoomZ - 2.5);
             afrikadaaPoster1.rotation.y = Math.PI / 2;
             afrikadaaPoster1.userData.isWallArt = true;
             addFurniture(afrikadaaPoster1, 'poster-afrikadaa-1');
 
             const afrikadaaPoster2 = createAfrikadaaPoster('PANAFRICAN', 0xfdd835, 0.4, 0.5);
-            afrikadaaPoster2.position.set(posterWallX, 1.5, mainRoomZ - 1.3);  // Further north
+            afrikadaaPoster2.position.set(posterWallX, 2.0, mainRoomZ + 2.0);
             afrikadaaPoster2.rotation.y = Math.PI / 2;
             afrikadaaPoster2.userData.isWallArt = true;
             addFurniture(afrikadaaPoster2, 'poster-afrikadaa-2');
 
-            const afrikadaaPoster3 = createAfrikadaaPoster('DIASPORA', 0x00897b, 0.45, 0.6);
-            afrikadaaPoster3.position.set(posterWallX, 1.7, mainRoomZ - 2.0);  // Furthest north
-            afrikadaaPoster3.rotation.y = Math.PI / 2;
-            afrikadaaPoster3.userData.isWallArt = true;
-            addFurniture(afrikadaaPoster3, 'poster-afrikadaa-3');
-
-            // === MINIMAL LIGHTING ===
-            const pendantLight = createSimplePendant();
-            pendantLight.position.set(-ROOM_S202_WIDTH / 2 + 0.5, CEILING_HEIGHT - 0.4, mainRoomZ - 1.0);
-            addFurniture(pendantLight, 'pendant-light-1');
-
-            const pendantLight2 = createSimplePendant();
-            pendantLight2.position.set(0, CEILING_HEIGHT - 0.4, windowZ - 1.2);
-            addFurniture(pendantLight2, 'pendant-light-2');
-
             return group;
         }
 
-        // ============ SOUND LIBRARY (EAST) ============
-        // LAYOUT: Windows on FRONT (+Z), Door to corridor on BACK (-Z), Door to Pan-African Library on LEFT (-X)
+        // ============ SPECIAL SPECIAL / SOUND LIBRARY (EAST) ============
+        // LAYOUT: Windows on FRONT (+Z), Entry CORRIDOR on BACK (-Z), Door to Pan-African Library on LEFT (-X)
+        // The room has an L-shaped corridor entry from the main hallway
         function createRoomS203() {
             const group = new THREE.Group();
 
-            // Floor
+            // Total depth including corridor
+            const TOTAL_DEPTH = ROOM_S203_DEPTH + ROOM_S203_CORRIDOR_DEPTH;
+
+            // Main room floor
             const floor = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_S203_WIDTH, ROOM_S203_DEPTH), floorMaterial);
             floor.rotation.x = -Math.PI / 2;
-            floor.position.set(0, 0.01, 0);
+            floor.position.set(0, 0.01, ROOM_S203_CORRIDOR_DEPTH / 2);  // Offset forward to make room for corridor
             group.add(floor);
 
-            // BACK WALL (-Z) - Door to corridor (door is positioned toward LEFT, not centered)
-            // From floor plan: door is closer to the shared wall with S202
-            const backWallGroup = new THREE.Group();
-            const doorOffsetX = -ROOM_S203_WIDTH / 4;  // Door offset toward left (shared wall side)
+            // Corridor floor (entry corridor at back)
+            const corridorFloor = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_S203_WIDTH, ROOM_S203_CORRIDOR_DEPTH), floorMaterial);
+            corridorFloor.rotation.x = -Math.PI / 2;
+            corridorFloor.position.set(0, 0.01, -ROOM_S203_DEPTH / 2);
+            group.add(corridorFloor);
 
-            // Left wall section (small, between door and left wall)
-            const leftWallWidth = ROOM_S203_WIDTH / 2 + doorOffsetX - DOOR_WIDTH / 2;
-            if (leftWallWidth > 0.1) {
-                const backWallLeft = new THREE.Mesh(
-                    new THREE.BoxGeometry(leftWallWidth, CEILING_HEIGHT, WALL_THICKNESS),
-                    brickMaterial
-                );
-                backWallLeft.position.set(-ROOM_S203_WIDTH / 2 + leftWallWidth / 2, CEILING_HEIGHT / 2, -ROOM_S203_DEPTH / 2);
-                backWallGroup.add(backWallLeft);
-            }
+            // ========== CORRIDOR WALLS ==========
+            // Back wall of corridor (-Z) with entry door from main hallway
+            const corridorBackGroup = new THREE.Group();
+            const corridorBackZ = -ROOM_S203_DEPTH / 2 - ROOM_S203_CORRIDOR_DEPTH / 2;
 
-            // Right wall section (larger, most of the poster wall)
-            const rightWallWidth = ROOM_S203_WIDTH / 2 - doorOffsetX - DOOR_WIDTH / 2;
-            const backWallRight = new THREE.Mesh(
-                new THREE.BoxGeometry(rightWallWidth, CEILING_HEIGHT, WALL_THICKNESS),
+            // Door is on the right side of the corridor back wall
+            const corridorDoorOffsetX = ROOM_S203_WIDTH / 4;
+
+            // Left section of corridor back wall
+            const corridorBackLeftWidth = ROOM_S203_WIDTH / 2 + corridorDoorOffsetX - DOOR_WIDTH / 2;
+            const corridorBackLeft = new THREE.Mesh(
+                new THREE.BoxGeometry(corridorBackLeftWidth, CEILING_HEIGHT, WALL_THICKNESS),
                 brickMaterial
             );
-            backWallRight.position.set(ROOM_S203_WIDTH / 2 - rightWallWidth / 2, CEILING_HEIGHT / 2, -ROOM_S203_DEPTH / 2);
-            backWallGroup.add(backWallRight);
+            corridorBackLeft.position.set(-ROOM_S203_WIDTH / 2 + corridorBackLeftWidth / 2, CEILING_HEIGHT / 2, corridorBackZ);
+            corridorBackGroup.add(corridorBackLeft);
 
-            // Door header
-            const backDoorHeader = new THREE.Mesh(
+            // Right section (small, door side)
+            const corridorBackRightWidth = ROOM_S203_WIDTH / 2 - corridorDoorOffsetX - DOOR_WIDTH / 2;
+            if (corridorBackRightWidth > 0.1) {
+                const corridorBackRight = new THREE.Mesh(
+                    new THREE.BoxGeometry(corridorBackRightWidth, CEILING_HEIGHT, WALL_THICKNESS),
+                    brickMaterial
+                );
+                corridorBackRight.position.set(ROOM_S203_WIDTH / 2 - corridorBackRightWidth / 2, CEILING_HEIGHT / 2, corridorBackZ);
+                corridorBackGroup.add(corridorBackRight);
+            }
+
+            // Door header above corridor entry
+            const corridorDoorHeader = new THREE.Mesh(
                 new THREE.BoxGeometry(DOOR_WIDTH, CEILING_HEIGHT - DOOR_HEIGHT, WALL_THICKNESS),
                 brickMaterial
             );
-            backDoorHeader.position.set(doorOffsetX, DOOR_HEIGHT + (CEILING_HEIGHT - DOOR_HEIGHT) / 2, -ROOM_S203_DEPTH / 2);
-            backWallGroup.add(backDoorHeader);
+            corridorDoorHeader.position.set(corridorDoorOffsetX, DOOR_HEIGHT + (CEILING_HEIGHT - DOOR_HEIGHT) / 2, corridorBackZ);
+            corridorBackGroup.add(corridorDoorHeader);
 
-            // Poster wall on right section (main poster wall area)
-            const posterWall = createPosterWall(rightWallWidth - 0.2, CEILING_HEIGHT - 0.3);
-            posterWall.position.set(ROOM_S203_WIDTH / 2 - rightWallWidth / 2, CEILING_HEIGHT / 2, -ROOM_S203_DEPTH / 2 + WALL_THICKNESS / 2 + 0.02);
-            backWallGroup.add(posterWall);
+            group.add(corridorBackGroup);
+            roomS203Walls.back = corridorBackGroup;
 
-            group.add(backWallGroup);
-            roomS203Walls.back = backWallGroup;
+            // Corridor side walls (short walls extending from main room to back)
+            // Left corridor wall (shared with Three Star room)
+            const corridorLeftWall = new THREE.Mesh(
+                new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, ROOM_S203_CORRIDOR_DEPTH),
+                brickMaterial
+            );
+            corridorLeftWall.position.set(-ROOM_S203_WIDTH / 2, CEILING_HEIGHT / 2, -ROOM_S203_DEPTH / 2);
+            group.add(corridorLeftWall);
+
+            // Right corridor wall
+            const corridorRightWall = new THREE.Mesh(
+                new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, ROOM_S203_CORRIDOR_DEPTH),
+                brickMaterial
+            );
+            corridorRightWall.position.set(ROOM_S203_WIDTH / 2, CEILING_HEIGHT / 2, -ROOM_S203_DEPTH / 2);
+            group.add(corridorRightWall);
+
+            // ========== MAIN ROOM WALLS ==========
+            // Transition wall between corridor and main room (partial wall with opening)
+            // This creates the L-shape entrance feel
+            const transitionZ = ROOM_S203_CORRIDOR_DEPTH / 2 - ROOM_S203_DEPTH / 2 + ROOM_S203_CORRIDOR_DEPTH / 2;
+            // (No physical wall here - open transition from corridor to main room)
 
             // FRONT WALL (+Z) - PS1 Industrial Windows (same style as S202)
             const frontWallGroup = new THREE.Group();
@@ -3999,68 +4024,75 @@
                 group.add(item);
             }
 
-            // === READING AREA ===
-            const readingTable = createReadingTable();
-            readingTable.position.set(0, 0, -0.5);
-            addFurniture(readingTable, 'reading-table');
+            // === SOUND LIBRARY MAIN ROOM ===
+            // Offset for main room (corridor is at back)
+            const mainRoomOffsetZ = ROOM_S203_CORRIDOR_DEPTH / 2;
 
-            const chair1 = createStackableChair();
-            chair1.position.set(-0.6, 0, -1.0);
-            chair1.rotation.y = 0;
-            addFurniture(chair1, 'chair-1');
+            // === BANQUETTE-SHELF along right wall ===
+            const banquetteSound = createBanquetteShelfUnit(2.8);
+            banquetteSound.position.set(ROOM_S203_WIDTH / 2 - 0.3, 0, mainRoomOffsetZ + 0.5);
+            banquetteSound.rotation.y = -Math.PI / 2;
+            addFurniture(banquetteSound, 'banquette-sound');
 
-            const chair2 = createStackableChair();
-            chair2.position.set(0.6, 0, -1.0);
-            chair2.rotation.y = 0;
-            addFurniture(chair2, 'chair-2');
+            // === DJ / AUDIO STATION ===
+            const audioStation = createAudioStation();
+            audioStation.position.set(-ROOM_S203_WIDTH / 2 + 0.5, 0, mainRoomOffsetZ);
+            audioStation.rotation.y = Math.PI / 2;
+            addFurniture(audioStation, 'dj-station');
 
-            const chair3 = createStackableChair();
-            chair3.position.set(-0.6, 0, 0);
-            chair3.rotation.y = Math.PI;
-            addFurniture(chair3, 'chair-3');
+            // === VINYL RECORD TABLES ===
+            const recordTable1 = createVinylRecordTable('ngoma');
+            recordTable1.position.set(0, 0, mainRoomOffsetZ);
+            addFurniture(recordTable1, 'sound-table-1');
 
-            const chair4 = createStackableChair();
-            chair4.position.set(0.6, 0, 0);
-            chair4.rotation.y = Math.PI;
-            addFurniture(chair4, 'chair-4');
+            const recordTable2 = createVinylRecordTable('bantou');
+            recordTable2.position.set(-0.8, 0, mainRoomOffsetZ + 1.2);
+            addFurniture(recordTable2, 'sound-table-2');
 
-            // === ARCHIVE WALL ===
-            const archiveShelf1 = createWallShelf();
-            archiveShelf1.position.set(ROOM_S203_WIDTH / 2 - 0.15, 1.2, -1.5);
-            archiveShelf1.rotation.y = -Math.PI / 2;
-            addFurniture(archiveShelf1, 'archive-shelf-1', true);
+            // === CARDBOARD CUBE STOOLS ===
+            const cubeStool1 = createCardboardCubeStool('branches');
+            cubeStool1.position.set(0.5, 0, mainRoomOffsetZ - 0.6);
+            addFurniture(cubeStool1, 'sound-stool-1');
 
-            const archiveShelf2 = createWallShelf();
-            archiveShelf2.position.set(ROOM_S203_WIDTH / 2 - 0.15, 1.2, 0.5);
-            archiveShelf2.rotation.y = -Math.PI / 2;
-            addFurniture(archiveShelf2, 'archive-shelf-2', true);
+            const cubeStool2 = createCardboardCubeStool('african-pattern');
+            cubeStool2.position.set(-0.5, 0, mainRoomOffsetZ + 0.6);
+            addFurniture(cubeStool2, 'sound-stool-2');
 
-            const archiveCabinet = createLowArchiveCabinet();
-            archiveCabinet.position.set(ROOM_S203_WIDTH / 2 - 0.35, 0, -0.5);
-            archiveCabinet.rotation.y = -Math.PI / 2;
-            addFurniture(archiveCabinet, 'archive-cabinet');
+            const cubeStool3 = createCardboardCubeStool('benin');
+            cubeStool3.position.set(0.8, 0, mainRoomOffsetZ + 1.5);
+            addFurniture(cubeStool3, 'sound-stool-3');
 
-            const bookDisplay = createWallShelf();
-            bookDisplay.position.set(1.0, 1.2, -ROOM_S203_DEPTH / 2 + 0.15);
-            addFurniture(bookDisplay, 'book-display', true);
+            // === FLOOR SEATING (poufs and mats) ===
+            const pouf1 = createSimplePouf(0xc41e3a);
+            pouf1.position.set(-0.3, 0, mainRoomOffsetZ + 1.8);
+            addFurniture(pouf1, 'pouf-sound-1');
 
-            // === VIDEO/MEDIA AREA ===
-            const screenStand1 = createScreenStand();
-            screenStand1.position.set(-0.8, 0, 2.5);
-            screenStand1.rotation.y = Math.PI;
-            addFurniture(screenStand1, 'screen-stand-1');
+            const pouf2 = createSimplePouf(0x8b4513);
+            pouf2.position.set(0.6, 0, mainRoomOffsetZ + 2.0);
+            addFurniture(pouf2, 'pouf-sound-2');
 
-            const screenStand2 = createScreenStand();
-            screenStand2.position.set(0.8, 0, 2.5);
-            screenStand2.rotation.y = Math.PI;
-            addFurniture(screenStand2, 'screen-stand-2');
+            const natteSound = createAfricanNatte();
+            natteSound.position.set(0, 0.01, mainRoomOffsetZ + 1.5);
+            addFurniture(natteSound, 'natte-sound');
 
+            // === SPEAKERS ===
+            const speaker1 = createFloorSpeaker();
+            speaker1.position.set(-ROOM_S203_WIDTH / 2 + 0.25, 0, mainRoomOffsetZ + ROOM_S203_DEPTH / 2 - 0.3);
+            speaker1.rotation.y = Math.PI * 0.75;
+            addFurniture(speaker1, 'speaker-left');
+
+            const speaker2 = createFloorSpeaker();
+            speaker2.position.set(ROOM_S203_WIDTH / 2 - 0.25, 0, mainRoomOffsetZ + ROOM_S203_DEPTH / 2 - 0.3);
+            speaker2.rotation.y = Math.PI * 1.25;
+            addFurniture(speaker2, 'speaker-right');
+
+            // === HEADPHONE STATIONS ===
             const headphones1 = createHeadphoneStation();
-            headphones1.position.set(-1.4, 0, 2.3);
+            headphones1.position.set(-ROOM_S203_WIDTH / 2 + 0.35, 0, mainRoomOffsetZ + 1.0);
             addFurniture(headphones1, 'headphone-station-1');
 
             const headphones2 = createHeadphoneStation();
-            headphones2.position.set(1.4, 0, 2.3);
+            headphones2.position.set(-ROOM_S203_WIDTH / 2 + 0.35, 0, mainRoomOffsetZ - 0.5);
             addFurniture(headphones2, 'headphone-station-2');
 
             const viewStool1 = createSimpleStool();
@@ -4666,19 +4698,23 @@
         ];
 
         const defaultFurniture = [
-            { emoji: '🎧', text: 'DJ/Audio station (west wall)' },
-            { emoji: '🔊', text: 'Floor speakers in corners' },
-            { emoji: '🧘', text: 'Floor poufs for listening' },
-            { emoji: '🎵', text: 'Headphone stations' },
-            { emoji: '📖', text: 'Reading tables with chairs' },
-            { emoji: '📚', text: 'Wall-mounted archive shelves' },
-            { emoji: '📺', text: 'Video screen stands' }
+            { emoji: '📚', text: 'Reading area (tables, chairs, display stands) — Pan-African Library' },
+            { emoji: '📖', text: 'Books on table: zines, fanzines, essays, archives, catalogues, experimental editions' },
+            { emoji: '🖼️', text: 'Printed posters on walls — Afrikadaa posters, AABF archives' },
+            { emoji: '🗺️', text: 'Mapping African publishing (wall-based or digital display)' },
+            { emoji: '📺', text: 'Video screens for publisher interviews (10 filmed interviews)' },
+            { emoji: '🎧', text: 'Audio/radio listening station with speakers & headphones — Sound Library' },
+            { emoji: '🎵', text: 'DJ table with vinyl collection' },
+            { emoji: '📱', text: '2-3 screens with media players or 4 iPads with headphones' },
+            { emoji: '🧘', text: 'Floor cushions (poufs) for seating' },
+            { emoji: '🪴', text: 'Woven mats on the floor' }
         ];
 
         const defaultFunctions = [
-            { title: 'Three Star (West) — Pan-African Library', text: '~50 independent publications, AABF 10-year archives, video interviews with publishers, mapping African publishing networks' },
-            { title: 'Special Special (East) — Sound Library', text: 'Audio/radio listening station, DJ table, collective listening sessions, readings, performances, poetry' },
-            { title: 'Duration', text: '3-day art fair exhibition at MoMA PS1' }
+            { title: 'Three Star — The Pan-African Library', text: 'Curatorial selection of ~50 independent publications (zines, fanzines, essays, archives, catalogues, experimental editions). AABF 10-year archives with posters, visuals, documents, photographs, catalogues, and manifestos. Video space with filmed interviews with publishers, artists, and publishing activists. Mapping African publishing: wall-based or digital installation mapping editorial scenes, networks, and emerging practices.' },
+            { title: 'Special Special — Sound Library', text: 'Audio/radio listening station with speakers, headphones, and listening terminal. DJ table with vinyl. 2-3 screens with media players and headphones (or 4 iPads). Floor cushions (poufs) and woven mats. Sound works from Afrikadaa collective and Station of Commons radio. Collective listening sessions with DJ-led music focused on repair of bodies and narratives. Collective reading space for group readings, performances, and poetry. Public program with roundtables and conversations between AABF × Printed Matter.' },
+            { title: 'The Reading Room Concept', text: 'A space of extended time within the fair: a place to read, listen, watch, exchange, and rest. The project favors a sensory and collective experience, inviting visitors to slow down, immerse themselves in the archives, and activate publications as living objects of transmission and dialogue.' },
+            { title: 'Expected Impact', text: 'Creates a unique space for the circulation of transnational knowledge among African, diasporic, and North American publishers, connecting New York, Dakar, and the African continent. Amplifies editorial voices often relegated to the margins. Proposes a critical and active engagement with archives. Affirms the necessity of a decolonial, collective, and self-affirmed ecology of knowledge.' }
         ];
 
         // Load from localStorage or use defaults
