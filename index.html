@@ -1545,16 +1545,21 @@
             <!-- Add Image Form -->
             <div class="add-image-form" id="add-image-form">
                 <div class="drop-zone" id="drop-zone" onclick="document.getElementById('image-file-input').click()">
-                    📷 Drag & drop image here or click to browse
+                    📷 Drag & drop images here or click to browse<br>
+                    <span style="font-size: 10px; color: #888;">Select multiple files at once!</span>
                 </div>
-                <input type="file" id="image-file-input" accept="image/*" style="display:none" onchange="handleImageSelect(event)">
+                <input type="file" id="image-file-input" accept="image/*" multiple style="display:none" onchange="handleMultiImageSelect(event)">
+                <div id="upload-queue" style="display:none; max-height: 150px; overflow-y: auto; margin: 8px 0; padding: 8px; background: rgba(0,0,0,0.3); border-radius: 4px;">
+                    <!-- Upload queue will be shown here -->
+                </div>
                 <input type="text" id="new-image-url" placeholder="Or paste image URL...">
-                <input type="text" id="new-image-title" placeholder="Image title / description">
+                <input type="text" id="new-image-title" placeholder="Image title / description (for single upload)">
                 <select id="new-image-category">
                     <!-- Rendered by JS -->
                 </select>
                 <div style="display: flex; gap: 10px;">
-                    <button class="moodboard-toolbar-btn primary" onclick="addMoodboardImage()" style="flex:1">Add Image</button>
+                    <button class="moodboard-toolbar-btn primary" onclick="addMoodboardImage()" style="flex:1" id="add-single-btn">Add Image</button>
+                    <button class="moodboard-toolbar-btn primary" onclick="addAllQueuedImages()" style="flex:1; display:none;" id="add-all-btn">➕ Add All (<span id="queue-count">0</span>)</button>
                     <button class="moodboard-toolbar-btn" onclick="toggleAddImageForm()" style="flex:1">Cancel</button>
                 </div>
             </div>
@@ -2802,25 +2807,28 @@
 
         // ============================================================
         // EXACT DIMENSIONS FROM FLOOR PLAN (converted to meters)
-        // CORRECTED LAYOUT: Windows on FRONT (south), Doors on BACK (north)
+        // LAYOUT: Windows on NORTH (+Z), Entries on SOUTH (-Z)
         // Both rooms are labeled S202 on the floor plan
         // ============================================================
-        // SPECIAL SPECIAL (East Room - Sound Library) - the working room
+        // SPECIAL SPECIAL (East Room - Sound Library)
         const SPECIAL_SPECIAL_WIDTH = 3.496;  // 11'-5⅝" (X direction)
         const SPECIAL_SPECIAL_DEPTH = 4.61;   // 15'-1½" (Z direction) main room
-        const SPECIAL_SPECIAL_CORRIDOR_DEPTH = 1.83; // ~6' corridor leading to main room
-        // THREE STAR (West Room - Pan-African Library) - NEW room to add
-        const THREE_STAR_WIDTH = 5.29;   // 17'-4½" (X direction)
+        const SPECIAL_SPECIAL_CORRIDOR_WIDTH = 0.85;  // 2'-9⅝" entry corridor width
+        const SPECIAL_SPECIAL_CORRIDOR_DEPTH = 0.65;  // 2'-1 5/16" entry corridor depth
+        // THREE STAR (West Room - Pan-African Library)
+        const THREE_STAR_WIDTH = 4.36;   // 14'-3 13/16" INTERIOR width (X direction)
         const THREE_STAR_DEPTH = 7.715;  // 25'-3¾" (Z direction)
+        const THREE_STAR_ENTRY_WIDTH = 1.37;  // 4'-5 15/16" entry alcove width
+        const THREE_STAR_WINDOW_WIDTH = 3.09; // 10'-1½" window section width
         // Shared constants
         const CEILING_HEIGHT = 3.66;   // 12' ceiling
         const WALL_THICKNESS = 0.152;  // 6"
         const DOOR_WIDTH = 1.044;      // 3'-5⅛"
         const DOOR_HEIGHT = 2.134;     // 7'-0"
 
-        // Entry vestibule/corridor for SPECIAL SPECIAL (Sound Library)
-        const VESTIBULE_WIDTH = SPECIAL_SPECIAL_WIDTH;  // Same width as room
-        const VESTIBULE_DEPTH = SPECIAL_SPECIAL_CORRIDOR_DEPTH;  // Corridor depth
+        // Entry vestibule for SPECIAL SPECIAL (small corridor at south)
+        const VESTIBULE_WIDTH = SPECIAL_SPECIAL_CORRIDOR_WIDTH;
+        const VESTIBULE_DEPTH = SPECIAL_SPECIAL_CORRIDOR_DEPTH;
 
         // ============================================================
         // LAYOUT VALIDATION SYSTEM
@@ -5419,7 +5427,130 @@
             renderMoodboardGallery();
         }
 
-        // Image upload handling - with IndexedDB persistence
+        // ============ MULTI-FILE UPLOAD QUEUE ============
+        let uploadQueue = [];
+
+        // Process a single file and return its data URL
+        async function processImageFile(file) {
+            return new Promise((resolve, reject) => {
+                try {
+                    if (typeof handleMoodboardImageUpload === 'function') {
+                        handleMoodboardImageUpload(file).then(resolve).catch(() => {
+                            // Fallback to FileReader
+                            const reader = new FileReader();
+                            reader.onload = (e) => resolve(e.target.result);
+                            reader.onerror = reject;
+                            reader.readAsDataURL(file);
+                        });
+                    } else {
+                        const reader = new FileReader();
+                        reader.onload = (e) => resolve(e.target.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(file);
+                    }
+                } catch (err) {
+                    reject(err);
+                }
+            });
+        }
+
+        // Update the upload queue UI
+        function updateUploadQueueUI() {
+            const queueEl = document.getElementById('upload-queue');
+            const queueCountEl = document.getElementById('queue-count');
+            const addAllBtn = document.getElementById('add-all-btn');
+            const addSingleBtn = document.getElementById('add-single-btn');
+
+            if (uploadQueue.length > 0) {
+                queueEl.style.display = 'block';
+                addAllBtn.style.display = 'block';
+                addSingleBtn.style.display = 'none';
+                queueCountEl.textContent = uploadQueue.length;
+
+                queueEl.innerHTML = uploadQueue.map((item, i) => `
+                    <div style="display:flex; align-items:center; gap:8px; padding:4px; background:rgba(255,255,255,0.05); border-radius:3px; margin-bottom:4px;">
+                        <img src="${item.src}" style="width:40px; height:40px; object-fit:cover; border-radius:3px;">
+                        <span style="flex:1; font-size:11px; color:#ccc; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${item.name}</span>
+                        <button onclick="removeFromQueue(${i})" style="background:none; border:none; color:#f55; cursor:pointer; font-size:14px;">✕</button>
+                    </div>
+                `).join('');
+            } else {
+                queueEl.style.display = 'none';
+                addAllBtn.style.display = 'none';
+                addSingleBtn.style.display = 'block';
+            }
+        }
+
+        // Remove item from queue
+        window.removeFromQueue = function(index) {
+            uploadQueue.splice(index, 1);
+            updateUploadQueueUI();
+            if (uploadQueue.length === 0) {
+                const dropZone = document.getElementById('drop-zone');
+                dropZone.innerHTML = '📷 Drag & drop images here or click to browse<br><span style="font-size: 10px; color: #888;">Select multiple files at once!</span>';
+                dropZone.classList.remove('has-file');
+            }
+        };
+
+        // Add all queued images to moodboard
+        window.addAllQueuedImages = function() {
+            const categorySelect = document.getElementById('new-image-category');
+            const category = categorySelect.value;
+
+            uploadQueue.forEach(item => {
+                moodboardImages.push({
+                    src: item.src,
+                    title: item.name.replace(/\.[^/.]+$/, ''), // Remove file extension
+                    category: category
+                });
+            });
+
+            saveMoodboardImages();
+            renderMoodboardGallery();
+
+            // Clear queue and reset form
+            uploadQueue = [];
+            updateUploadQueueUI();
+            const dropZone = document.getElementById('drop-zone');
+            dropZone.innerHTML = '📷 Drag & drop images here or click to browse<br><span style="font-size: 10px; color: #888;">Select multiple files at once!</span>';
+            dropZone.classList.remove('has-file');
+            toggleAddImageForm();
+        };
+
+        // Multi-file upload handler
+        window.handleMultiImageSelect = async function(event) {
+            const files = Array.from(event.target.files);
+            if (files.length === 0) return;
+
+            const dropZone = document.getElementById('drop-zone');
+            dropZone.innerHTML = `⏳ Processing ${files.length} images...`;
+
+            let processed = 0;
+            for (const file of files) {
+                if (!file.type.startsWith('image/')) continue;
+
+                try {
+                    const dataUrl = await processImageFile(file);
+                    uploadQueue.push({
+                        src: dataUrl,
+                        name: file.name
+                    });
+                    processed++;
+                    dropZone.innerHTML = `⏳ Processing ${processed}/${files.length}...`;
+                } catch (err) {
+                    console.error('Error processing', file.name, err);
+                }
+            }
+
+            dropZone.innerHTML = `✓ ${uploadQueue.length} images ready`;
+            dropZone.classList.add('has-file');
+            updateUploadQueueUI();
+
+            // Reset file input
+            event.target.value = '';
+        };
+
+        // Legacy single file handler (kept for compatibility)
         window.handleImageSelect = async function(event) {
             const file = event.target.files[0];
             if (file) {
@@ -5427,30 +5558,18 @@
                 dropZone.innerHTML = '⏳ Processing...';
 
                 try {
-                    // Use enhanced handler that saves to IndexedDB
-                    const dataUrl = await handleMoodboardImageUpload(file);
-                    if (dataUrl) {
-                        dropZone.dataset.imageSrc = dataUrl;
-                        dropZone.dataset.fileName = file.name;
-                        dropZone.classList.add('has-file');
-                        dropZone.innerHTML = `✓ ${file.name}`;
-                    }
+                    const dataUrl = await processImageFile(file);
+                    dropZone.dataset.imageSrc = dataUrl;
+                    dropZone.dataset.fileName = file.name;
+                    dropZone.classList.add('has-file');
+                    dropZone.innerHTML = `✓ ${file.name}`;
                 } catch (err) {
                     console.error('Image upload error:', err);
-                    // Fallback to simple FileReader
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        dropZone.dataset.imageSrc = e.target.result;
-                        dropZone.dataset.fileName = file.name;
-                        dropZone.classList.add('has-file');
-                        dropZone.innerHTML = `✓ ${file.name}`;
-                    };
-                    reader.readAsDataURL(file);
                 }
             }
         };
 
-        // Drop zone setup
+        // Drop zone setup - supports multiple files
         document.addEventListener('DOMContentLoaded', () => {
             const dropZone = document.getElementById('drop-zone');
             if (dropZone) {
@@ -5464,29 +5583,30 @@
                 dropZone.addEventListener('drop', async (e) => {
                     e.preventDefault();
                     dropZone.classList.remove('dragover');
-                    const file = e.dataTransfer.files[0];
-                    if (file && file.type.startsWith('image/')) {
-                        dropZone.innerHTML = '⏳ Processing...';
+
+                    const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+                    if (files.length === 0) return;
+
+                    dropZone.innerHTML = `⏳ Processing ${files.length} images...`;
+
+                    let processed = 0;
+                    for (const file of files) {
                         try {
-                            const dataUrl = await handleMoodboardImageUpload(file);
-                            if (dataUrl) {
-                                dropZone.dataset.imageSrc = dataUrl;
-                                dropZone.dataset.fileName = file.name;
-                                dropZone.classList.add('has-file');
-                                dropZone.innerHTML = `✓ ${file.name}`;
-                            }
+                            const dataUrl = await processImageFile(file);
+                            uploadQueue.push({
+                                src: dataUrl,
+                                name: file.name
+                            });
+                            processed++;
+                            dropZone.innerHTML = `⏳ Processing ${processed}/${files.length}...`;
                         } catch (err) {
-                            // Fallback
-                            const reader = new FileReader();
-                            reader.onload = (ev) => {
-                                dropZone.dataset.imageSrc = ev.target.result;
-                                dropZone.dataset.fileName = file.name;
-                                dropZone.classList.add('has-file');
-                                dropZone.innerHTML = `✓ ${file.name}`;
-                            };
-                            reader.readAsDataURL(file);
+                            console.error('Error processing', file.name, err);
                         }
                     }
+
+                    dropZone.innerHTML = `✓ ${uploadQueue.length} images ready`;
+                    dropZone.classList.add('has-file');
+                    updateUploadQueueUI();
                 });
             }
         });
