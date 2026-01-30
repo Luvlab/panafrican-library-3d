@@ -1411,16 +1411,16 @@
         <h2>Reading Room • Interactive 3D</h2>
         <p>A curatorial Reading Room conceived as a living archive of panafrican and diasporic publishing. A space to read, listen, and slow down.</p>
         <div class="room-buttons">
-            <button class="room-btn" onclick="focusRoom('threeStarRoom')">Three Star (West)</button>
-            <button class="room-btn" onclick="focusRoom('specialSpecialRoom')">Special Special (East)</button>
+            <button class="room-btn" onclick="focusRoom('threeStarRoom')">Three Star — Panafrican Library</button>
+            <button class="room-btn" onclick="focusRoom('specialSpecialRoom')">Special Special — Sound Library</button>
         </div>
         <div class="room-descriptions">
-            <div class="room-desc" id="desc-S202">
-                <strong>The Pan-African Library</strong><br>
+            <div class="room-desc" id="desc-THREE_STAR">
+                <strong>Three Star — Panafrican Library</strong><br>
                 Curatorial selection of ~50 independent publications — zines, fanzines, essays, archives, catalogues, and experimental editions. AABF 10-year archives with posters, visuals, documents, and manifestos. Video space with filmed interviews with publishers and activists. Mapping African publishing networks across the continent.
             </div>
-            <div class="room-desc" id="desc-S203">
-                <strong>Sound Library</strong><br>
+            <div class="room-desc" id="desc-SPECIAL_SPECIAL">
+                <strong>Special Special — Sound Library</strong><br>
                 Audio/radio listening station with speakers, headphones, DJ table & vinyl. Screens with media players. Floor cushions and woven mats. Sound works from Afrikadaa collective and Station of Commons radio. Collective listening and reading sessions, performances, poetry.
             </div>
         </div>
@@ -1433,7 +1433,7 @@
             <button class="control-btn" onclick="setView('floorPlan')"><span class="icon">📐</span>Floor Plan View</button>
         </div>
         <div class="control-section">
-            <div class="section-title">Three Star (West) — Pan-African Library</div>
+            <div class="section-title">Three Star (West) — Panafrican Library</div>
             <button class="control-btn" onclick="setView('threeStarRoomEntry')"><span class="icon">🚪</span>Entry Vestibule</button>
             <button class="control-btn" onclick="setView('threeStarRoomInside')"><span class="icon">🔊</span>Inside View</button>
             <button class="control-btn" onclick="setView('threeStarRoomWindows')"><span class="icon">🪟</span>Window Wall</button>
@@ -2955,7 +2955,7 @@
         const ROOM_GEOMETRY = {
             'THREE_STAR': {
                 id: 'THREE_STAR',
-                name: 'Three Star - Pan-African Library',
+                name: 'Three Star - Panafrican Library',
                 bounds: {
                     minX: -THREE_STAR_WIDTH / 2 - SPECIAL_SPECIAL_WIDTH / 2 - WALL_THICKNESS / 2,
                     maxX: -SPECIAL_SPECIAL_WIDTH / 2 - WALL_THICKNESS / 2,
@@ -4411,8 +4411,8 @@
             return sprite;
         }
 
-        labelsGroup.add(createLabel('THREE STAR (WEST)', new THREE.Vector3(THREE_STAR_X, CEILING_HEIGHT + 0.5, 0)));
-        labelsGroup.add(createLabel('SPECIAL SPECIAL (EAST)', new THREE.Vector3(SPECIAL_SPECIAL_X, CEILING_HEIGHT + 0.5, 0)));
+        labelsGroup.add(createLabel('THREE STAR - PANAFRICAN LIBRARY (WEST)', new THREE.Vector3(THREE_STAR_X, CEILING_HEIGHT + 0.5, 0)));
+        labelsGroup.add(createLabel('SPECIAL SPECIAL - SOUND LIBRARY (EAST)', new THREE.Vector3(SPECIAL_SPECIAL_X, CEILING_HEIGHT + 0.5, 0)));
         scene.add(labelsGroup);
 
         // Lighting
