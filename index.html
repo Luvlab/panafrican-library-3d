@@ -1249,8 +1249,8 @@
         <h1>The Panafrican Library Will Not Be Colonized</h1>
         <h2>Reading Room • Interactive 3D</h2>
         <p>A curatorial Reading Room conceived as a living archive of panafrican and diasporic publishing. A space to read, listen, and slow down.</p>
-        <button class="room-btn" onclick="focusRoom('roomS202')">Room S202 — Three Star</button>
-        <button class="room-btn" onclick="focusRoom('roomS203')">Room S202 — Special Special</button>
+        <button class="room-btn" onclick="focusRoom('roomS202')">Pan-African Library (West)</button>
+        <button class="room-btn" onclick="focusRoom('roomS203')">Sound Library (East)</button>
     </div>
 
     <div id="controls-panel">
@@ -1260,14 +1260,14 @@
             <button class="control-btn" onclick="setView('floorPlan')"><span class="icon">📐</span>Floor Plan View</button>
         </div>
         <div class="control-section">
-            <div class="section-title">Room S202 - Three Star</div>
+            <div class="section-title">Pan-African Library (West)</div>
             <button class="control-btn" onclick="setView('roomS202Entry')"><span class="icon">🚪</span>Entry Vestibule</button>
             <button class="control-btn" onclick="setView('roomS202Inside')"><span class="icon">🔊</span>Inside View</button>
             <button class="control-btn" onclick="setView('roomS202Windows')"><span class="icon">🪟</span>Window Wall</button>
             <button class="control-btn" onclick="setView('roomS202Table')"><span class="icon">📚</span>Display Table</button>
         </div>
         <div class="control-section">
-            <div class="section-title">Room S202 - Special Special</div>
+            <div class="section-title">Sound Library (East)</div>
             <button class="control-btn" onclick="setView('roomS203Entry')"><span class="icon">🚪</span>Entry (from door)</button>
             <button class="control-btn" onclick="setView('roomS203Inside')"><span class="icon">📖</span>Inside View</button>
             <button class="control-btn" onclick="setView('roomS203Windows')"><span class="icon">🪟</span>Arched Windows</button>
@@ -1282,19 +1282,19 @@
     <div id="dimensions-panel">
         <h3>Room Dimensions (from floor plan)</h3>
         <div class="dim-row">
-            <span class="dim-label">Room S202 (Three Star)</span>
+            <span class="dim-label">Pan-African Library (West)</span>
             <span class="dim-value">11'-5⅝" × 25'-3¾" | 3.49m × 7.71m</span>
         </div>
         <div class="dim-row">
-            <span class="dim-label">Three Star Area</span>
+            <span class="dim-label">Pan-African Library Area</span>
             <span class="dim-value">289.4 sq ft | 26.9 m²</span>
         </div>
         <div class="dim-row">
-            <span class="dim-label">Room S202 (Special Special)</span>
+            <span class="dim-label">Sound Library (East)</span>
             <span class="dim-value">14'-7¾" × 25'-3¾" | 4.46m × 7.71m</span>
         </div>
         <div class="dim-row">
-            <span class="dim-label">Special Special Area</span>
+            <span class="dim-label">Sound Library Area</span>
             <span class="dim-value">369.5 sq ft | 34.3 m²</span>
         </div>
         <div class="dim-row">
@@ -1426,9 +1426,9 @@
                 <div class="moodboard-section">
                     <h3>📍 Room Functions</h3>
                     <div class="layout-info" style="font-size: 12px;">
-                        <p><strong>Three Star (S202):</strong> Radio Room for collective listening, DJ sets, performances</p>
-                        <p><strong>Special Special (S202):</strong> Panafrican Library with ~50 publications, archives, video viewing</p>
-                        <p><strong>Duration:</strong> 3-day art fair exhibition</p>
+                        <p><strong>Pan-African Library (West):</strong> ~50 independent publications, AABF 10-year archives, video interviews with publishers, mapping African publishing networks</p>
+                        <p><strong>Sound Library (East):</strong> Audio/radio listening station, DJ table, collective listening sessions, readings, performances, poetry</p>
+                        <p><strong>Duration:</strong> 3-day art fair exhibition at MoMA PS1</p>
                     </div>
                 </div>
             </div>
@@ -2576,8 +2576,8 @@
         // ============================================================
         // EXACT DIMENSIONS FROM FLOOR PLAN (converted to meters)
         // CORRECTED LAYOUT: Windows on FRONT (south), Doors on BACK (north)
-        // Room S202 "Three Star" is LEFT, Room S202 "Special Special" is RIGHT
-        // Both rooms are part of S202 - Three Star has an entry vestibule/corridor
+        // Pan-African Library (West) is LEFT, Sound Library (East) is RIGHT
+        // Both rooms are part of S202 - Pan-African Library has an entry vestibule/corridor
         // ============================================================
         const ROOM_S202_WIDTH = 3.496;  // 11'-5⅝" (X direction)
         const ROOM_S202_DEPTH = 7.715;  // 25'-3¾" (Z direction)
@@ -2599,7 +2599,7 @@
 
         // Asset Whitelist - Only these items can be placed
         const ASSET_WHITELIST = {
-            // THREE STAR (S202 Left) - SOUND LIBRARY / RADIO ROOM
+            // PAN-AFRICAN LIBRARY (West) - Publications, archives, video interviews
             'audio_station': {
                 id: 'audio_station',
                 name: 'DJ / Audio Station',
@@ -2646,7 +2646,7 @@
                 maxCount: 2
             },
 
-            // SPECIAL SPECIAL (S202 Right) - PANAFRICAN LIBRARY
+            // SOUND LIBRARY (East) - Audio/radio, DJ, collective listening
             'reading_table': {
                 id: 'reading_table',
                 name: 'Reading Table',
@@ -3305,8 +3305,8 @@
             return group;
         }
 
-        // ============ ROOM S202 - THREE STAR ============
-        // LAYOUT: Windows on FRONT (+Z), Door to corridor on BACK (-Z) via VESTIBULE, Door to Special Special on RIGHT (+X)
+        // ============ PAN-AFRICAN LIBRARY (WEST) ============
+        // LAYOUT: Windows on FRONT (+Z), Door to corridor on BACK (-Z) via VESTIBULE, Door to Sound Library on RIGHT (+X)
         // Has an entry vestibule/corridor - a narrow enclosed passage before the main room
         function createRoomS202() {
             const group = new THREE.Group();
@@ -3479,8 +3479,8 @@
             group.add(frontWallGroup);
             roomS202Walls.front = frontWallGroup;
 
-            // ========== LEFT WALL (-X) - Wall with CLOSED DOOR to Three Star room ==========
-            // From floor plan: Three Star door is near the SOUTH (window) end of the west wall
+            // ========== LEFT WALL (-X) - Wall with CLOSED DOOR to Pan-African Library ==========
+            // From floor plan: Pan-African Library door is near the SOUTH (window) end of the west wall
             // The west wall runs the full depth of the room from north to south
             const leftWallGroup = new THREE.Group();
 
@@ -3491,7 +3491,7 @@
             const roomSouthZ = ROOM_S202_DEPTH / 2;    // South - windows (+Z)
             const roomNorthZ = -ROOM_S202_DEPTH / 2;   // North - corridor entry (-Z)
 
-            // Three Star door position - near the SOUTH (window) end
+            // Pan-African Library door position - near the SOUTH (window) end
             // From floor plan, door appears about 1.5m from the south wall
             const threeStarDoorCenterZ = roomSouthZ - 1.5;  // 1.5m from south wall
             const doorHalfWidth = DOOR_WIDTH / 2;
@@ -3518,7 +3518,7 @@
                 leftWallGroup.add(leftWallNorth);
             }
 
-            // Door header above the Three Star door
+            // Door header above the Pan-African Library door
             const leftDoorHeader = new THREE.Mesh(
                 new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT - DOOR_HEIGHT, DOOR_WIDTH),
                 wallMaterial
@@ -3526,7 +3526,7 @@
             leftDoorHeader.position.set(leftWallX, DOOR_HEIGHT + (CEILING_HEIGHT - DOOR_HEIGHT) / 2, threeStarDoorCenterZ);
             leftWallGroup.add(leftDoorHeader);
 
-            // Door opening to Three Star room - NO DOOR, just the opening
+            // Door opening to Pan-African Library - NO DOOR, just the opening
             // (Door and handle removed - just leaving the doorway)
 
             group.add(leftWallGroup);
@@ -3545,7 +3545,7 @@
             ceilingS202.userData.isCeiling = true;
             group.add(ceilingS202);
 
-            // ========== THREE STAR - SOUND LIBRARY / RADIO ROOM ==========
+            // ========== PAN-AFRICAN LIBRARY - Publications, Archives, Video ==========
             // CURATORIAL BRIEF: Collective listening space for sound library, radio,
             // DJ sets, readings, performances, poetry, round tables
             //
@@ -3659,8 +3659,8 @@
             return group;
         }
 
-        // ============ ROOM S202 - SPECIAL SPECIAL ============
-        // LAYOUT: Windows on FRONT (+Z), Door to corridor on BACK (-Z), Door to Three Star on LEFT (-X)
+        // ============ SOUND LIBRARY (EAST) ============
+        // LAYOUT: Windows on FRONT (+Z), Door to corridor on BACK (-Z), Door to Pan-African Library on LEFT (-X)
         function createRoomS203() {
             const group = new THREE.Group();
 
@@ -3798,7 +3798,7 @@
             ceilingS203.userData.isCeiling = true;
             group.add(ceilingS203);
 
-            // ========== SPECIAL SPECIAL - PANAFRICAN LIBRARY ==========
+            // ========== SOUND LIBRARY - Audio/Radio/DJ/Collective Listening ==========
             // CURATORIAL BRIEF: Reading room for ~50 publications, AABF archives,
             // video interviews, publishing network mapping
             //
@@ -4005,8 +4005,8 @@
             return sprite;
         }
 
-        labelsGroup.add(createLabel('ROOM S202 - THREE STAR', new THREE.Vector3(ROOM_S202_X, CEILING_HEIGHT + 0.5, 0)));
-        labelsGroup.add(createLabel('ROOM S202 - SPECIAL SPECIAL', new THREE.Vector3(ROOM_S203_X, CEILING_HEIGHT + 0.5, 0)));
+        labelsGroup.add(createLabel('PAN-AFRICAN LIBRARY (WEST)', new THREE.Vector3(ROOM_S202_X, CEILING_HEIGHT + 0.5, 0)));
+        labelsGroup.add(createLabel('SOUND LIBRARY (EAST)', new THREE.Vector3(ROOM_S203_X, CEILING_HEIGHT + 0.5, 0)));
         scene.add(labelsGroup);
 
         // Lighting
@@ -7157,7 +7157,7 @@
             if (roomS202Walls.back) roomS202Walls.back.visible = !hideBackArea;
             if (roomS202Walls.vestibuleGroup) roomS202Walls.vestibuleGroup.visible = !hideBackArea;
 
-            // LEFT wall (Three Star door) - hide when camera is to the left
+            // LEFT wall (Pan-African Library door) - hide when camera is to the left
             if (roomS202Walls.left) roomS202Walls.left.visible = camX > ROOM_S202_X - ROOM_S202_WIDTH / 2;
 
             // RIGHT wall (solid shared wall with S203) - hide when camera is to the right
