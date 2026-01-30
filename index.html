@@ -469,7 +469,17 @@
         }
         .pattern-swatch {
             position: relative;
-            cursor: pointer;
+            cursor: grab;
+            transition: transform 0.15s, box-shadow 0.15s;
+            border: 2px solid transparent;
+        }
+        .pattern-swatch:hover {
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(255,215,0,0.4);
+            border-color: #ffd700;
+        }
+        .pattern-swatch:active {
+            cursor: grabbing;
         }
         .pattern-swatch.editing::after {
             content: '✕';
@@ -486,6 +496,21 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
+        }
+        .mini-pattern {
+            transition: transform 0.1s;
+            border: 1px solid #333;
+        }
+        .mini-pattern:hover {
+            transform: scale(1.15);
+            border-color: #ffd700;
+        }
+        #texture-panel {
+            border: 1px solid #333;
+        }
+        #texture-panel h5 {
+            border-bottom: 1px solid #333;
+            padding-bottom: 6px;
         }
         .design-list {
             list-style: none;
@@ -1579,14 +1604,19 @@
                 </div>
                 <div class="moodboard-section">
                     <h3>🌍 Patterns <button class="section-edit-btn" onclick="togglePatternEdit()" id="pattern-edit-btn">✏️</button></h3>
-                    <div class="pattern-grid" id="pattern-grid-container" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                    <div class="pattern-grid" id="pattern-grid-container" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;">
                         <!-- Patterns rendered by JS -->
                     </div>
-                    <p style="font-size: 10px; color: #888; margin-top: 6px;">Ankara • Kente • Adinkra • Mud Cloth</p>
+                    <p style="font-size: 10px; color: #888; margin-top: 6px;">Drag patterns onto furniture • Ankara • Kente • Adinkra</p>
                     <div class="pattern-add-form" id="pattern-add-form" style="display:none; margin-top:8px;">
                         <input type="text" id="new-pattern-name" placeholder="Pattern name..." style="width:100%; padding:4px; font-size:11px; border:1px solid #444; border-radius:3px; background:#1a1a1a; color:#fff; margin-bottom:4px;">
-                        <input type="text" id="new-pattern-url" placeholder="Pattern image URL..." style="width:100%; padding:4px; font-size:11px; border:1px solid #444; border-radius:3px; background:#1a1a1a; color:#fff; margin-bottom:4px;">
-                        <button class="moodboard-toolbar-btn primary" onclick="addPatternSwatch()" style="padding:4px 8px; font-size:10px; width:100%;">Add Pattern</button>
+                        <input type="file" id="new-pattern-file" accept="image/*" style="width:100%; padding:4px; font-size:11px; border:1px solid #444; border-radius:3px; background:#1a1a1a; color:#fff; margin-bottom:4px;">
+                        <div style="display:flex; gap:4px;">
+                            <button class="moodboard-toolbar-btn primary" onclick="addPatternFromFile()" style="padding:4px 8px; font-size:10px; flex:1;">📁 Add from File</button>
+                            <button class="moodboard-toolbar-btn" onclick="loadPatternsFromFolder()" style="padding:4px 8px; font-size:10px; flex:1;">📂 Load Folder</button>
+                        </div>
+                        <input type="text" id="new-pattern-url" placeholder="...or paste image URL" style="width:100%; padding:4px; font-size:11px; border:1px solid #444; border-radius:3px; background:#1a1a1a; color:#fff; margin-top:4px; margin-bottom:4px;">
+                        <button class="moodboard-toolbar-btn" onclick="addPatternSwatch()" style="padding:4px 8px; font-size:10px; width:100%;">🔗 Add from URL</button>
                     </div>
                 </div>
                 <div class="moodboard-section">
@@ -1851,6 +1881,27 @@
             </div>
             <div style="font-size:9px; color:#888; margin-top:8px;">
                 Keys: G=move, R=rotate, Del=delete, Esc=deselect
+            </div>
+
+            <!-- TEXTURE CUSTOMIZATION PANEL -->
+            <div id="texture-panel" style="margin-top:12px; padding:10px; background:#1a1a1a; border-radius:6px; display:none;">
+                <h5 style="margin:0 0 8px 0; font-size:11px; color:#ffd700;">🎨 Apply Texture</h5>
+                <div id="texture-surfaces" style="margin-bottom:8px;">
+                    <label style="font-size:10px; color:#888;">Surface:</label>
+                    <select id="surface-select" style="width:100%; padding:4px; font-size:10px; background:#2a2a2a; color:#fff; border:1px solid #444; border-radius:3px; margin-top:4px;">
+                        <option value="all">All Surfaces</option>
+                        <option value="cushions">Cushions Only</option>
+                        <option value="top">Top Surface</option>
+                        <option value="sides">Side Surfaces</option>
+                    </select>
+                </div>
+                <div id="texture-patterns-mini" style="display:grid; grid-template-columns:repeat(5,1fr); gap:4px; max-height:120px; overflow-y:auto;">
+                    <!-- Populated by JS -->
+                </div>
+                <div style="margin-top:8px; display:flex; gap:4px;">
+                    <button class="item-control-btn" onclick="resetFurnitureTexture()" style="flex:1; font-size:9px;">Reset</button>
+                    <button class="item-control-btn" onclick="randomizeFurnitureTexture()" style="flex:1; font-size:9px;">Random</button>
+                </div>
             </div>
         </div>
 
@@ -4766,8 +4817,76 @@
         };
 
         // ===============================
-        // PATTERN EDITING
+        // PATTERN EDITING WITH INDEXEDDB & DRAG-DROP
         // ===============================
+
+        // IndexedDB for storing pattern images
+        let patternDB = null;
+        const PATTERN_DB_NAME = 'PanafricanPatternDB';
+        const PATTERN_STORE_NAME = 'patterns';
+
+        function initPatternDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(PATTERN_DB_NAME, 1);
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => { patternDB = request.result; resolve(patternDB); };
+                request.onupgradeneeded = (e) => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains(PATTERN_STORE_NAME)) {
+                        db.createObjectStore(PATTERN_STORE_NAME, { keyPath: 'id', autoIncrement: true });
+                    }
+                };
+            });
+        }
+
+        async function savePatternToDB(name, imageDataUrl) {
+            if (!patternDB) await initPatternDB();
+            return new Promise((resolve, reject) => {
+                const tx = patternDB.transaction(PATTERN_STORE_NAME, 'readwrite');
+                const store = tx.objectStore(PATTERN_STORE_NAME);
+                const id = 'pattern_' + Date.now();
+                const request = store.add({ id, name, imageData: imageDataUrl, timestamp: Date.now() });
+                request.onsuccess = () => resolve(id);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function getPatternFromDB(id) {
+            if (!patternDB) await initPatternDB();
+            return new Promise((resolve, reject) => {
+                const tx = patternDB.transaction(PATTERN_STORE_NAME, 'readonly');
+                const store = tx.objectStore(PATTERN_STORE_NAME);
+                const request = store.get(id);
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function getAllPatternsFromDB() {
+            if (!patternDB) await initPatternDB();
+            return new Promise((resolve, reject) => {
+                const tx = patternDB.transaction(PATTERN_STORE_NAME, 'readonly');
+                const store = tx.objectStore(PATTERN_STORE_NAME);
+                const request = store.getAll();
+                request.onsuccess = () => resolve(request.result || []);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function deletePatternFromDB(id) {
+            if (!patternDB) await initPatternDB();
+            return new Promise((resolve, reject) => {
+                const tx = patternDB.transaction(PATTERN_STORE_NAME, 'readwrite');
+                const store = tx.objectStore(PATTERN_STORE_NAME);
+                const request = store.delete(id);
+                request.onsuccess = () => resolve();
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        // Currently dragged pattern for furniture application
+        let draggedPattern = null;
+
         window.togglePatternEdit = function() {
             patternEditMode = !patternEditMode;
             document.getElementById('pattern-edit-btn').classList.toggle('active', patternEditMode);
@@ -4775,19 +4894,231 @@
             renderPatterns();
         };
 
-        function renderPatterns() {
+        async function renderPatterns() {
             const container = document.getElementById('pattern-grid-container');
-            container.innerHTML = patterns.map((p, idx) => {
+            // Get patterns from both localStorage (CSS) and IndexedDB (images)
+            const dbPatterns = await getAllPatternsFromDB();
+
+            let html = '';
+
+            // Render CSS-based patterns from localStorage
+            patterns.forEach((p, idx) => {
                 const bgStyle = p.imageUrl ? `url(${p.imageUrl})` : p.css;
                 const bgSize = p.imageUrl ? 'background-size: cover; background-position: center;' : '';
-                return `
+                html += `
                     <div class="pattern-swatch ${patternEditMode ? 'editing' : ''}"
-                         style="background: ${bgStyle}; width: 60px; height: 60px; border-radius: 4px; ${bgSize}"
-                         title="${p.name}"
-                         onclick="${patternEditMode ? `removePattern(${idx})` : ''}">
+                         draggable="true"
+                         data-pattern-type="css"
+                         data-pattern-idx="${idx}"
+                         style="background: ${bgStyle}; width: 50px; height: 50px; border-radius: 4px; cursor: grab; ${bgSize}"
+                         title="${p.name} (drag to furniture)"
+                         ondragstart="handlePatternDragStart(event, 'css', ${idx})"
+                         onclick="${patternEditMode ? `removePattern(${idx})` : `selectPatternForTexture('css', ${idx})`}">
                     </div>
                 `;
-            }).join('');
+            });
+
+            // Render image-based patterns from IndexedDB
+            dbPatterns.forEach((p, idx) => {
+                html += `
+                    <div class="pattern-swatch ${patternEditMode ? 'editing' : ''}"
+                         draggable="true"
+                         data-pattern-type="db"
+                         data-pattern-id="${p.id}"
+                         style="background: url(${p.imageData}); background-size: cover; background-position: center; width: 50px; height: 50px; border-radius: 4px; cursor: grab;"
+                         title="${p.name} (drag to furniture)"
+                         ondragstart="handlePatternDragStart(event, 'db', '${p.id}')"
+                         onclick="${patternEditMode ? `removePatternFromDB('${p.id}')` : `selectPatternForTexture('db', '${p.id}')`}">
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+
+            // Also update the mini texture panel in Room Decorator
+            updateTexturePanelPatterns();
+        }
+
+        // Pattern drag start handler
+        window.handlePatternDragStart = function(event, type, idOrIdx) {
+            draggedPattern = { type, id: idOrIdx };
+            event.dataTransfer.setData('text/plain', JSON.stringify(draggedPattern));
+            event.dataTransfer.effectAllowed = 'copy';
+        };
+
+        // Select pattern for applying to selected furniture
+        window.selectPatternForTexture = async function(type, idOrIdx) {
+            if (!selectedPlacedItem) {
+                alert('Please select a piece of furniture first in the Room Decorator');
+                return;
+            }
+            await applyPatternToFurniture(type, idOrIdx);
+        };
+
+        // Apply pattern texture to selected furniture
+        async function applyPatternToFurniture(type, idOrIdx, surfaceType = 'all') {
+            if (!selectedPlacedItem) return;
+
+            let textureUrl;
+            if (type === 'css') {
+                // For CSS patterns, we create a canvas-based texture
+                const pattern = patterns[idOrIdx];
+                if (pattern.imageUrl) {
+                    textureUrl = pattern.imageUrl;
+                } else {
+                    // Generate texture from CSS pattern (use existing canvas generator)
+                    const patternIdx = idOrIdx % 10;
+                    const texture = getTextileTexture(patternIdx);
+                    applyTextureToObject(selectedPlacedItem, texture, surfaceType);
+                    return;
+                }
+            } else if (type === 'db') {
+                const pattern = await getPatternFromDB(idOrIdx);
+                if (pattern) {
+                    textureUrl = pattern.imageData;
+                }
+            }
+
+            if (textureUrl) {
+                const loader = new THREE.TextureLoader();
+                loader.load(textureUrl, (texture) => {
+                    texture.wrapS = THREE.RepeatWrapping;
+                    texture.wrapT = THREE.RepeatWrapping;
+                    texture.repeat.set(2, 2);
+                    applyTextureToObject(selectedPlacedItem, texture, surfaceType);
+                }, undefined, (err) => {
+                    console.error('Error loading texture:', err);
+                });
+            }
+        }
+
+        // Apply texture to 3D object based on surface type
+        function applyTextureToObject(object, texture, surfaceType) {
+            if (!object) return;
+
+            object.traverse((child) => {
+                if (child.isMesh) {
+                    const mat = child.material;
+                    const isTexturable = shouldApplyToSurface(child, surfaceType);
+
+                    if (isTexturable) {
+                        // Clone material to avoid affecting other objects
+                        const newMat = mat.clone();
+                        newMat.map = texture;
+                        newMat.needsUpdate = true;
+                        child.material = newMat;
+                    }
+                }
+            });
+        }
+
+        // Determine if texture should be applied to this surface
+        function shouldApplyToSurface(mesh, surfaceType) {
+            if (surfaceType === 'all') return true;
+
+            const mat = mesh.material;
+            const color = mat.color ? mat.color.getHex() : 0;
+
+            // Heuristics based on color and position
+            if (surfaceType === 'cushions') {
+                // Cushions are typically colored (olive, etc) and at seat height
+                return mesh.position.y < 1.0 && color !== 0xf5f5f5 && color !== 0xffffff;
+            } else if (surfaceType === 'top') {
+                return mesh.position.y === Math.max(...mesh.parent.children.filter(c => c.isMesh).map(c => c.position.y));
+            } else if (surfaceType === 'sides') {
+                return mesh.position.y !== Math.max(...mesh.parent.children.filter(c => c.isMesh).map(c => c.position.y));
+            }
+            return true;
+        }
+
+        // Update texture panel in Room Decorator
+        async function updateTexturePanelPatterns() {
+            const container = document.getElementById('texture-patterns-mini');
+            if (!container) return;
+
+            const dbPatterns = await getAllPatternsFromDB();
+
+            let html = '';
+
+            // First 5 CSS patterns
+            patterns.slice(0, 5).forEach((p, idx) => {
+                const bgStyle = p.imageUrl ? `url(${p.imageUrl})` : p.css;
+                const bgSize = p.imageUrl ? 'background-size: cover;' : '';
+                html += `<div class="mini-pattern" style="background:${bgStyle}; width:32px; height:32px; border-radius:3px; cursor:pointer; ${bgSize}" onclick="applyPatternToFurniture('css', ${idx}, document.getElementById('surface-select').value)" title="${p.name}"></div>`;
+            });
+
+            // IndexedDB patterns
+            dbPatterns.slice(0, 10).forEach((p) => {
+                html += `<div class="mini-pattern" style="background:url(${p.imageData}); background-size:cover; width:32px; height:32px; border-radius:3px; cursor:pointer;" onclick="applyPatternToFurniture('db', '${p.id}', document.getElementById('surface-select').value)" title="${p.name}"></div>`;
+            });
+
+            container.innerHTML = html || '<p style="font-size:9px; color:#666;">No patterns - add in Mood Board</p>';
+        }
+
+        // Add pattern from file upload
+        window.addPatternFromFile = async function() {
+            const fileInput = document.getElementById('new-pattern-file');
+            const nameInput = document.getElementById('new-pattern-name');
+
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert('Please select an image file');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const name = nameInput.value.trim() || file.name.replace(/\.[^/.]+$/, '');
+
+            try {
+                const dataUrl = await fileToDataUrl(file);
+                await savePatternToDB(name, dataUrl);
+                fileInput.value = '';
+                nameInput.value = '';
+                await renderPatterns();
+                console.log('Pattern added:', name);
+            } catch (err) {
+                console.error('Error adding pattern:', err);
+                alert('Error adding pattern: ' + err.message);
+            }
+        };
+
+        // Load multiple patterns from folder
+        window.loadPatternsFromFolder = function() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.multiple = true;
+            input.accept = 'image/*';
+            input.webkitdirectory = true;
+
+            input.onchange = async (e) => {
+                const files = Array.from(e.target.files).filter(f => f.type.startsWith('image/'));
+                let added = 0;
+
+                for (const file of files) {
+                    try {
+                        const name = file.name.replace(/\.[^/.]+$/, '');
+                        const dataUrl = await fileToDataUrl(file);
+                        await savePatternToDB(name, dataUrl);
+                        added++;
+                    } catch (err) {
+                        console.warn('Skipped file:', file.name, err);
+                    }
+                }
+
+                await renderPatterns();
+                alert(`Added ${added} patterns from folder`);
+            };
+
+            input.click();
+        };
+
+        // Helper: Convert file to data URL
+        function fileToDataUrl(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => reject(reader.error);
+                reader.readAsDataURL(file);
+            });
         }
 
         window.addPatternSwatch = function() {
@@ -4808,6 +5139,34 @@
             patterns.splice(index, 1);
             savePatterns();
             renderPatterns();
+        };
+
+        window.removePatternFromDB = async function(id) {
+            if (confirm('Remove this pattern?')) {
+                await deletePatternFromDB(id);
+                await renderPatterns();
+            }
+        };
+
+        // Reset furniture texture to default
+        window.resetFurnitureTexture = function() {
+            if (!selectedPlacedItem) return;
+            selectedPlacedItem.traverse((child) => {
+                if (child.isMesh && child.material) {
+                    const newMat = child.material.clone();
+                    newMat.map = null;
+                    newMat.needsUpdate = true;
+                    child.material = newMat;
+                }
+            });
+        };
+
+        // Randomize furniture textures
+        window.randomizeFurnitureTexture = function() {
+            if (!selectedPlacedItem) return;
+            const randomIdx = Math.floor(Math.random() * 10);
+            const texture = getTextileTexture(randomIdx);
+            applyTextureToObject(selectedPlacedItem, texture, 'cushions');
         };
 
         // ===============================
@@ -5226,9 +5585,16 @@
         function updateSelectedInfo() {
             const info = document.getElementById('selected-item-info');
             const nameSpan = document.getElementById('selected-name');
+            const texturePanel = document.getElementById('texture-panel');
+
             if (selectedPlacedItem) {
                 info.classList.add('visible');
                 nameSpan.textContent = selectedPlacedItem.userData.itemType || 'Item';
+                // Show texture panel for customization
+                if (texturePanel) {
+                    texturePanel.style.display = 'block';
+                    updateTexturePanelPatterns();
+                }
                 // Attach transform controls gizmo
                 if (transformControls) {
                     transformControls.attach(selectedPlacedItem);
@@ -5236,12 +5602,16 @@
             } else if (selectedFurnitureType) {
                 info.classList.add('visible');
                 nameSpan.textContent = selectedFurnitureType + ' (click to place)';
+                // Hide texture panel when no placed item selected
+                if (texturePanel) texturePanel.style.display = 'none';
                 // Detach transform controls
                 if (transformControls) {
                     transformControls.detach();
                 }
             } else {
                 info.classList.remove('visible');
+                // Hide texture panel
+                if (texturePanel) texturePanel.style.display = 'none';
                 // Detach transform controls
                 if (transformControls) {
                     transformControls.detach();
@@ -6867,17 +7237,314 @@
             return group;
         }
 
+        // ============ AFRICAN TEXTILE PATTERN GENERATORS ============
+
+        // Create canvas-based textures for African wax print patterns
+        function createAfricanTextileTexture(patternType = 0) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 256;
+            canvas.height = 256;
+            const ctx = canvas.getContext('2d');
+
+            // Pattern definitions inspired by African wax prints
+            const patterns = [
+                // Pattern 0: Red/Yellow floral with circles
+                () => {
+                    ctx.fillStyle = '#d4382a'; // Deep red base
+                    ctx.fillRect(0, 0, 256, 256);
+                    // Yellow flower circles
+                    ctx.fillStyle = '#f4c430';
+                    for (let x = 32; x < 256; x += 64) {
+                        for (let y = 32; y < 256; y += 64) {
+                            ctx.beginPath();
+                            ctx.arc(x, y, 20, 0, Math.PI * 2);
+                            ctx.fill();
+                            // Black center
+                            ctx.fillStyle = '#1a1a1a';
+                            ctx.beginPath();
+                            ctx.arc(x, y, 8, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.fillStyle = '#f4c430';
+                        }
+                    }
+                    // Black line details
+                    ctx.strokeStyle = '#1a1a1a';
+                    ctx.lineWidth = 2;
+                    for (let i = 0; i < 256; i += 32) {
+                        ctx.beginPath();
+                        ctx.moveTo(i, 0);
+                        ctx.lineTo(i + 16, 256);
+                        ctx.stroke();
+                    }
+                },
+                // Pattern 1: Blue diamond zigzag woven
+                () => {
+                    ctx.fillStyle = '#1e4d7b'; // Deep blue base
+                    ctx.fillRect(0, 0, 256, 256);
+                    ctx.fillStyle = '#87ceeb'; // Light blue
+                    // Diamond pattern
+                    for (let y = 0; y < 256; y += 32) {
+                        for (let x = (y % 64 === 0) ? 0 : 16; x < 256; x += 32) {
+                            ctx.beginPath();
+                            ctx.moveTo(x + 16, y);
+                            ctx.lineTo(x + 32, y + 16);
+                            ctx.lineTo(x + 16, y + 32);
+                            ctx.lineTo(x, y + 16);
+                            ctx.closePath();
+                            ctx.fill();
+                        }
+                    }
+                    // White accent lines
+                    ctx.strokeStyle = '#ffffff';
+                    ctx.lineWidth = 1;
+                    for (let i = 0; i < 256; i += 16) {
+                        ctx.beginPath();
+                        ctx.moveTo(0, i);
+                        ctx.lineTo(256, i);
+                        ctx.stroke();
+                    }
+                },
+                // Pattern 2: Orange/green circular medallions
+                () => {
+                    ctx.fillStyle = '#ff8c00'; // Orange base
+                    ctx.fillRect(0, 0, 256, 256);
+                    // Green medallions
+                    ctx.fillStyle = '#228b22';
+                    for (let x = 64; x < 256; x += 128) {
+                        for (let y = 64; y < 256; y += 128) {
+                            ctx.beginPath();
+                            ctx.arc(x, y, 40, 0, Math.PI * 2);
+                            ctx.fill();
+                            // Yellow inner ring
+                            ctx.fillStyle = '#ffd700';
+                            ctx.beginPath();
+                            ctx.arc(x, y, 25, 0, Math.PI * 2);
+                            ctx.fill();
+                            // Orange center
+                            ctx.fillStyle = '#ff6600';
+                            ctx.beginPath();
+                            ctx.arc(x, y, 12, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.fillStyle = '#228b22';
+                        }
+                    }
+                },
+                // Pattern 3: Pink/Cyan fan scallop
+                () => {
+                    ctx.fillStyle = '#ff69b4'; // Pink base
+                    ctx.fillRect(0, 0, 256, 256);
+                    // Cyan scallops
+                    ctx.fillStyle = '#00ced1';
+                    for (let y = 0; y < 256; y += 48) {
+                        for (let x = (y % 96 === 0) ? 0 : 24; x < 256; x += 48) {
+                            ctx.beginPath();
+                            ctx.arc(x + 24, y + 48, 24, Math.PI, 0);
+                            ctx.fill();
+                        }
+                    }
+                    // Yellow accents
+                    ctx.fillStyle = '#ffd700';
+                    for (let y = 24; y < 256; y += 48) {
+                        for (let x = 12; x < 256; x += 48) {
+                            ctx.beginPath();
+                            ctx.arc(x, y, 6, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }
+                },
+                // Pattern 4: Teal/Yellow circular pattern
+                () => {
+                    ctx.fillStyle = '#008b8b'; // Teal base
+                    ctx.fillRect(0, 0, 256, 256);
+                    // Yellow circles
+                    ctx.fillStyle = '#ffd700';
+                    for (let x = 40; x < 256; x += 80) {
+                        for (let y = 40; y < 256; y += 80) {
+                            ctx.beginPath();
+                            ctx.arc(x, y, 30, 0, Math.PI * 2);
+                            ctx.fill();
+                            // Black center pattern
+                            ctx.fillStyle = '#1a1a1a';
+                            ctx.beginPath();
+                            ctx.arc(x, y, 15, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.fillStyle = '#ffd700';
+                        }
+                    }
+                    // White radial lines
+                    ctx.strokeStyle = '#ffffff';
+                    ctx.lineWidth = 2;
+                    for (let x = 40; x < 256; x += 80) {
+                        for (let y = 40; y < 256; y += 80) {
+                            for (let a = 0; a < Math.PI * 2; a += Math.PI / 4) {
+                                ctx.beginPath();
+                                ctx.moveTo(x + Math.cos(a) * 15, y + Math.sin(a) * 15);
+                                ctx.lineTo(x + Math.cos(a) * 30, y + Math.sin(a) * 30);
+                                ctx.stroke();
+                            }
+                        }
+                    }
+                },
+                // Pattern 5: Red/Gold diamond lattice
+                () => {
+                    ctx.fillStyle = '#8b0000'; // Dark red base
+                    ctx.fillRect(0, 0, 256, 256);
+                    // Gold lattice
+                    ctx.strokeStyle = '#daa520';
+                    ctx.lineWidth = 8;
+                    for (let i = -256; i < 512; i += 32) {
+                        ctx.beginPath();
+                        ctx.moveTo(i, 0);
+                        ctx.lineTo(i + 256, 256);
+                        ctx.stroke();
+                        ctx.beginPath();
+                        ctx.moveTo(i + 256, 0);
+                        ctx.lineTo(i, 256);
+                        ctx.stroke();
+                    }
+                    // White dots at intersections
+                    ctx.fillStyle = '#ffffff';
+                    for (let x = 16; x < 256; x += 32) {
+                        for (let y = 16; y < 256; y += 32) {
+                            ctx.beginPath();
+                            ctx.arc(x, y, 4, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }
+                },
+                // Pattern 6: Purple/Pink flowing florals
+                () => {
+                    ctx.fillStyle = '#4b0082'; // Indigo base
+                    ctx.fillRect(0, 0, 256, 256);
+                    // Pink flowing shapes
+                    ctx.fillStyle = '#ff1493';
+                    for (let y = 0; y < 256; y += 64) {
+                        ctx.beginPath();
+                        ctx.moveTo(0, y + 32);
+                        for (let x = 0; x < 256; x += 32) {
+                            ctx.quadraticCurveTo(x + 16, y + (x % 64 === 0 ? 0 : 64), x + 32, y + 32);
+                        }
+                        ctx.lineTo(256, y + 64);
+                        ctx.lineTo(0, y + 64);
+                        ctx.closePath();
+                        ctx.fill();
+                    }
+                    // Burgundy accents
+                    ctx.fillStyle = '#800020';
+                    for (let x = 32; x < 256; x += 64) {
+                        for (let y = 32; y < 256; y += 64) {
+                            ctx.beginPath();
+                            ctx.arc(x, y, 10, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }
+                },
+                // Pattern 7: Yellow/Red sunburst
+                () => {
+                    ctx.fillStyle = '#ffd700'; // Yellow base
+                    ctx.fillRect(0, 0, 256, 256);
+                    // Red sunbursts
+                    ctx.fillStyle = '#dc143c';
+                    for (let x = 64; x < 256; x += 128) {
+                        for (let y = 64; y < 256; y += 128) {
+                            for (let a = 0; a < Math.PI * 2; a += Math.PI / 8) {
+                                ctx.beginPath();
+                                ctx.moveTo(x, y);
+                                ctx.lineTo(x + Math.cos(a) * 45, y + Math.sin(a) * 45);
+                                ctx.lineTo(x + Math.cos(a + Math.PI / 16) * 45, y + Math.sin(a + Math.PI / 16) * 45);
+                                ctx.closePath();
+                                ctx.fill();
+                            }
+                            // Black center
+                            ctx.fillStyle = '#1a1a1a';
+                            ctx.beginPath();
+                            ctx.arc(x, y, 12, 0, Math.PI * 2);
+                            ctx.fill();
+                            // White ring
+                            ctx.strokeStyle = '#ffffff';
+                            ctx.lineWidth = 2;
+                            ctx.beginPath();
+                            ctx.arc(x, y, 8, 0, Math.PI * 2);
+                            ctx.stroke();
+                            ctx.fillStyle = '#dc143c';
+                        }
+                    }
+                },
+                // Pattern 8: Orange/Teal abstract shapes
+                () => {
+                    ctx.fillStyle = '#ff7f50'; // Coral base
+                    ctx.fillRect(0, 0, 256, 256);
+                    // Teal abstract shapes
+                    ctx.fillStyle = '#20b2aa';
+                    for (let x = 0; x < 256; x += 64) {
+                        for (let y = 0; y < 256; y += 64) {
+                            ctx.beginPath();
+                            ctx.ellipse(x + 32, y + 32, 25, 15, (x + y) * 0.02, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }
+                    // Yellow dots
+                    ctx.fillStyle = '#ffff00';
+                    for (let x = 16; x < 256; x += 32) {
+                        for (let y = 16; y < 256; y += 32) {
+                            ctx.beginPath();
+                            ctx.arc(x, y, 5, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }
+                },
+                // Pattern 9: Green/Blue kente-style
+                () => {
+                    ctx.fillStyle = '#006400'; // Dark green base
+                    ctx.fillRect(0, 0, 256, 256);
+                    // Blue stripes
+                    ctx.fillStyle = '#4169e1';
+                    for (let i = 0; i < 256; i += 32) {
+                        ctx.fillRect(i, 0, 16, 256);
+                    }
+                    // Gold horizontal bands
+                    ctx.fillStyle = '#ffd700';
+                    for (let i = 0; i < 256; i += 64) {
+                        ctx.fillRect(0, i, 256, 8);
+                    }
+                    // Red accents
+                    ctx.fillStyle = '#ff0000';
+                    for (let x = 8; x < 256; x += 32) {
+                        for (let y = 32; y < 256; y += 64) {
+                            ctx.fillRect(x, y, 8, 16);
+                        }
+                    }
+                }
+            ];
+
+            // Execute the selected pattern
+            patterns[patternType % patterns.length]();
+
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.wrapS = THREE.RepeatWrapping;
+            texture.wrapT = THREE.RepeatWrapping;
+            texture.repeat.set(2, 2);
+            return texture;
+        }
+
+        // Cache for textile textures to avoid recreating
+        const textileTextureCache = {};
+        function getTextileTexture(patternIndex) {
+            if (!textileTextureCache[patternIndex]) {
+                textileTextureCache[patternIndex] = createAfricanTextileTexture(patternIndex);
+            }
+            return textileTextureCache[patternIndex];
+        }
+
         // ============ NEW PANAFRICAN LIBRARY FURNITURE ============
 
         // BANQUETTE-SHELF UNIT - Integrated wall seating with book display
-        // Olive green cushioned bench with backrest and face-out shelf above
-        function createBanquetteShelfUnit(length = 2.4) {
+        // Now featuring African textile patterned cushions instead of solid color
+        function createBanquetteShelfUnit(length = 2.4, startPatternIndex = null) {
             const group = new THREE.Group();
 
             // Materials
             const whiteMat = new THREE.MeshLambertMaterial({ color: 0xf5f5f5 }); // White structure
-            const oliveMat = new THREE.MeshLambertMaterial({ color: 0x6b8e23 }); // Olive green cushions
-            const oliveDarkMat = new THREE.MeshLambertMaterial({ color: 0x556b2f }); // Darker olive for backrest
 
             // Base/platform - white
             const baseHeight = 0.08;
@@ -6888,23 +7555,53 @@
             base.position.set(0, baseHeight / 2, 0);
             group.add(base);
 
-            // Seat cushion - olive green
+            // Create individual seat cushions with different African textile patterns
+            const cushionWidth = 0.5; // Each cushion is ~50cm wide
+            const numCushions = Math.max(1, Math.floor(length / cushionWidth));
+            const actualCushionWidth = (length - 0.04) / numCushions;
             const seatHeight = 0.12;
-            const seat = new THREE.Mesh(
-                new THREE.BoxGeometry(length - 0.04, seatHeight, 0.5),
-                oliveMat
-            );
-            seat.position.set(0, baseHeight + seatHeight / 2, 0);
-            group.add(seat);
 
-            // Backrest cushion - slightly darker olive
+            // Random starting pattern if not specified
+            const patternStart = startPatternIndex !== null ? startPatternIndex : Math.floor(Math.random() * 10);
+
+            for (let i = 0; i < numCushions; i++) {
+                // Each cushion gets a different pattern
+                const patternIndex = (patternStart + i) % 10;
+                const texture = getTextileTexture(patternIndex);
+                const cushionMat = new THREE.MeshLambertMaterial({
+                    map: texture
+                });
+
+                const cushion = new THREE.Mesh(
+                    new THREE.BoxGeometry(actualCushionWidth - 0.02, seatHeight, 0.48),
+                    cushionMat
+                );
+                const cushionX = -length / 2 + 0.02 + actualCushionWidth / 2 + i * actualCushionWidth;
+                cushion.position.set(cushionX, baseHeight + seatHeight / 2, 0);
+                group.add(cushion);
+            }
+
+            // Backrest cushions - also with textile patterns
             const backrestHeight = 0.4;
-            const backrest = new THREE.Mesh(
-                new THREE.BoxGeometry(length - 0.04, backrestHeight, 0.1),
-                oliveDarkMat
-            );
-            backrest.position.set(0, baseHeight + seatHeight + backrestHeight / 2, -0.22);
-            group.add(backrest);
+            const numBackCushions = Math.max(1, Math.floor(length / 0.6));
+            const actualBackWidth = (length - 0.04) / numBackCushions;
+
+            for (let i = 0; i < numBackCushions; i++) {
+                // Offset pattern from seat cushions for variety
+                const patternIndex = (patternStart + i + 3) % 10;
+                const texture = getTextileTexture(patternIndex);
+                const backMat = new THREE.MeshLambertMaterial({
+                    map: texture
+                });
+
+                const backCushion = new THREE.Mesh(
+                    new THREE.BoxGeometry(actualBackWidth - 0.02, backrestHeight, 0.1),
+                    backMat
+                );
+                const backX = -length / 2 + 0.02 + actualBackWidth / 2 + i * actualBackWidth;
+                backCushion.position.set(backX, baseHeight + seatHeight + backrestHeight / 2, -0.22);
+                group.add(backCushion);
+            }
 
             // Shelf bracket/support - white vertical panel
             const shelfSupportHeight = 0.5;
