@@ -42,6 +42,8 @@
             #info-panel h2 { font-size: 9px; margin-bottom: 10px; }
             #info-panel p { font-size: 11px; margin-bottom: 10px; }
             .room-btn { padding: 6px 10px; font-size: 10px; }
+            .room-desc { font-size: 10px; padding: 6px 8px; }
+            .room-desc strong { font-size: 11px; }
             #controls-panel {
                 top: auto;
                 bottom: 180px;
@@ -91,6 +93,7 @@
             }
             #info-panel h1 { font-size: 12px; }
             #info-panel p { display: none; }
+            .room-descriptions { display: none; }
             #controls-panel {
                 max-height: 35vh;
             }
@@ -132,6 +135,27 @@
         }
         .room-btn:hover {
             background: cornflowerblue;
+        }
+        .room-buttons {
+            margin-bottom: 12px;
+        }
+        .room-descriptions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .room-desc {
+            font-size: 11px;
+            line-height: 1.5;
+            color: #aaa;
+            padding: 8px 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+            border-left: 3px solid cornflowerblue;
+        }
+        .room-desc strong {
+            color: cornflowerblue;
+            font-size: 12px;
         }
         #controls-panel {
             position: absolute;
@@ -378,6 +402,91 @@
             transition: transform 0.2s;
         }
         .color-swatch:hover { transform: scale(1.1); }
+        .color-swatch.editing { position: relative; }
+        .color-swatch.editing::after {
+            content: '✕';
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 16px;
+            height: 16px;
+            background: #c41e3a;
+            color: #fff;
+            border-radius: 50%;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .section-edit-btn {
+            background: none;
+            border: 1px solid #444;
+            color: #888;
+            padding: 2px 6px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 10px;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        .section-edit-btn:hover, .section-edit-btn.active { background: rgba(255,255,255,0.1); color: #fff; }
+        .color-add-form, .pattern-add-form, .furniture-add-form, .functions-add-form {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .editable-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 0;
+        }
+        .editable-item .remove-btn {
+            background: #c41e3a;
+            border: none;
+            color: #fff;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 10px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .editable-item.editing .remove-btn { display: flex; }
+        .editable-item .edit-input {
+            background: #1a1a1a;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 4px 8px;
+            font-size: 11px;
+            border-radius: 3px;
+            flex: 1;
+        }
+        .pattern-swatch {
+            position: relative;
+            cursor: pointer;
+        }
+        .pattern-swatch.editing::after {
+            content: '✕';
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 16px;
+            height: 16px;
+            background: #c41e3a;
+            color: #fff;
+            border-radius: 50%;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
         .design-list {
             list-style: none;
             font-size: 13px;
@@ -837,7 +946,7 @@
         #admin-btn {
             position: absolute;
             top: 20px;
-            right: 240px;
+            right: 20px;
             padding: 8px 16px;
             background: rgba(139, 41, 66, 0.8);
             border: 1px solid #8b2942;
@@ -848,7 +957,34 @@
             z-index: 100;
         }
         #admin-btn:hover { background: #8b2942; }
-        #admin-btn.logged-in { background: #20c997; border-color: #1aa87c; }
+        #admin-profile {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 12px;
+            background: rgba(32, 201, 151, 0.9);
+            border: 1px solid #1aa87c;
+            border-radius: 4px;
+            z-index: 100;
+        }
+        #admin-name {
+            color: #fff;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        #admin-logout-btn {
+            padding: 4px 10px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: #fff;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 10px;
+        }
+        #admin-logout-btn:hover { background: rgba(255,255,255,0.3); }
         #render-btn {
             position: absolute;
             bottom: 20px;
@@ -1249,8 +1385,20 @@
         <h1>The Panafrican Library Will Not Be Colonized</h1>
         <h2>Reading Room • Interactive 3D</h2>
         <p>A curatorial Reading Room conceived as a living archive of panafrican and diasporic publishing. A space to read, listen, and slow down.</p>
-        <button class="room-btn" onclick="focusRoom('roomS202')">Pan-African Library (West)</button>
-        <button class="room-btn" onclick="focusRoom('roomS203')">Sound Library (East)</button>
+        <div class="room-buttons">
+            <button class="room-btn" onclick="focusRoom('roomS202')">Three Star (West)</button>
+            <button class="room-btn" onclick="focusRoom('roomS203')">Special Special (East)</button>
+        </div>
+        <div class="room-descriptions">
+            <div class="room-desc" id="desc-S202">
+                <strong>Pan-African Library</strong><br>
+                ~50 independent publications, AABF 10-year archives, video interviews with publishers, mapping African publishing networks
+            </div>
+            <div class="room-desc" id="desc-S203">
+                <strong>Sound Library</strong><br>
+                Audio/radio listening station, DJ table, collective listening sessions, readings, performances, poetry
+            </div>
+        </div>
     </div>
 
     <div id="controls-panel">
@@ -1260,14 +1408,14 @@
             <button class="control-btn" onclick="setView('floorPlan')"><span class="icon">📐</span>Floor Plan View</button>
         </div>
         <div class="control-section">
-            <div class="section-title">Pan-African Library (West)</div>
+            <div class="section-title">Three Star (West) — Pan-African Library</div>
             <button class="control-btn" onclick="setView('roomS202Entry')"><span class="icon">🚪</span>Entry Vestibule</button>
             <button class="control-btn" onclick="setView('roomS202Inside')"><span class="icon">🔊</span>Inside View</button>
             <button class="control-btn" onclick="setView('roomS202Windows')"><span class="icon">🪟</span>Window Wall</button>
             <button class="control-btn" onclick="setView('roomS202Table')"><span class="icon">📚</span>Display Table</button>
         </div>
         <div class="control-section">
-            <div class="section-title">Sound Library (East)</div>
+            <div class="section-title">Special Special (East) — Sound Library</div>
             <button class="control-btn" onclick="setView('roomS203Entry')"><span class="icon">🚪</span>Entry (from door)</button>
             <button class="control-btn" onclick="setView('roomS203Inside')"><span class="icon">📖</span>Inside View</button>
             <button class="control-btn" onclick="setView('roomS203Windows')"><span class="icon">🪟</span>Arched Windows</button>
@@ -1282,20 +1430,20 @@
     <div id="dimensions-panel">
         <h3>Room Dimensions (from floor plan)</h3>
         <div class="dim-row">
-            <span class="dim-label">Pan-African Library (West)</span>
-            <span class="dim-value">11'-5⅝" × 25'-3¾" | 3.49m × 7.71m</span>
+            <span class="dim-label">Three Star (West)</span>
+            <span class="dim-value">17'-4½" × 25'-3¾" | 5.29m × 7.71m</span>
         </div>
         <div class="dim-row">
-            <span class="dim-label">Pan-African Library Area</span>
-            <span class="dim-value">289.4 sq ft | 26.9 m²</span>
+            <span class="dim-label">Three Star Area</span>
+            <span class="dim-value">438.7 sq ft | 40.8 m²</span>
         </div>
         <div class="dim-row">
-            <span class="dim-label">Sound Library (East)</span>
-            <span class="dim-value">14'-7¾" × 25'-3¾" | 4.46m × 7.71m</span>
+            <span class="dim-label">Special Special (East)</span>
+            <span class="dim-value">11'-5⅝" × 15'-1½" | 3.49m × 4.61m</span>
         </div>
         <div class="dim-row">
-            <span class="dim-label">Sound Library Area</span>
-            <span class="dim-value">369.5 sq ft | 34.3 m²</span>
+            <span class="dim-label">Special Special Area</span>
+            <span class="dim-value">173.1 sq ft | 16.1 m²</span>
         </div>
         <div class="dim-row">
             <span class="dim-label">Ceiling Height</span>
@@ -1307,7 +1455,7 @@
         </div>
         <div class="dim-row">
             <span class="dim-label">Total Combined Area</span>
-            <span class="dim-value">658.9 sq ft | 61.2 m²</span>
+            <span class="dim-value">611.8 sq ft | 56.9 m²</span>
         </div>
     </div>
 
@@ -1334,6 +1482,10 @@
     <button id="decorator-btn" onclick="toggleDecorator()">🛋️ Decorator</button>
     <button id="render-btn" onclick="openRenderModal()">✨ AI Render</button>
     <button id="admin-btn" onclick="toggleAdminLogin()">🔐 Admin</button>
+    <div id="admin-profile" style="display:none;">
+        <span id="admin-name" onclick="toggleAdminPanel()" style="cursor:pointer;">👤 Admin</span>
+        <button id="admin-logout-btn" onclick="logoutAdmin()">Logout</button>
+    </div>
 
     <!-- Mood Board Modal -->
     <div id="moodboard-modal" class="modal-hidden">
@@ -1346,10 +1498,23 @@
             <div class="moodboard-toolbar">
                 <button class="moodboard-toolbar-btn" onclick="toggleMoodboardEdit()" id="edit-mode-btn">✏️ Edit Mode</button>
                 <button class="moodboard-toolbar-btn primary" onclick="toggleAddImageForm()" id="add-image-btn">➕ Add Image</button>
-                <button class="moodboard-toolbar-btn" onclick="filterMoodboard('all')" data-filter="all">All</button>
-                <button class="moodboard-toolbar-btn" onclick="filterMoodboard('furniture')" data-filter="furniture">Furniture</button>
-                <button class="moodboard-toolbar-btn" onclick="filterMoodboard('ambiance')" data-filter="ambiance">Ambiance</button>
-                <button class="moodboard-toolbar-btn" onclick="filterMoodboard('inspiration')" data-filter="inspiration">Inspiration</button>
+                <span id="category-filter-buttons">
+                    <!-- Dynamically rendered category filters -->
+                </span>
+                <button class="moodboard-toolbar-btn" onclick="toggleCategoryManager()" id="manage-categories-btn" title="Manage Categories">⚙️</button>
+            </div>
+
+            <!-- Category Manager -->
+            <div class="category-manager" id="category-manager" style="display:none; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+                <h4 style="color: #fff; margin-bottom: 10px;">Manage Categories</h4>
+                <div id="category-list" style="margin-bottom: 10px;">
+                    <!-- Rendered by JS -->
+                </div>
+                <div style="display: flex; gap: 6px; align-items: center;">
+                    <input type="text" id="new-category-value" placeholder="category-key" style="width: 100px; padding: 6px; font-size: 11px; border: 1px solid #444; border-radius: 3px; background: #1a1a1a; color: #fff;">
+                    <input type="text" id="new-category-label" placeholder="Category Label" style="flex: 1; padding: 6px; font-size: 11px; border: 1px solid #444; border-radius: 3px; background: #1a1a1a; color: #fff;">
+                    <button class="moodboard-toolbar-btn primary" onclick="addCategory()" style="padding: 6px 10px;">Add</button>
+                </div>
             </div>
 
             <!-- Add Image Form -->
@@ -1361,14 +1526,33 @@
                 <input type="text" id="new-image-url" placeholder="Or paste image URL...">
                 <input type="text" id="new-image-title" placeholder="Image title / description">
                 <select id="new-image-category">
-                    <option value="furniture">Furniture Style</option>
-                    <option value="ambiance">Ambiance</option>
-                    <option value="inspiration">Inspiration</option>
-                    <option value="pattern">Patterns & Textiles</option>
+                    <!-- Rendered by JS -->
                 </select>
                 <div style="display: flex; gap: 10px;">
                     <button class="moodboard-toolbar-btn primary" onclick="addMoodboardImage()" style="flex:1">Add Image</button>
                     <button class="moodboard-toolbar-btn" onclick="toggleAddImageForm()" style="flex:1">Cancel</button>
+                </div>
+            </div>
+
+            <!-- Edit Image Modal -->
+            <div id="edit-image-modal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.9); z-index:2000; justify-content:center; align-items:center;">
+                <div style="background:#222; padding:20px; border-radius:8px; max-width:400px; width:90%;">
+                    <h3 style="color:#fff; margin-bottom:15px;">Edit Image Details</h3>
+                    <input type="hidden" id="edit-image-index">
+                    <div style="margin-bottom:10px;">
+                        <label style="color:#888; font-size:11px;">Title</label>
+                        <input type="text" id="edit-image-title" style="width:100%; padding:8px; font-size:12px; border:1px solid #444; border-radius:4px; background:#1a1a1a; color:#fff; margin-top:4px;">
+                    </div>
+                    <div style="margin-bottom:15px;">
+                        <label style="color:#888; font-size:11px;">Category</label>
+                        <select id="edit-image-category" style="width:100%; padding:8px; font-size:12px; border:1px solid #444; border-radius:4px; background:#1a1a1a; color:#fff; margin-top:4px;">
+                            <!-- Rendered by JS -->
+                        </select>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button class="moodboard-toolbar-btn primary" onclick="saveImageEdit()" style="flex:1;">Save</button>
+                        <button class="moodboard-toolbar-btn" onclick="closeImageEdit()" style="flex:1;">Cancel</button>
+                    </div>
                 </div>
             </div>
 
@@ -1382,53 +1566,49 @@
 
             <div class="moodboard-grid">
                 <div class="moodboard-section">
-                    <h3>🎨 Color Palette</h3>
+                    <h3>🎨 Color Palette <button class="section-edit-btn" onclick="toggleColorPaletteEdit()" id="color-edit-btn">✏️</button></h3>
                     <p style="font-size: 11px; color: #666; margin-bottom: 8px;">Based on Panafrican reference imagery</p>
-                    <div class="color-palette">
-                        <div class="color-swatch" style="background: #f5f0e8;" title="Cream/Off-White (Bean Bags, Walls)"></div>
-                        <div class="color-swatch" style="background: #fd7e14;" title="Burnt Orange (Bean Bags, Accents)"></div>
-                        <div class="color-swatch" style="background: #c41e3a;" title="Deep Red (Natte, Posters)"></div>
-                        <div class="color-swatch" style="background: #fdd835;" title="Bright Yellow (Wax Print, Highlights)"></div>
-                        <div class="color-swatch" style="background: #c2185b;" title="Magenta/Pink (Cushions, Rugs)"></div>
-                        <div class="color-swatch" style="background: #6b8e23;" title="Olive Green (Velvet Sofa)"></div>
-                        <div class="color-swatch" style="background: #00897b;" title="Teal (Cushions, Accents)"></div>
-                        <div class="color-swatch" style="background: #1a3a5c;" title="Deep Blue (Tie-Dye, Books)"></div>
-                        <div class="color-swatch" style="background: #d4a76a;" title="Natural Wood/Rattan"></div>
-                        <div class="color-swatch" style="background: #8b4513;" title="Terracotta/Brown"></div>
-                        <div class="color-swatch" style="background: #c9a227;" title="Ochre/Gold"></div>
-                        <div class="color-swatch" style="background: #1a1a1a;" title="Black (Frames, Contrast)"></div>
+                    <div class="color-palette" id="color-palette-container">
+                        <!-- Colors rendered by JS -->
+                    </div>
+                    <div class="color-add-form" id="color-add-form" style="display:none;">
+                        <input type="color" id="new-color-value" value="#fd7e14">
+                        <input type="text" id="new-color-name" placeholder="Color name..." style="flex:1; padding:4px; font-size:11px; border:1px solid #444; border-radius:3px; background:#1a1a1a; color:#fff;">
+                        <button class="moodboard-toolbar-btn primary" onclick="addColorSwatch()" style="padding:4px 8px; font-size:10px;">Add</button>
                     </div>
                 </div>
                 <div class="moodboard-section">
-                    <h3>🌍 African Wax Patterns</h3>
-                    <div class="pattern-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
-                        <div class="pattern-swatch" style="background: repeating-conic-gradient(from 0deg, #fdd835 0deg 30deg, #c41e3a 30deg 60deg); width: 60px; height: 60px; border-radius: 4px;" title="Ankara Circles"></div>
-                        <div class="pattern-swatch" style="background: repeating-linear-gradient(45deg, #fd7e14 0px, #fd7e14 10px, #fdd835 10px, #fdd835 20px); width: 60px; height: 60px; border-radius: 4px;" title="Kente Stripes"></div>
-                        <div class="pattern-swatch" style="background: radial-gradient(circle at 50% 50%, #c41e3a 30%, #1a1a1a 30%, #1a1a1a 40%, #fdd835 40%); width: 60px; height: 60px; border-radius: 4px;" title="Target Circles"></div>
-                        <div class="pattern-swatch" style="background: repeating-linear-gradient(0deg, #00897b 0px, #00897b 8px, #f5f0e8 8px, #f5f0e8 16px); width: 60px; height: 60px; border-radius: 4px;" title="Horizontal Bars"></div>
-                        <div class="pattern-swatch" style="background: conic-gradient(#c2185b, #fdd835, #00897b, #c41e3a, #c2185b); width: 60px; height: 60px; border-radius: 4px;" title="Color Wheel"></div>
-                        <div class="pattern-swatch" style="background: repeating-conic-gradient(#1a1a1a 0deg 10deg, #f5f0e8 10deg 20deg); width: 60px; height: 60px; border-radius: 4px;" title="B&W Geometric"></div>
+                    <h3>🌍 Patterns <button class="section-edit-btn" onclick="togglePatternEdit()" id="pattern-edit-btn">✏️</button></h3>
+                    <div class="pattern-grid" id="pattern-grid-container" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                        <!-- Patterns rendered by JS -->
                     </div>
                     <p style="font-size: 10px; color: #888; margin-top: 6px;">Ankara • Kente • Adinkra • Mud Cloth</p>
+                    <div class="pattern-add-form" id="pattern-add-form" style="display:none; margin-top:8px;">
+                        <input type="text" id="new-pattern-name" placeholder="Pattern name..." style="width:100%; padding:4px; font-size:11px; border:1px solid #444; border-radius:3px; background:#1a1a1a; color:#fff; margin-bottom:4px;">
+                        <input type="text" id="new-pattern-url" placeholder="Pattern image URL..." style="width:100%; padding:4px; font-size:11px; border:1px solid #444; border-radius:3px; background:#1a1a1a; color:#fff; margin-bottom:4px;">
+                        <button class="moodboard-toolbar-btn primary" onclick="addPatternSwatch()" style="padding:4px 8px; font-size:10px; width:100%;">Add Pattern</button>
+                    </div>
                 </div>
                 <div class="moodboard-section">
-                    <h3>🛋️ Key Furniture</h3>
-                    <ul class="design-list" style="font-size: 12px;">
-                        <li>🎧 DJ/Audio station (west wall)</li>
-                        <li>🔊 Floor speakers in corners</li>
-                        <li>🧘 Floor poufs for listening</li>
-                        <li>🎵 Headphone stations</li>
-                        <li>📖 Reading tables with chairs</li>
-                        <li>📚 Wall-mounted archive shelves</li>
-                        <li>📺 Video screen stands</li>
-                    </ul>
+                    <h3>🛋️ Key Furniture <button class="section-edit-btn" onclick="toggleFurnitureEdit()" id="furniture-edit-btn">✏️</button></h3>
+                    <div id="furniture-list-container">
+                        <!-- Furniture items rendered by JS -->
+                    </div>
+                    <div class="furniture-add-form" id="furniture-add-form" style="display:none; margin-top:8px;">
+                        <input type="text" id="new-furniture-emoji" placeholder="Emoji" style="width:40px; padding:4px; font-size:11px; border:1px solid #444; border-radius:3px; background:#1a1a1a; color:#fff;">
+                        <input type="text" id="new-furniture-text" placeholder="Furniture description..." style="flex:1; padding:4px; font-size:11px; border:1px solid #444; border-radius:3px; background:#1a1a1a; color:#fff;">
+                        <button class="moodboard-toolbar-btn primary" onclick="addFurnitureItem()" style="padding:4px 8px; font-size:10px;">Add</button>
+                    </div>
                 </div>
                 <div class="moodboard-section">
-                    <h3>📍 Room Functions</h3>
-                    <div class="layout-info" style="font-size: 12px;">
-                        <p><strong>Pan-African Library (West):</strong> ~50 independent publications, AABF 10-year archives, video interviews with publishers, mapping African publishing networks</p>
-                        <p><strong>Sound Library (East):</strong> Audio/radio listening station, DJ table, collective listening sessions, readings, performances, poetry</p>
-                        <p><strong>Duration:</strong> 3-day art fair exhibition at MoMA PS1</p>
+                    <h3>📍 Room Functions <button class="section-edit-btn" onclick="toggleFunctionsEdit()" id="functions-edit-btn">✏️</button></h3>
+                    <div class="layout-info" id="functions-container" style="font-size: 12px;">
+                        <!-- Room functions rendered by JS -->
+                    </div>
+                    <div class="functions-add-form" id="functions-add-form" style="display:none; margin-top:8px;">
+                        <input type="text" id="new-function-title" placeholder="Section title..." style="width:100%; padding:4px; font-size:11px; border:1px solid #444; border-radius:3px; background:#1a1a1a; color:#fff; margin-bottom:4px;">
+                        <textarea id="new-function-text" placeholder="Description..." style="width:100%; padding:4px; font-size:11px; border:1px solid #444; border-radius:3px; background:#1a1a1a; color:#fff; resize:vertical; min-height:40px;"></textarea>
+                        <button class="moodboard-toolbar-btn primary" onclick="addFunctionItem()" style="padding:4px 8px; font-size:10px; width:100%; margin-top:4px;">Add Section</button>
                     </div>
                 </div>
             </div>
@@ -1448,10 +1628,6 @@
             <button class="slideshow-btn nav" onclick="slideshowNav(1)">→</button>
         </div>
     </div>
-
-    <button id="decorator-btn" onclick="toggleDecorator()">🛋️ Decorator</button>
-    <button id="render-btn" onclick="openRenderModal()">✨ AI Render</button>
-    <button id="admin-btn" onclick="toggleAdminLogin()">🔐 Admin</button>
 
     <!-- Login Modal -->
     <div id="login-modal">
@@ -2576,13 +2752,15 @@
         // ============================================================
         // EXACT DIMENSIONS FROM FLOOR PLAN (converted to meters)
         // CORRECTED LAYOUT: Windows on FRONT (south), Doors on BACK (north)
-        // Pan-African Library (West) is LEFT, Sound Library (East) is RIGHT
-        // Both rooms are part of S202 - Pan-African Library has an entry vestibule/corridor
+        // THREE STAR (West) is LEFT/larger, SPECIAL SPECIAL (East) is RIGHT/smaller
+        // Both rooms are labeled S202 but have different functions
         // ============================================================
-        const ROOM_S202_WIDTH = 3.496;  // 11'-5⅝" (X direction)
+        // THREE STAR (West Room - Pan-African Library)
+        const ROOM_S202_WIDTH = 5.29;   // 17'-4½" (X direction)
         const ROOM_S202_DEPTH = 7.715;  // 25'-3¾" (Z direction)
-        const ROOM_S203_WIDTH = 4.465;  // 14'-7¾"
-        const ROOM_S203_DEPTH = 7.715;  // 25'-3¾"
+        // SPECIAL SPECIAL (East Room - Sound Library)
+        const ROOM_S203_WIDTH = 3.496;  // 11'-5⅝" (X direction)
+        const ROOM_S203_DEPTH = 4.61;   // 15'-1½" (Z direction) - SHORTER room!
         const CEILING_HEIGHT = 3.66;   // 12' ceiling
         const WALL_THICKNESS = 0.152;  // 6"
         const DOOR_WIDTH = 1.044;      // 3'-5⅛"
@@ -4005,8 +4183,8 @@
             return sprite;
         }
 
-        labelsGroup.add(createLabel('PAN-AFRICAN LIBRARY (WEST)', new THREE.Vector3(ROOM_S202_X, CEILING_HEIGHT + 0.5, 0)));
-        labelsGroup.add(createLabel('SOUND LIBRARY (EAST)', new THREE.Vector3(ROOM_S203_X, CEILING_HEIGHT + 0.5, 0)));
+        labelsGroup.add(createLabel('THREE STAR (WEST)', new THREE.Vector3(ROOM_S202_X, CEILING_HEIGHT + 0.5, 0)));
+        labelsGroup.add(createLabel('SPECIAL SPECIAL (EAST)', new THREE.Vector3(ROOM_S203_X, CEILING_HEIGHT + 0.5, 0)));
         scene.add(labelsGroup);
 
         // Lighting
@@ -4205,6 +4383,128 @@
             { src: 'photos refs reading room/Style mobilier/tissu-wax.webp', title: 'African wax print fabric', category: 'pattern' }
         ];
 
+        // Default categories
+        const defaultCategories = [
+            { value: 'furniture', label: 'Furniture Style' },
+            { value: 'ambiance', label: 'Ambiance' },
+            { value: 'inspiration', label: 'Inspiration' },
+            { value: 'pattern', label: 'Patterns & Textiles' },
+            { value: 'film', label: 'Films' },
+            { value: 'media', label: 'Media' }
+        ];
+        let imageCategories = JSON.parse(localStorage.getItem('panafricanCategories')) || [...defaultCategories];
+
+        function saveCategories() {
+            localStorage.setItem('panafricanCategories', JSON.stringify(imageCategories));
+        }
+
+        // Render category filter buttons
+        function renderCategoryFilters() {
+            const container = document.getElementById('category-filter-buttons');
+            if (!container) return;
+            container.innerHTML = `
+                <button class="moodboard-toolbar-btn ${currentFilter === 'all' ? 'active' : ''}" onclick="filterMoodboard('all')" data-filter="all">All</button>
+                ${imageCategories.map(c => `
+                    <button class="moodboard-toolbar-btn ${currentFilter === c.value ? 'active' : ''}" onclick="filterMoodboard('${c.value}')" data-filter="${c.value}">${c.label}</button>
+                `).join('')}
+            `;
+        }
+
+        // Render category dropdown options
+        function renderCategoryOptions() {
+            const addSelect = document.getElementById('new-image-category');
+            const editSelect = document.getElementById('edit-image-category');
+            const options = imageCategories.map(c => `<option value="${c.value}">${c.label}</option>`).join('');
+            if (addSelect) addSelect.innerHTML = options;
+            if (editSelect) editSelect.innerHTML = options;
+        }
+
+        // Category manager
+        window.toggleCategoryManager = function() {
+            const manager = document.getElementById('category-manager');
+            manager.style.display = manager.style.display === 'none' ? 'block' : 'none';
+            document.getElementById('manage-categories-btn').classList.toggle('active', manager.style.display !== 'none');
+            renderCategoryList();
+        };
+
+        function renderCategoryList() {
+            const container = document.getElementById('category-list');
+            container.innerHTML = imageCategories.map((c, idx) => `
+                <div style="display: flex; align-items: center; gap: 8px; padding: 4px 0; border-bottom: 1px solid #333;">
+                    <span style="color: #888; font-size: 10px; width: 80px;">${c.value}</span>
+                    <span style="color: #fff; font-size: 12px; flex: 1;">${c.label}</span>
+                    <button onclick="removeCategory(${idx})" style="background: #c41e3a; border: none; color: #fff; width: 18px; height: 18px; border-radius: 50%; cursor: pointer; font-size: 10px;">✕</button>
+                </div>
+            `).join('');
+        }
+
+        window.addCategory = function() {
+            const value = document.getElementById('new-category-value').value.trim().toLowerCase().replace(/\s+/g, '-');
+            const label = document.getElementById('new-category-label').value.trim();
+            if (value && label) {
+                if (imageCategories.some(c => c.value === value)) {
+                    alert('Category key already exists');
+                    return;
+                }
+                imageCategories.push({ value, label });
+                saveCategories();
+                document.getElementById('new-category-value').value = '';
+                document.getElementById('new-category-label').value = '';
+                renderCategoryList();
+                renderCategoryFilters();
+                renderCategoryOptions();
+            }
+        };
+
+        window.removeCategory = function(index) {
+            if (imageCategories.length <= 1) {
+                alert('You must keep at least one category');
+                return;
+            }
+            const cat = imageCategories[index];
+            // Move images in this category to first available category
+            const newCat = imageCategories[0].value !== cat.value ? imageCategories[0].value : imageCategories[1].value;
+            moodboardImages.forEach(img => {
+                if (img.category === cat.value) img.category = newCat;
+            });
+            saveMoodboardImages();
+            imageCategories.splice(index, 1);
+            saveCategories();
+            renderCategoryList();
+            renderCategoryFilters();
+            renderCategoryOptions();
+            renderMoodboardGallery();
+        };
+
+        // Edit image details
+        window.editImageDetails = function(index) {
+            const img = moodboardImages[index];
+            document.getElementById('edit-image-index').value = index;
+            document.getElementById('edit-image-title').value = img.title;
+            renderCategoryOptions();
+            document.getElementById('edit-image-category').value = img.category;
+            document.getElementById('edit-image-modal').style.display = 'flex';
+        };
+
+        window.saveImageEdit = function() {
+            const index = parseInt(document.getElementById('edit-image-index').value);
+            moodboardImages[index].title = document.getElementById('edit-image-title').value.trim();
+            moodboardImages[index].category = document.getElementById('edit-image-category').value;
+            saveMoodboardImages();
+            closeImageEdit();
+            renderMoodboardGallery();
+        };
+
+        window.closeImageEdit = function() {
+            document.getElementById('edit-image-modal').style.display = 'none';
+        };
+
+        // Initialize categories on load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCategoryFilters();
+            renderCategoryOptions();
+        });
+
         function saveMoodboardImages() {
             localStorage.setItem('moodboardImages', JSON.stringify(moodboardImages));
         }
@@ -4221,21 +4521,27 @@
 
             countEl.textContent = `(${filtered.length} images)`;
 
-            gallery.innerHTML = filtered.map((img, idx) => `
+            gallery.innerHTML = filtered.map((img, idx) => {
+                const realIdx = moodboardImages.indexOf(img);
+                const categoryLabel = imageCategories.find(c => c.value === img.category)?.label || img.category;
+                return `
                 <div class="moodboard-image-item ${moodboardEditMode ? 'editing' : ''}"
-                     data-index="${moodboardImages.indexOf(img)}"
-                     onclick="openSlideshow(${moodboardImages.indexOf(img)})"
+                     data-index="${realIdx}"
+                     onclick="openSlideshow(${realIdx})"
                      draggable="${moodboardEditMode}">
                     <img src="${img.src}" alt="${img.title}" onerror="this.parentElement.style.display='none'">
                     <div class="image-overlay">
                         <div class="image-title">${img.title}</div>
+                        <div class="image-category" style="font-size:9px; opacity:0.7; margin-top:2px;">${categoryLabel}</div>
                     </div>
                     <div class="image-actions">
                         <button class="image-action-btn move" title="Drag to reorder" onclick="event.stopPropagation()">⋮⋮</button>
-                        <button class="image-action-btn delete" title="Remove" onclick="event.stopPropagation(); removeMoodboardImage(${moodboardImages.indexOf(img)})">✕</button>
+                        <button class="image-action-btn edit" title="Edit" onclick="event.stopPropagation(); editImageDetails(${realIdx})" style="background:rgba(32,201,151,0.8);">✏️</button>
+                        <button class="image-action-btn delete" title="Remove" onclick="event.stopPropagation(); removeMoodboardImage(${realIdx})">✕</button>
                     </div>
                 </div>
-            `).join('');
+                `;
+            }).join('');
 
             // Add drag-drop for reordering
             if (moodboardEditMode) {
@@ -4325,6 +4631,234 @@
                 renderMoodboardGallery();
             }
         };
+
+        // ===============================
+        // EDITABLE SECTIONS DATA & STATE
+        // ===============================
+        let colorPaletteEditMode = false;
+        let patternEditMode = false;
+        let furnitureEditMode = false;
+        let functionsEditMode = false;
+
+        // Default data
+        const defaultColorPalette = [
+            { color: '#f5f0e8', name: 'Cream/Off-White (Bean Bags, Walls)' },
+            { color: '#fd7e14', name: 'Burnt Orange (Bean Bags, Accents)' },
+            { color: '#c41e3a', name: 'Deep Red (Natte, Posters)' },
+            { color: '#fdd835', name: 'Bright Yellow (Wax Print, Highlights)' },
+            { color: '#c2185b', name: 'Magenta/Pink (Cushions, Rugs)' },
+            { color: '#6b8e23', name: 'Olive Green (Velvet Sofa)' },
+            { color: '#00897b', name: 'Teal (Cushions, Accents)' },
+            { color: '#1a3a5c', name: 'Deep Blue (Tie-Dye, Books)' },
+            { color: '#d4a76a', name: 'Natural Wood/Rattan' },
+            { color: '#8b4513', name: 'Terracotta/Brown' },
+            { color: '#c9a227', name: 'Ochre/Gold' },
+            { color: '#1a1a1a', name: 'Black (Frames, Contrast)' }
+        ];
+
+        const defaultPatterns = [
+            { name: 'Ankara Circles', css: 'repeating-conic-gradient(from 0deg, #fdd835 0deg 30deg, #c41e3a 30deg 60deg)' },
+            { name: 'Kente Stripes', css: 'repeating-linear-gradient(45deg, #fd7e14 0px, #fd7e14 10px, #fdd835 10px, #fdd835 20px)' },
+            { name: 'Target Circles', css: 'radial-gradient(circle at 50% 50%, #c41e3a 30%, #1a1a1a 30%, #1a1a1a 40%, #fdd835 40%)' },
+            { name: 'Horizontal Bars', css: 'repeating-linear-gradient(0deg, #00897b 0px, #00897b 8px, #f5f0e8 8px, #f5f0e8 16px)' },
+            { name: 'Color Wheel', css: 'conic-gradient(#c2185b, #fdd835, #00897b, #c41e3a, #c2185b)' },
+            { name: 'B&W Geometric', css: 'repeating-conic-gradient(#1a1a1a 0deg 10deg, #f5f0e8 10deg 20deg)' }
+        ];
+
+        const defaultFurniture = [
+            { emoji: '🎧', text: 'DJ/Audio station (west wall)' },
+            { emoji: '🔊', text: 'Floor speakers in corners' },
+            { emoji: '🧘', text: 'Floor poufs for listening' },
+            { emoji: '🎵', text: 'Headphone stations' },
+            { emoji: '📖', text: 'Reading tables with chairs' },
+            { emoji: '📚', text: 'Wall-mounted archive shelves' },
+            { emoji: '📺', text: 'Video screen stands' }
+        ];
+
+        const defaultFunctions = [
+            { title: 'Three Star (West) — Pan-African Library', text: '~50 independent publications, AABF 10-year archives, video interviews with publishers, mapping African publishing networks' },
+            { title: 'Special Special (East) — Sound Library', text: 'Audio/radio listening station, DJ table, collective listening sessions, readings, performances, poetry' },
+            { title: 'Duration', text: '3-day art fair exhibition at MoMA PS1' }
+        ];
+
+        // Load from localStorage or use defaults
+        let colorPalette = JSON.parse(localStorage.getItem('panafricanColorPalette')) || [...defaultColorPalette];
+        let patterns = JSON.parse(localStorage.getItem('panafricanPatterns')) || [...defaultPatterns];
+        let furnitureItems = JSON.parse(localStorage.getItem('panafricanFurniture')) || [...defaultFurniture];
+        let roomFunctions = JSON.parse(localStorage.getItem('panafricanFunctions')) || [...defaultFunctions];
+
+        // Save functions
+        function saveColorPalette() { localStorage.setItem('panafricanColorPalette', JSON.stringify(colorPalette)); }
+        function savePatterns() { localStorage.setItem('panafricanPatterns', JSON.stringify(patterns)); }
+        function saveFurniture() { localStorage.setItem('panafricanFurniture', JSON.stringify(furnitureItems)); }
+        function saveFunctions() { localStorage.setItem('panafricanFunctions', JSON.stringify(roomFunctions)); }
+
+        // ===============================
+        // COLOR PALETTE EDITING
+        // ===============================
+        window.toggleColorPaletteEdit = function() {
+            colorPaletteEditMode = !colorPaletteEditMode;
+            document.getElementById('color-edit-btn').classList.toggle('active', colorPaletteEditMode);
+            document.getElementById('color-add-form').style.display = colorPaletteEditMode ? 'flex' : 'none';
+            renderColorPalette();
+        };
+
+        function renderColorPalette() {
+            const container = document.getElementById('color-palette-container');
+            container.innerHTML = colorPalette.map((c, idx) => `
+                <div class="color-swatch ${colorPaletteEditMode ? 'editing' : ''}"
+                     style="background: ${c.color}; position: relative;"
+                     title="${c.name}"
+                     onclick="${colorPaletteEditMode ? `removeColorSwatch(${idx})` : ''}">
+                </div>
+            `).join('');
+        }
+
+        window.addColorSwatch = function() {
+            const colorValue = document.getElementById('new-color-value').value;
+            const colorName = document.getElementById('new-color-name').value.trim() || 'New Color';
+            colorPalette.push({ color: colorValue, name: colorName });
+            saveColorPalette();
+            document.getElementById('new-color-name').value = '';
+            renderColorPalette();
+        };
+
+        window.removeColorSwatch = function(index) {
+            colorPalette.splice(index, 1);
+            saveColorPalette();
+            renderColorPalette();
+        };
+
+        // ===============================
+        // PATTERN EDITING
+        // ===============================
+        window.togglePatternEdit = function() {
+            patternEditMode = !patternEditMode;
+            document.getElementById('pattern-edit-btn').classList.toggle('active', patternEditMode);
+            document.getElementById('pattern-add-form').style.display = patternEditMode ? 'block' : 'none';
+            renderPatterns();
+        };
+
+        function renderPatterns() {
+            const container = document.getElementById('pattern-grid-container');
+            container.innerHTML = patterns.map((p, idx) => {
+                const bgStyle = p.imageUrl ? `url(${p.imageUrl})` : p.css;
+                const bgSize = p.imageUrl ? 'background-size: cover; background-position: center;' : '';
+                return `
+                    <div class="pattern-swatch ${patternEditMode ? 'editing' : ''}"
+                         style="background: ${bgStyle}; width: 60px; height: 60px; border-radius: 4px; ${bgSize}"
+                         title="${p.name}"
+                         onclick="${patternEditMode ? `removePattern(${idx})` : ''}">
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.addPatternSwatch = function() {
+            const patternName = document.getElementById('new-pattern-name').value.trim() || 'New Pattern';
+            const patternUrl = document.getElementById('new-pattern-url').value.trim();
+            if (patternUrl) {
+                patterns.push({ name: patternName, imageUrl: patternUrl });
+                savePatterns();
+                document.getElementById('new-pattern-name').value = '';
+                document.getElementById('new-pattern-url').value = '';
+                renderPatterns();
+            } else {
+                alert('Please provide a pattern image URL');
+            }
+        };
+
+        window.removePattern = function(index) {
+            patterns.splice(index, 1);
+            savePatterns();
+            renderPatterns();
+        };
+
+        // ===============================
+        // FURNITURE EDITING
+        // ===============================
+        window.toggleFurnitureEdit = function() {
+            furnitureEditMode = !furnitureEditMode;
+            document.getElementById('furniture-edit-btn').classList.toggle('active', furnitureEditMode);
+            document.getElementById('furniture-add-form').style.display = furnitureEditMode ? 'flex' : 'none';
+            renderFurniture();
+        };
+
+        function renderFurniture() {
+            const container = document.getElementById('furniture-list-container');
+            container.innerHTML = `<ul class="design-list" style="font-size: 12px;">` +
+                furnitureItems.map((f, idx) => `
+                    <li class="editable-item ${furnitureEditMode ? 'editing' : ''}">
+                        <button class="remove-btn" onclick="removeFurniture(${idx})">✕</button>
+                        <span>${f.emoji} ${f.text}</span>
+                    </li>
+                `).join('') +
+            `</ul>`;
+        }
+
+        window.addFurnitureItem = function() {
+            const emoji = document.getElementById('new-furniture-emoji').value.trim() || '•';
+            const text = document.getElementById('new-furniture-text').value.trim();
+            if (text) {
+                furnitureItems.push({ emoji, text });
+                saveFurniture();
+                document.getElementById('new-furniture-emoji').value = '';
+                document.getElementById('new-furniture-text').value = '';
+                renderFurniture();
+            }
+        };
+
+        window.removeFurniture = function(index) {
+            furnitureItems.splice(index, 1);
+            saveFurniture();
+            renderFurniture();
+        };
+
+        // ===============================
+        // ROOM FUNCTIONS EDITING
+        // ===============================
+        window.toggleFunctionsEdit = function() {
+            functionsEditMode = !functionsEditMode;
+            document.getElementById('functions-edit-btn').classList.toggle('active', functionsEditMode);
+            document.getElementById('functions-add-form').style.display = functionsEditMode ? 'block' : 'none';
+            renderFunctions();
+        };
+
+        function renderFunctions() {
+            const container = document.getElementById('functions-container');
+            container.innerHTML = roomFunctions.map((f, idx) => `
+                <div class="editable-item ${functionsEditMode ? 'editing' : ''}" style="display: block; margin-bottom: 8px;">
+                    <button class="remove-btn" onclick="removeFunction(${idx})" style="float: right; margin-left: 8px;">✕</button>
+                    <p><strong>${f.title}:</strong> ${f.text}</p>
+                </div>
+            `).join('');
+        }
+
+        window.addFunctionItem = function() {
+            const title = document.getElementById('new-function-title').value.trim();
+            const text = document.getElementById('new-function-text').value.trim();
+            if (title && text) {
+                roomFunctions.push({ title, text });
+                saveFunctions();
+                document.getElementById('new-function-title').value = '';
+                document.getElementById('new-function-text').value = '';
+                renderFunctions();
+            }
+        };
+
+        window.removeFunction = function(index) {
+            roomFunctions.splice(index, 1);
+            saveFunctions();
+            renderFunctions();
+        };
+
+        // Initialize editable sections on load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderColorPalette();
+            renderPatterns();
+            renderFurniture();
+            renderFunctions();
+        });
 
         function reorderMoodboardImage(fromIndex, toIndex) {
             const item = moodboardImages.splice(fromIndex, 1)[0];
@@ -7241,8 +7775,10 @@
                 const data = JSON.parse(savedAdmin);
                 adminUser = data.email;
                 adminToken = data.token;
-                document.getElementById('admin-btn').classList.add('logged-in');
-                document.getElementById('admin-btn').textContent = '👤 ' + (data.name || 'Admin');
+                // Hide login button, show profile badge
+                document.getElementById('admin-btn').style.display = 'none';
+                document.getElementById('admin-profile').style.display = 'flex';
+                document.getElementById('admin-name').textContent = '👤 ' + (data.name || 'Admin');
             } catch(e) {}
         }
 
@@ -7284,8 +7820,10 @@
                         token: result.token,
                         name: result.name
                     }));
-                    document.getElementById('admin-btn').classList.add('logged-in');
-                    document.getElementById('admin-btn').textContent = '👤 ' + result.name;
+                    // Hide login button, show profile badge
+                    document.getElementById('admin-btn').style.display = 'none';
+                    document.getElementById('admin-profile').style.display = 'flex';
+                    document.getElementById('admin-name').textContent = '👤 ' + result.name;
                     document.getElementById('admin-user-name').textContent = 'Logged in as: ' + result.name;
                     closeLoginModal();
                     toggleAdminPanel();
@@ -7302,8 +7840,9 @@
             adminUser = null;
             adminToken = null;
             localStorage.removeItem('panafricanAdmin');
-            document.getElementById('admin-btn').classList.remove('logged-in');
-            document.getElementById('admin-btn').textContent = '🔐 Admin';
+            // Show login button, hide profile badge
+            document.getElementById('admin-btn').style.display = 'block';
+            document.getElementById('admin-profile').style.display = 'none';
             document.getElementById('admin-panel').classList.remove('open');
         };
 
