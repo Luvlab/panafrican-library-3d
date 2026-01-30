@@ -4896,8 +4896,15 @@
 
         async function renderPatterns() {
             const container = document.getElementById('pattern-grid-container');
+            if (!container) return; // Safety check
+
             // Get patterns from both localStorage (CSS) and IndexedDB (images)
-            const dbPatterns = await getAllPatternsFromDB();
+            let dbPatterns = [];
+            try {
+                dbPatterns = await getAllPatternsFromDB();
+            } catch (err) {
+                console.warn('Could not load patterns from IndexedDB:', err);
+            }
 
             let html = '';
 
@@ -4936,7 +4943,11 @@
             container.innerHTML = html;
 
             // Also update the mini texture panel in Room Decorator
-            updateTexturePanelPatterns();
+            try {
+                await updateTexturePanelPatterns();
+            } catch (err) {
+                console.warn('Could not update texture panel:', err);
+            }
         }
 
         // Pattern drag start handler
@@ -5036,7 +5047,12 @@
             const container = document.getElementById('texture-patterns-mini');
             if (!container) return;
 
-            const dbPatterns = await getAllPatternsFromDB();
+            let dbPatterns = [];
+            try {
+                dbPatterns = await getAllPatternsFromDB();
+            } catch (err) {
+                console.warn('Could not load patterns for texture panel:', err);
+            }
 
             let html = '';
 
@@ -5248,11 +5264,15 @@
         };
 
         // Initialize editable sections on load
-        document.addEventListener('DOMContentLoaded', () => {
-            renderColorPalette();
-            renderPatterns();
-            renderFurniture();
-            renderFunctions();
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                renderColorPalette();
+                await renderPatterns();
+                renderFurniture();
+                renderFunctions();
+            } catch (err) {
+                console.error('Error initializing mood board:', err);
+            }
         });
 
         function reorderMoodboardImage(fromIndex, toIndex) {
