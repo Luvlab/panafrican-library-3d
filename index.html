@@ -3236,6 +3236,148 @@
         const ochreFloorMaterial = new THREE.MeshLambertMaterial({ color: 0xc9a227 });
         const redMaterial = new THREE.MeshLambertMaterial({ color: 0xc41e3a });
 
+        // ============ AFRICAN TEXTILE PATTERN SYSTEM (must be before furniture) ============
+        // Cache for textile textures
+        const textileTextureCache = {};
+
+        // Create canvas-based textures for African wax print patterns
+        function createAfricanTextileTexture(patternType = 0) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 256;
+            canvas.height = 256;
+            const ctx = canvas.getContext('2d');
+
+            const patterns = [
+                // Pattern 0: Red/Yellow floral
+                () => {
+                    ctx.fillStyle = '#d4382a';
+                    ctx.fillRect(0, 0, 256, 256);
+                    ctx.fillStyle = '#f4c430';
+                    for (let x = 32; x < 256; x += 64) {
+                        for (let y = 32; y < 256; y += 64) {
+                            ctx.beginPath(); ctx.arc(x, y, 20, 0, Math.PI * 2); ctx.fill();
+                            ctx.fillStyle = '#1a1a1a'; ctx.beginPath(); ctx.arc(x, y, 8, 0, Math.PI * 2); ctx.fill();
+                            ctx.fillStyle = '#f4c430';
+                        }
+                    }
+                },
+                // Pattern 1: Blue diamond
+                () => {
+                    ctx.fillStyle = '#1e4d7b'; ctx.fillRect(0, 0, 256, 256);
+                    ctx.fillStyle = '#87ceeb';
+                    for (let y = 0; y < 256; y += 32) {
+                        for (let x = (y % 64 === 0) ? 0 : 16; x < 256; x += 32) {
+                            ctx.beginPath(); ctx.moveTo(x + 16, y); ctx.lineTo(x + 32, y + 16);
+                            ctx.lineTo(x + 16, y + 32); ctx.lineTo(x, y + 16); ctx.closePath(); ctx.fill();
+                        }
+                    }
+                },
+                // Pattern 2: Orange/green medallions
+                () => {
+                    ctx.fillStyle = '#ff8c00'; ctx.fillRect(0, 0, 256, 256);
+                    ctx.fillStyle = '#228b22';
+                    for (let x = 64; x < 256; x += 128) {
+                        for (let y = 64; y < 256; y += 128) {
+                            ctx.beginPath(); ctx.arc(x, y, 40, 0, Math.PI * 2); ctx.fill();
+                            ctx.fillStyle = '#ffd700'; ctx.beginPath(); ctx.arc(x, y, 25, 0, Math.PI * 2); ctx.fill();
+                            ctx.fillStyle = '#ff6600'; ctx.beginPath(); ctx.arc(x, y, 12, 0, Math.PI * 2); ctx.fill();
+                            ctx.fillStyle = '#228b22';
+                        }
+                    }
+                },
+                // Pattern 3: Pink/Cyan scallop
+                () => {
+                    ctx.fillStyle = '#ff69b4'; ctx.fillRect(0, 0, 256, 256);
+                    ctx.fillStyle = '#00ced1';
+                    for (let y = 0; y < 256; y += 48) {
+                        for (let x = (y % 96 === 0) ? 0 : 24; x < 256; x += 48) {
+                            ctx.beginPath(); ctx.arc(x + 24, y + 48, 24, Math.PI, 0); ctx.fill();
+                        }
+                    }
+                },
+                // Pattern 4: Teal/Yellow circles
+                () => {
+                    ctx.fillStyle = '#008b8b'; ctx.fillRect(0, 0, 256, 256);
+                    ctx.fillStyle = '#ffd700';
+                    for (let x = 40; x < 256; x += 80) {
+                        for (let y = 40; y < 256; y += 80) {
+                            ctx.beginPath(); ctx.arc(x, y, 30, 0, Math.PI * 2); ctx.fill();
+                            ctx.fillStyle = '#1a1a1a'; ctx.beginPath(); ctx.arc(x, y, 15, 0, Math.PI * 2); ctx.fill();
+                            ctx.fillStyle = '#ffd700';
+                        }
+                    }
+                },
+                // Pattern 5: Red/Gold lattice
+                () => {
+                    ctx.fillStyle = '#8b0000'; ctx.fillRect(0, 0, 256, 256);
+                    ctx.strokeStyle = '#daa520'; ctx.lineWidth = 8;
+                    for (let i = -256; i < 512; i += 32) {
+                        ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i + 256, 256); ctx.stroke();
+                        ctx.beginPath(); ctx.moveTo(i + 256, 0); ctx.lineTo(i, 256); ctx.stroke();
+                    }
+                },
+                // Pattern 6: Purple/Pink florals
+                () => {
+                    ctx.fillStyle = '#4b0082'; ctx.fillRect(0, 0, 256, 256);
+                    ctx.fillStyle = '#ff1493';
+                    for (let y = 0; y < 256; y += 64) {
+                        ctx.beginPath(); ctx.moveTo(0, y + 32);
+                        for (let x = 0; x < 256; x += 32) ctx.quadraticCurveTo(x + 16, y + (x % 64 === 0 ? 0 : 64), x + 32, y + 32);
+                        ctx.lineTo(256, y + 64); ctx.lineTo(0, y + 64); ctx.closePath(); ctx.fill();
+                    }
+                },
+                // Pattern 7: Yellow/Red sunburst
+                () => {
+                    ctx.fillStyle = '#ffd700'; ctx.fillRect(0, 0, 256, 256);
+                    ctx.fillStyle = '#dc143c';
+                    for (let x = 64; x < 256; x += 128) {
+                        for (let y = 64; y < 256; y += 128) {
+                            for (let a = 0; a < Math.PI * 2; a += Math.PI / 8) {
+                                ctx.beginPath(); ctx.moveTo(x, y);
+                                ctx.lineTo(x + Math.cos(a) * 45, y + Math.sin(a) * 45);
+                                ctx.lineTo(x + Math.cos(a + Math.PI / 16) * 45, y + Math.sin(a + Math.PI / 16) * 45);
+                                ctx.closePath(); ctx.fill();
+                            }
+                        }
+                    }
+                },
+                // Pattern 8: Orange/Teal abstract
+                () => {
+                    ctx.fillStyle = '#ff7f50'; ctx.fillRect(0, 0, 256, 256);
+                    ctx.fillStyle = '#20b2aa';
+                    for (let x = 0; x < 256; x += 64) {
+                        for (let y = 0; y < 256; y += 64) {
+                            ctx.beginPath(); ctx.ellipse(x + 32, y + 32, 25, 15, (x + y) * 0.02, 0, Math.PI * 2); ctx.fill();
+                        }
+                    }
+                },
+                // Pattern 9: Green/Blue kente
+                () => {
+                    ctx.fillStyle = '#006400'; ctx.fillRect(0, 0, 256, 256);
+                    ctx.fillStyle = '#4169e1';
+                    for (let i = 0; i < 256; i += 32) ctx.fillRect(i, 0, 16, 256);
+                    ctx.fillStyle = '#ffd700';
+                    for (let i = 0; i < 256; i += 64) ctx.fillRect(0, i, 256, 8);
+                }
+            ];
+
+            patterns[patternType % patterns.length]();
+
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.wrapS = THREE.RepeatWrapping;
+            texture.wrapT = THREE.RepeatWrapping;
+            texture.repeat.set(2, 2);
+            return texture;
+        }
+
+        function getTextileTexture(patternIndex) {
+            if (!textileTextureCache[patternIndex]) {
+                textileTextureCache[patternIndex] = createAfricanTextileTexture(patternIndex);
+            }
+            return textileTextureCache[patternIndex];
+        }
+        // ============ END TEXTILE PATTERN SYSTEM ============
+
         // Groups for visibility control
         const labelsGroup = new THREE.Group();
         const ceilingsGroup = new THREE.Group();
@@ -7255,305 +7397,6 @@
             armR.rotation.z = -0.5;
             group.add(armR);
             return group;
-        }
-
-        // ============ AFRICAN TEXTILE PATTERN GENERATORS ============
-
-        // Create canvas-based textures for African wax print patterns
-        function createAfricanTextileTexture(patternType = 0) {
-            const canvas = document.createElement('canvas');
-            canvas.width = 256;
-            canvas.height = 256;
-            const ctx = canvas.getContext('2d');
-
-            // Pattern definitions inspired by African wax prints
-            const patterns = [
-                // Pattern 0: Red/Yellow floral with circles
-                () => {
-                    ctx.fillStyle = '#d4382a'; // Deep red base
-                    ctx.fillRect(0, 0, 256, 256);
-                    // Yellow flower circles
-                    ctx.fillStyle = '#f4c430';
-                    for (let x = 32; x < 256; x += 64) {
-                        for (let y = 32; y < 256; y += 64) {
-                            ctx.beginPath();
-                            ctx.arc(x, y, 20, 0, Math.PI * 2);
-                            ctx.fill();
-                            // Black center
-                            ctx.fillStyle = '#1a1a1a';
-                            ctx.beginPath();
-                            ctx.arc(x, y, 8, 0, Math.PI * 2);
-                            ctx.fill();
-                            ctx.fillStyle = '#f4c430';
-                        }
-                    }
-                    // Black line details
-                    ctx.strokeStyle = '#1a1a1a';
-                    ctx.lineWidth = 2;
-                    for (let i = 0; i < 256; i += 32) {
-                        ctx.beginPath();
-                        ctx.moveTo(i, 0);
-                        ctx.lineTo(i + 16, 256);
-                        ctx.stroke();
-                    }
-                },
-                // Pattern 1: Blue diamond zigzag woven
-                () => {
-                    ctx.fillStyle = '#1e4d7b'; // Deep blue base
-                    ctx.fillRect(0, 0, 256, 256);
-                    ctx.fillStyle = '#87ceeb'; // Light blue
-                    // Diamond pattern
-                    for (let y = 0; y < 256; y += 32) {
-                        for (let x = (y % 64 === 0) ? 0 : 16; x < 256; x += 32) {
-                            ctx.beginPath();
-                            ctx.moveTo(x + 16, y);
-                            ctx.lineTo(x + 32, y + 16);
-                            ctx.lineTo(x + 16, y + 32);
-                            ctx.lineTo(x, y + 16);
-                            ctx.closePath();
-                            ctx.fill();
-                        }
-                    }
-                    // White accent lines
-                    ctx.strokeStyle = '#ffffff';
-                    ctx.lineWidth = 1;
-                    for (let i = 0; i < 256; i += 16) {
-                        ctx.beginPath();
-                        ctx.moveTo(0, i);
-                        ctx.lineTo(256, i);
-                        ctx.stroke();
-                    }
-                },
-                // Pattern 2: Orange/green circular medallions
-                () => {
-                    ctx.fillStyle = '#ff8c00'; // Orange base
-                    ctx.fillRect(0, 0, 256, 256);
-                    // Green medallions
-                    ctx.fillStyle = '#228b22';
-                    for (let x = 64; x < 256; x += 128) {
-                        for (let y = 64; y < 256; y += 128) {
-                            ctx.beginPath();
-                            ctx.arc(x, y, 40, 0, Math.PI * 2);
-                            ctx.fill();
-                            // Yellow inner ring
-                            ctx.fillStyle = '#ffd700';
-                            ctx.beginPath();
-                            ctx.arc(x, y, 25, 0, Math.PI * 2);
-                            ctx.fill();
-                            // Orange center
-                            ctx.fillStyle = '#ff6600';
-                            ctx.beginPath();
-                            ctx.arc(x, y, 12, 0, Math.PI * 2);
-                            ctx.fill();
-                            ctx.fillStyle = '#228b22';
-                        }
-                    }
-                },
-                // Pattern 3: Pink/Cyan fan scallop
-                () => {
-                    ctx.fillStyle = '#ff69b4'; // Pink base
-                    ctx.fillRect(0, 0, 256, 256);
-                    // Cyan scallops
-                    ctx.fillStyle = '#00ced1';
-                    for (let y = 0; y < 256; y += 48) {
-                        for (let x = (y % 96 === 0) ? 0 : 24; x < 256; x += 48) {
-                            ctx.beginPath();
-                            ctx.arc(x + 24, y + 48, 24, Math.PI, 0);
-                            ctx.fill();
-                        }
-                    }
-                    // Yellow accents
-                    ctx.fillStyle = '#ffd700';
-                    for (let y = 24; y < 256; y += 48) {
-                        for (let x = 12; x < 256; x += 48) {
-                            ctx.beginPath();
-                            ctx.arc(x, y, 6, 0, Math.PI * 2);
-                            ctx.fill();
-                        }
-                    }
-                },
-                // Pattern 4: Teal/Yellow circular pattern
-                () => {
-                    ctx.fillStyle = '#008b8b'; // Teal base
-                    ctx.fillRect(0, 0, 256, 256);
-                    // Yellow circles
-                    ctx.fillStyle = '#ffd700';
-                    for (let x = 40; x < 256; x += 80) {
-                        for (let y = 40; y < 256; y += 80) {
-                            ctx.beginPath();
-                            ctx.arc(x, y, 30, 0, Math.PI * 2);
-                            ctx.fill();
-                            // Black center pattern
-                            ctx.fillStyle = '#1a1a1a';
-                            ctx.beginPath();
-                            ctx.arc(x, y, 15, 0, Math.PI * 2);
-                            ctx.fill();
-                            ctx.fillStyle = '#ffd700';
-                        }
-                    }
-                    // White radial lines
-                    ctx.strokeStyle = '#ffffff';
-                    ctx.lineWidth = 2;
-                    for (let x = 40; x < 256; x += 80) {
-                        for (let y = 40; y < 256; y += 80) {
-                            for (let a = 0; a < Math.PI * 2; a += Math.PI / 4) {
-                                ctx.beginPath();
-                                ctx.moveTo(x + Math.cos(a) * 15, y + Math.sin(a) * 15);
-                                ctx.lineTo(x + Math.cos(a) * 30, y + Math.sin(a) * 30);
-                                ctx.stroke();
-                            }
-                        }
-                    }
-                },
-                // Pattern 5: Red/Gold diamond lattice
-                () => {
-                    ctx.fillStyle = '#8b0000'; // Dark red base
-                    ctx.fillRect(0, 0, 256, 256);
-                    // Gold lattice
-                    ctx.strokeStyle = '#daa520';
-                    ctx.lineWidth = 8;
-                    for (let i = -256; i < 512; i += 32) {
-                        ctx.beginPath();
-                        ctx.moveTo(i, 0);
-                        ctx.lineTo(i + 256, 256);
-                        ctx.stroke();
-                        ctx.beginPath();
-                        ctx.moveTo(i + 256, 0);
-                        ctx.lineTo(i, 256);
-                        ctx.stroke();
-                    }
-                    // White dots at intersections
-                    ctx.fillStyle = '#ffffff';
-                    for (let x = 16; x < 256; x += 32) {
-                        for (let y = 16; y < 256; y += 32) {
-                            ctx.beginPath();
-                            ctx.arc(x, y, 4, 0, Math.PI * 2);
-                            ctx.fill();
-                        }
-                    }
-                },
-                // Pattern 6: Purple/Pink flowing florals
-                () => {
-                    ctx.fillStyle = '#4b0082'; // Indigo base
-                    ctx.fillRect(0, 0, 256, 256);
-                    // Pink flowing shapes
-                    ctx.fillStyle = '#ff1493';
-                    for (let y = 0; y < 256; y += 64) {
-                        ctx.beginPath();
-                        ctx.moveTo(0, y + 32);
-                        for (let x = 0; x < 256; x += 32) {
-                            ctx.quadraticCurveTo(x + 16, y + (x % 64 === 0 ? 0 : 64), x + 32, y + 32);
-                        }
-                        ctx.lineTo(256, y + 64);
-                        ctx.lineTo(0, y + 64);
-                        ctx.closePath();
-                        ctx.fill();
-                    }
-                    // Burgundy accents
-                    ctx.fillStyle = '#800020';
-                    for (let x = 32; x < 256; x += 64) {
-                        for (let y = 32; y < 256; y += 64) {
-                            ctx.beginPath();
-                            ctx.arc(x, y, 10, 0, Math.PI * 2);
-                            ctx.fill();
-                        }
-                    }
-                },
-                // Pattern 7: Yellow/Red sunburst
-                () => {
-                    ctx.fillStyle = '#ffd700'; // Yellow base
-                    ctx.fillRect(0, 0, 256, 256);
-                    // Red sunbursts
-                    ctx.fillStyle = '#dc143c';
-                    for (let x = 64; x < 256; x += 128) {
-                        for (let y = 64; y < 256; y += 128) {
-                            for (let a = 0; a < Math.PI * 2; a += Math.PI / 8) {
-                                ctx.beginPath();
-                                ctx.moveTo(x, y);
-                                ctx.lineTo(x + Math.cos(a) * 45, y + Math.sin(a) * 45);
-                                ctx.lineTo(x + Math.cos(a + Math.PI / 16) * 45, y + Math.sin(a + Math.PI / 16) * 45);
-                                ctx.closePath();
-                                ctx.fill();
-                            }
-                            // Black center
-                            ctx.fillStyle = '#1a1a1a';
-                            ctx.beginPath();
-                            ctx.arc(x, y, 12, 0, Math.PI * 2);
-                            ctx.fill();
-                            // White ring
-                            ctx.strokeStyle = '#ffffff';
-                            ctx.lineWidth = 2;
-                            ctx.beginPath();
-                            ctx.arc(x, y, 8, 0, Math.PI * 2);
-                            ctx.stroke();
-                            ctx.fillStyle = '#dc143c';
-                        }
-                    }
-                },
-                // Pattern 8: Orange/Teal abstract shapes
-                () => {
-                    ctx.fillStyle = '#ff7f50'; // Coral base
-                    ctx.fillRect(0, 0, 256, 256);
-                    // Teal abstract shapes
-                    ctx.fillStyle = '#20b2aa';
-                    for (let x = 0; x < 256; x += 64) {
-                        for (let y = 0; y < 256; y += 64) {
-                            ctx.beginPath();
-                            ctx.ellipse(x + 32, y + 32, 25, 15, (x + y) * 0.02, 0, Math.PI * 2);
-                            ctx.fill();
-                        }
-                    }
-                    // Yellow dots
-                    ctx.fillStyle = '#ffff00';
-                    for (let x = 16; x < 256; x += 32) {
-                        for (let y = 16; y < 256; y += 32) {
-                            ctx.beginPath();
-                            ctx.arc(x, y, 5, 0, Math.PI * 2);
-                            ctx.fill();
-                        }
-                    }
-                },
-                // Pattern 9: Green/Blue kente-style
-                () => {
-                    ctx.fillStyle = '#006400'; // Dark green base
-                    ctx.fillRect(0, 0, 256, 256);
-                    // Blue stripes
-                    ctx.fillStyle = '#4169e1';
-                    for (let i = 0; i < 256; i += 32) {
-                        ctx.fillRect(i, 0, 16, 256);
-                    }
-                    // Gold horizontal bands
-                    ctx.fillStyle = '#ffd700';
-                    for (let i = 0; i < 256; i += 64) {
-                        ctx.fillRect(0, i, 256, 8);
-                    }
-                    // Red accents
-                    ctx.fillStyle = '#ff0000';
-                    for (let x = 8; x < 256; x += 32) {
-                        for (let y = 32; y < 256; y += 64) {
-                            ctx.fillRect(x, y, 8, 16);
-                        }
-                    }
-                }
-            ];
-
-            // Execute the selected pattern
-            patterns[patternType % patterns.length]();
-
-            const texture = new THREE.CanvasTexture(canvas);
-            texture.wrapS = THREE.RepeatWrapping;
-            texture.wrapT = THREE.RepeatWrapping;
-            texture.repeat.set(2, 2);
-            return texture;
-        }
-
-        // Cache for textile textures to avoid recreating
-        const textileTextureCache = {};
-        function getTextileTexture(patternIndex) {
-            if (!textileTextureCache[patternIndex]) {
-                textileTextureCache[patternIndex] = createAfricanTextileTexture(patternIndex);
-            }
-            return textileTextureCache[patternIndex];
         }
 
         // ============ NEW PANAFRICAN LIBRARY FURNITURE ============
