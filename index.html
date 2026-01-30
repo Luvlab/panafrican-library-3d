@@ -326,7 +326,8 @@
             padding: 40px 20px;
         }
         .modal-content {
-            max-width: 900px;
+            max-width: 1400px;
+            width: 95%;
             margin: 0 auto;
             background: #1a1a1a;
             border-radius: 12px;
@@ -1586,15 +1587,8 @@
                 </div>
             </div>
 
-            <!-- Reference Images Gallery -->
-            <div class="moodboard-section" style="grid-column: 1 / -1;">
-                <h3>📸 Reference Images <span id="image-count" style="color:#888; font-weight:normal;"></span></h3>
-                <div class="moodboard-images" id="moodboard-gallery">
-                    <!-- Images will be populated by JavaScript -->
-                </div>
-            </div>
-
             <div class="moodboard-grid">
+                <!-- Color Palette -->
                 <div class="moodboard-section">
                     <h3>🎨 Color Palette <button class="section-edit-btn" onclick="toggleColorPaletteEdit()" id="color-edit-btn">✏️</button></h3>
                     <p style="font-size: 11px; color: #666; margin-bottom: 8px;">Based on Panafrican reference imagery</p>
@@ -1606,24 +1600,26 @@
                         <input type="text" id="new-color-name" placeholder="Color name..." style="flex:1; padding:4px; font-size:11px; border:1px solid #444; border-radius:3px; background:#1a1a1a; color:#fff;">
                         <button class="moodboard-toolbar-btn primary" onclick="addColorSwatch()" style="padding:4px 8px; font-size:10px;">Add</button>
                     </div>
-                </div>
-                <div class="moodboard-section">
-                    <h3>🌍 Patterns <button class="section-edit-btn" onclick="togglePatternEdit()" id="pattern-edit-btn">✏️</button></h3>
+
+                    <!-- Patterns (under Color Palette) -->
+                    <h4 style="margin-top: 15px; margin-bottom: 8px; color: #fff; font-size: 13px;">🌍 Patterns <button class="section-edit-btn" onclick="togglePatternEdit()" id="pattern-edit-btn">✏️</button></h4>
                     <div class="pattern-grid" id="pattern-grid-container" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;">
                         <!-- Patterns rendered by JS -->
                     </div>
                     <p style="font-size: 10px; color: #888; margin-top: 6px;">Drag patterns onto furniture • Ankara • Kente • Adinkra</p>
                     <div class="pattern-add-form" id="pattern-add-form" style="display:none; margin-top:8px;">
                         <input type="text" id="new-pattern-name" placeholder="Pattern name..." style="width:100%; padding:4px; font-size:11px; border:1px solid #444; border-radius:3px; background:#1a1a1a; color:#fff; margin-bottom:4px;">
-                        <input type="file" id="new-pattern-file" accept="image/*" style="width:100%; padding:4px; font-size:11px; border:1px solid #444; border-radius:3px; background:#1a1a1a; color:#fff; margin-bottom:4px;">
+                        <input type="file" id="new-pattern-file" accept="image/*" multiple style="width:100%; padding:4px; font-size:11px; border:1px solid #444; border-radius:3px; background:#1a1a1a; color:#fff; margin-bottom:4px;">
                         <div style="display:flex; gap:4px;">
-                            <button class="moodboard-toolbar-btn primary" onclick="addPatternFromFile()" style="padding:4px 8px; font-size:10px; flex:1;">📁 Add from File</button>
+                            <button class="moodboard-toolbar-btn primary" onclick="addPatternFromFile()" style="padding:4px 8px; font-size:10px; flex:1;">📁 Add from File(s)</button>
                             <button class="moodboard-toolbar-btn" onclick="loadPatternsFromFolder()" style="padding:4px 8px; font-size:10px; flex:1;">📂 Load Folder</button>
                         </div>
                         <input type="text" id="new-pattern-url" placeholder="...or paste image URL" style="width:100%; padding:4px; font-size:11px; border:1px solid #444; border-radius:3px; background:#1a1a1a; color:#fff; margin-top:4px; margin-bottom:4px;">
                         <button class="moodboard-toolbar-btn" onclick="addPatternSwatch()" style="padding:4px 8px; font-size:10px; width:100%;">🔗 Add from URL</button>
                     </div>
                 </div>
+
+                <!-- Key Furniture -->
                 <div class="moodboard-section">
                     <h3>🛋️ Key Furniture <button class="section-edit-btn" onclick="toggleFurnitureEdit()" id="furniture-edit-btn">✏️</button></h3>
                     <div id="furniture-list-container">
@@ -1634,9 +1630,9 @@
                         <input type="text" id="new-furniture-text" placeholder="Furniture description..." style="flex:1; padding:4px; font-size:11px; border:1px solid #444; border-radius:3px; background:#1a1a1a; color:#fff;">
                         <button class="moodboard-toolbar-btn primary" onclick="addFurnitureItem()" style="padding:4px 8px; font-size:10px;">Add</button>
                     </div>
-                </div>
-                <div class="moodboard-section">
-                    <h3>📍 Room Functions <button class="section-edit-btn" onclick="toggleFunctionsEdit()" id="functions-edit-btn">✏️</button></h3>
+
+                    <!-- Room Functions (under Key Furniture) -->
+                    <h4 style="margin-top: 15px; margin-bottom: 8px; color: #fff; font-size: 13px;">📍 Room Functions <button class="section-edit-btn" onclick="toggleFunctionsEdit()" id="functions-edit-btn">✏️</button></h4>
                     <div class="layout-info" id="functions-container" style="font-size: 12px;">
                         <!-- Room functions rendered by JS -->
                     </div>
@@ -1645,6 +1641,30 @@
                         <textarea id="new-function-text" placeholder="Description..." style="width:100%; padding:4px; font-size:11px; border:1px solid #444; border-radius:3px; background:#1a1a1a; color:#fff; resize:vertical; min-height:40px;"></textarea>
                         <button class="moodboard-toolbar-btn primary" onclick="addFunctionItem()" style="padding:4px 8px; font-size:10px; width:100%; margin-top:4px;">Add Section</button>
                     </div>
+                </div>
+            </div>
+
+            <!-- Reference Images Gallery (with multi-file upload) -->
+            <div class="moodboard-section" style="margin-top: 20px;">
+                <h3>📸 Reference Images <span id="image-count" style="color:#888; font-weight:normal;"></span></h3>
+                <div class="reference-upload-zone" id="reference-drop-zone" style="border: 2px dashed #444; border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 15px; cursor: pointer; transition: all 0.3s;">
+                    <div style="font-size: 24px; margin-bottom: 8px;">📷</div>
+                    <div style="color: #aaa; font-size: 13px;">Drag & drop images here or click to browse</div>
+                    <div style="color: #666; font-size: 11px; margin-top: 4px;">Select multiple files at once!</div>
+                    <input type="file" id="reference-file-input" accept="image/*" multiple style="display:none;">
+                </div>
+                <div id="reference-upload-queue" style="display:none; max-height: 120px; overflow-y: auto; margin-bottom: 15px; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 6px;">
+                    <!-- Upload queue preview -->
+                </div>
+                <div id="reference-upload-actions" style="display:none; margin-bottom: 15px;">
+                    <select id="reference-category-select" style="padding: 8px; font-size: 12px; border: 1px solid #444; border-radius: 4px; background: #1a1a1a; color: #fff; margin-right: 10px;">
+                        <!-- Categories rendered by JS -->
+                    </select>
+                    <button class="moodboard-toolbar-btn primary" onclick="addAllReferenceImages()" style="padding: 8px 16px;">➕ Add All (<span id="reference-queue-count">0</span>)</button>
+                    <button class="moodboard-toolbar-btn" onclick="clearReferenceQueue()" style="padding: 8px 16px; margin-left: 5px;">Clear</button>
+                </div>
+                <div class="moodboard-images" id="moodboard-gallery">
+                    <!-- Images will be populated by JavaScript -->
                 </div>
             </div>
         </div>
@@ -5607,6 +5627,151 @@
                     dropZone.innerHTML = `✓ ${uploadQueue.length} images ready`;
                     dropZone.classList.add('has-file');
                     updateUploadQueueUI();
+                });
+            }
+        });
+
+        // ============ REFERENCE IMAGES UPLOAD ============
+        let referenceUploadQueue = [];
+
+        function updateReferenceQueueUI() {
+            const queueEl = document.getElementById('reference-upload-queue');
+            const actionsEl = document.getElementById('reference-upload-actions');
+            const countEl = document.getElementById('reference-queue-count');
+            const categorySelect = document.getElementById('reference-category-select');
+
+            if (referenceUploadQueue.length > 0) {
+                queueEl.style.display = 'block';
+                actionsEl.style.display = 'block';
+                countEl.textContent = referenceUploadQueue.length;
+
+                // Populate category dropdown
+                if (categorySelect && moodboardCategories) {
+                    categorySelect.innerHTML = moodboardCategories.map(c =>
+                        `<option value="${c.value}">${c.label}</option>`
+                    ).join('');
+                }
+
+                queueEl.innerHTML = `<div style="display: flex; flex-wrap: wrap; gap: 8px;">` +
+                    referenceUploadQueue.map((item, i) => `
+                        <div style="position: relative; width: 60px; height: 60px;">
+                            <img src="${item.src}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;">
+                            <button onclick="removeFromReferenceQueue(${i})" style="position: absolute; top: -5px; right: -5px; width: 18px; height: 18px; border-radius: 50%; background: #f55; border: none; color: white; font-size: 10px; cursor: pointer; line-height: 1;">✕</button>
+                        </div>
+                    `).join('') + `</div>`;
+            } else {
+                queueEl.style.display = 'none';
+                actionsEl.style.display = 'none';
+            }
+        }
+
+        window.removeFromReferenceQueue = function(index) {
+            referenceUploadQueue.splice(index, 1);
+            updateReferenceQueueUI();
+            if (referenceUploadQueue.length === 0) {
+                const dropZone = document.getElementById('reference-drop-zone');
+                dropZone.innerHTML = `<div style="font-size: 24px; margin-bottom: 8px;">📷</div>
+                    <div style="color: #aaa; font-size: 13px;">Drag & drop images here or click to browse</div>
+                    <div style="color: #666; font-size: 11px; margin-top: 4px;">Select multiple files at once!</div>`;
+            }
+        };
+
+        window.clearReferenceQueue = function() {
+            referenceUploadQueue = [];
+            updateReferenceQueueUI();
+            const dropZone = document.getElementById('reference-drop-zone');
+            dropZone.innerHTML = `<div style="font-size: 24px; margin-bottom: 8px;">📷</div>
+                <div style="color: #aaa; font-size: 13px;">Drag & drop images here or click to browse</div>
+                <div style="color: #666; font-size: 11px; margin-top: 4px;">Select multiple files at once!</div>`;
+        };
+
+        window.addAllReferenceImages = function() {
+            const categorySelect = document.getElementById('reference-category-select');
+            const category = categorySelect ? categorySelect.value : 'reference';
+
+            referenceUploadQueue.forEach(item => {
+                moodboardImages.push({
+                    src: item.src,
+                    title: item.name.replace(/\.[^/.]+$/, ''),
+                    category: category
+                });
+            });
+
+            saveMoodboardImages();
+            renderMoodboardGallery();
+
+            // Clear queue
+            referenceUploadQueue = [];
+            updateReferenceQueueUI();
+            const dropZone = document.getElementById('reference-drop-zone');
+            dropZone.innerHTML = `<div style="font-size: 24px; margin-bottom: 8px;">📷</div>
+                <div style="color: #aaa; font-size: 13px;">Drag & drop images here or click to browse</div>
+                <div style="color: #666; font-size: 11px; margin-top: 4px;">Select multiple files at once!</div>`;
+        };
+
+        // Setup reference images drop zone
+        document.addEventListener('DOMContentLoaded', () => {
+            const refDropZone = document.getElementById('reference-drop-zone');
+            const refFileInput = document.getElementById('reference-file-input');
+
+            if (refDropZone && refFileInput) {
+                // Click to browse
+                refDropZone.addEventListener('click', () => refFileInput.click());
+
+                // File input change
+                refFileInput.addEventListener('change', async (e) => {
+                    const files = Array.from(e.target.files).filter(f => f.type.startsWith('image/'));
+                    if (files.length === 0) return;
+
+                    refDropZone.innerHTML = `<div style="font-size: 18px;">⏳ Processing ${files.length} images...</div>`;
+
+                    for (const file of files) {
+                        try {
+                            const dataUrl = await processImageFile(file);
+                            referenceUploadQueue.push({ src: dataUrl, name: file.name });
+                        } catch (err) {
+                            console.error('Error:', file.name, err);
+                        }
+                    }
+
+                    refDropZone.innerHTML = `<div style="font-size: 18px; color: #4CAF50;">✓ ${referenceUploadQueue.length} images ready to add</div>`;
+                    updateReferenceQueueUI();
+                    e.target.value = '';
+                });
+
+                // Drag & drop
+                refDropZone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    refDropZone.style.borderColor = '#6495ED';
+                    refDropZone.style.background = 'rgba(100, 149, 237, 0.1)';
+                });
+
+                refDropZone.addEventListener('dragleave', () => {
+                    refDropZone.style.borderColor = '#444';
+                    refDropZone.style.background = 'transparent';
+                });
+
+                refDropZone.addEventListener('drop', async (e) => {
+                    e.preventDefault();
+                    refDropZone.style.borderColor = '#444';
+                    refDropZone.style.background = 'transparent';
+
+                    const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+                    if (files.length === 0) return;
+
+                    refDropZone.innerHTML = `<div style="font-size: 18px;">⏳ Processing ${files.length} images...</div>`;
+
+                    for (const file of files) {
+                        try {
+                            const dataUrl = await processImageFile(file);
+                            referenceUploadQueue.push({ src: dataUrl, name: file.name });
+                        } catch (err) {
+                            console.error('Error:', file.name, err);
+                        }
+                    }
+
+                    refDropZone.innerHTML = `<div style="font-size: 18px; color: #4CAF50;">✓ ${referenceUploadQueue.length} images ready to add</div>`;
+                    updateReferenceQueueUI();
                 });
             }
         });
