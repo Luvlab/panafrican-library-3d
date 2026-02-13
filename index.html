@@ -2856,12 +2856,15 @@
 
         // Room positioning constants - define here for use in ROOM_GEOMETRY
         // In the 3D view (floor plan view looking down):
-        // - THREE STAR (larger room) should appear on LEFT = WEST
-        // - SPECIAL SPECIAL (smaller room with corridor) should appear on RIGHT = EAST
-        // Swapped signs to match visual expectation in floor plan view
-        const TOTAL_WIDTH = THREE_STAR_WIDTH + WALL_THICKNESS + SPECIAL_SPECIAL_WIDTH;
-        const THREE_STAR_X = TOTAL_WIDTH / 2 - THREE_STAR_WIDTH / 2;  // Appears on LEFT in floor plan view
-        const SPECIAL_SPECIAL_X = -(TOTAL_WIDTH / 2) + SPECIAL_SPECIAL_WIDTH / 2;  // Appears on RIGHT in floor plan view
+        // - THREE STAR (larger room) should appear on LEFT = WEST  (+X side)
+        // - SPECIAL SPECIAL (smaller room with corridor) should appear on RIGHT = EAST (-X side)
+        //
+        // The shared wall (with connecting door) is built by THREE STAR at its -X edge.
+        // SPECIAL SPECIAL has no east wall (it's handled by THREE STAR's west/shared wall).
+        // Position rooms so Three Star's west wall sits flush against Special Special's east edge.
+        const TOTAL_WIDTH = THREE_STAR_WIDTH + SPECIAL_SPECIAL_WIDTH;  // No extra gap — shared wall is built by Three Star at its -X edge
+        const THREE_STAR_X = TOTAL_WIDTH / 2 - THREE_STAR_WIDTH / 2;  // THREE STAR on +X side (appears LEFT in floor plan view)
+        const SPECIAL_SPECIAL_X = -(TOTAL_WIDTH / 2) + SPECIAL_SPECIAL_WIDTH / 2;  // SPECIAL SPECIAL on -X side (appears RIGHT in floor plan view)
 
         // ============================================================
         // LAYOUT VALIDATION SYSTEM
