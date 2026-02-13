@@ -6075,17 +6075,20 @@
             const panel = document.getElementById('decorator-panel');
             panel.classList.toggle('open');
             decoratorMode = panel.classList.contains('open');
-            if (!decoratorMode) {
-                deselectAll();
-            } else {
-                // Close mood board if open
-                const moodModal = document.getElementById('moodboard-modal');
-                if (moodModal && !moodModal.classList.contains('modal-hidden')) {
-                    moodModal.classList.add('modal-hidden');
+            // Defer heavy work so click handler returns fast (fixes INP)
+            requestAnimationFrame(() => {
+                if (!decoratorMode) {
+                    deselectAll();
+                } else {
+                    // Close mood board if open
+                    const moodModal = document.getElementById('moodboard-modal');
+                    if (moodModal && !moodModal.classList.contains('modal-hidden')) {
+                        moodModal.classList.add('modal-hidden');
+                    }
+                    // Setup drag-drop for library items when decorator opens
+                    setupLibraryDragDrop();
                 }
-                // Setup drag-drop for library items when decorator opens
-                setupLibraryDragDrop();
-            }
+            });
         };
 
         // Setup drag-drop for all library item cards
