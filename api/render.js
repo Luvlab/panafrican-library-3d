@@ -59,7 +59,7 @@ export default async function handler(req, res) {
           ],
           generationConfig: {
             responseModalities: ['TEXT', 'IMAGE'],
-            temperature: 0.4,
+            temperature: 0.2,
           }
         })
       }
@@ -104,48 +104,37 @@ export default async function handler(req, res) {
 }
 
 function buildRenderPrompt(customPrompt, style) {
-  const basePrompt = `Transform this 3D room screenshot into a photorealistic architectural render.
+  const basePrompt = `You are an architectural visualization renderer. Take this 3D model screenshot and make it look like a real photograph taken with a professional camera.
 
-CRITICAL RULES:
-- ONLY render what is visible in the input image. Do NOT add, invent, or hallucinate any objects, furniture, windows, shelves, books, or architectural elements that are not already shown in the screenshot.
-- Maintain the EXACT same room layout, wall positions, window positions, and furniture arrangement as shown.
-- Do NOT add extra windows, doors, bookshelves, or any objects not present in the 3D model screenshot.
-- The number and position of windows must match the input EXACTLY.
+Keep EXACTLY the same composition — same walls, same objects, same windows, same furniture, same positions. Change NOTHING about what is in the scene. Only improve the realism of what already exists:
 
-RENDERING REQUIREMENTS:
-- Apply photorealistic lighting with warm, inviting ambiance to the existing scene
-- Add realistic material textures (wood grain, fabric, carpet patterns) to existing surfaces
-- Include subtle atmospheric effects (soft shadows, ambient occlusion)
-- Enhance the existing colors and materials without changing the composition`;
+- Replace flat 3D materials with photorealistic textures (real wood grain, real fabric, real carpet, real brick)
+- Add natural lighting: warm ambient light, soft shadows, sunlight through existing windows
+- Add depth of field, ambient occlusion, and subtle atmospheric haze
+- Make surfaces look physically accurate (reflections, roughness, subsurface scattering)
+
+This is an interior of a gallery/reading room at MoMA PS1 in New York.`;
 
   const styleGuides = {
     'photorealistic': `
-STYLE: Ultra-photorealistic
-- Professional architectural photography quality
-- Sharp details, accurate materials
-- Natural color grading`,
+
+Render as ultra-photorealistic architectural photography. Shot on a full-frame camera with a 24mm lens. Natural color grading, sharp focus.`,
 
     'warm-cozy': `
-STYLE: Warm and Cozy
-- Golden hour lighting
-- Soft, inviting atmosphere
-- Emphasize comfort and intimacy`,
+
+Render with warm golden-hour lighting. Soft, inviting atmosphere. Emphasize warmth and intimacy. Slightly warm color temperature.`,
 
     'editorial': `
-STYLE: Editorial Magazine
-- High contrast, dramatic lighting
-- Bold colors, artistic composition
-- Publication-ready quality`,
+
+Render as editorial magazine photography. High contrast, dramatic directional lighting. Bold saturated colors. Publication-quality composition.`,
 
     'sketch': `
-STYLE: Architectural Sketch
-- Hand-drawn aesthetic
-- Pencil/charcoal texture
-- Conceptual presentation style`
+
+Render as a hand-drawn architectural sketch. Pencil and charcoal on paper texture. Conceptual presentation style with visible line work.`
   };
 
   const styleGuide = styleGuides[style] || styleGuides['photorealistic'];
-  const userPrompt = customPrompt ? `\n\nADDITIONAL INSTRUCTIONS: ${customPrompt}` : '';
+  const userPrompt = customPrompt ? `\n\n${customPrompt}` : '';
 
-  return basePrompt + styleGuide + userPrompt + '\n\nGenerate a single high-quality image.';
+  return basePrompt + styleGuide + userPrompt;
 }
