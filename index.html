@@ -4761,6 +4761,82 @@
         specialSpecialRoomLight.position.set(SPECIAL_SPECIAL_X, CEILING_HEIGHT - 0.5, 0);
         scene.add(specialSpecialRoomLight);
 
+        // ========== GALLERY CEILING SPOTLIGHTS ==========
+        // White track-mounted spotlights evenly distributed across both rooms
+        const spotlightMat = new THREE.MeshLambertMaterial({ color: 0xf0f0f0 });
+        const spotlightEmissive = new THREE.MeshBasicMaterial({ color: 0xffffee });
+
+        function createCeilingSpotlight(worldX, worldZ) {
+            const group = new THREE.Group();
+
+            // Track rail segment (horizontal bar flush to ceiling)
+            const rail = new THREE.Mesh(
+                new THREE.BoxGeometry(0.25, 0.03, 0.03),
+                spotlightMat
+            );
+            rail.position.set(0, 0, 0);
+            group.add(rail);
+
+            // Spotlight housing (cylinder hanging from rail)
+            const housing = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.04, 0.05, 0.10, 12),
+                spotlightMat
+            );
+            housing.position.set(0, -0.07, 0);
+            group.add(housing);
+
+            // Lens / bulb face (glowing disc at bottom)
+            const lens = new THREE.Mesh(
+                new THREE.CircleGeometry(0.04, 12),
+                spotlightEmissive
+            );
+            lens.rotation.x = Math.PI / 2; // face down
+            lens.position.set(0, -0.12, 0);
+            group.add(lens);
+
+            group.position.set(worldX, CEILING_HEIGHT - 0.01, worldZ);
+            group.userData.isCeiling = true;
+            group.traverse(child => { child.userData.isCeiling = true; });
+
+            // Actual SpotLight for illumination
+            const spotLight = new THREE.SpotLight(0xffffff, 0.5, 8, Math.PI / 6, 0.6, 1.5);
+            spotLight.position.set(worldX, CEILING_HEIGHT - 0.13, worldZ);
+            spotLight.target.position.set(worldX, 0, worldZ);
+            spotLight.userData.isCeiling = true;
+            scene.add(spotLight);
+            scene.add(spotLight.target);
+
+            scene.add(group);
+            return group;
+        }
+
+        // Panafrican Library (Three Star) — 3×4 grid of spotlights
+        const tsMinX = THREE_STAR_X - THREE_STAR_WIDTH / 2;
+        const tsMaxX = THREE_STAR_X + THREE_STAR_WIDTH / 2;
+        const tsMinZ = -THREE_STAR_DEPTH / 2;
+        const tsMaxZ = THREE_STAR_DEPTH / 2;
+        const tsCols = 3, tsRows = 4;
+        for (let c = 0; c < tsCols; c++) {
+            for (let r = 0; r < tsRows; r++) {
+                const x = tsMinX + (c + 0.5) * (THREE_STAR_WIDTH / tsCols);
+                const z = tsMinZ + (r + 0.5) * (THREE_STAR_DEPTH / tsRows);
+                createCeilingSpotlight(x, z);
+            }
+        }
+
+        // Sound Library (Special Special) — 2×4 grid of spotlights
+        const ssZoff = SPECIAL_SPECIAL_Z_OFFSET;
+        const ssMinX = SPECIAL_SPECIAL_X - SPECIAL_SPECIAL_WIDTH / 2;
+        const ssMinZ = ssZoff - SPECIAL_SPECIAL_DEPTH / 2;
+        const ssCols = 2, ssRows = 4;
+        for (let c = 0; c < ssCols; c++) {
+            for (let r = 0; r < ssRows; r++) {
+                const x = ssMinX + (c + 0.5) * (SPECIAL_SPECIAL_WIDTH / ssCols);
+                const z = ssMinZ + (r + 0.5) * (SPECIAL_SPECIAL_DEPTH / ssRows);
+                createCeilingSpotlight(x, z);
+            }
+        }
+
         // Camera controls
         let isMouseDown = false;
         let mouseX = 0, mouseY = 0;
