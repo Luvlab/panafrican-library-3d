@@ -4675,6 +4675,230 @@
         specialSpecialRoom.position.set(SPECIAL_SPECIAL_X, 0, SPECIAL_SPECIAL_Z_OFFSET);
         scene.add(specialSpecialRoom);
 
+        // ========== NORTH CORRIDOR (STUDIO HALLWAY) ==========
+        // The hallway just outside both room doors, running east-west along the north side
+        // Both rooms' north walls align at Z = THREE_STAR_DEPTH/2
+        (function createNorthCorridor() {
+            const corridorGroup = new THREE.Group();
+            const corridorDepth = 2.5;   // ~8 feet deep corridor
+            const corridorFloorMat = new THREE.MeshLambertMaterial({ color: 0xb0b0a8 }); // grey concrete
+            const corridorWallMat = new THREE.MeshLambertMaterial({ color: 0xe8e4dc });  // off-white plaster
+            const corridorCeilMat = new THREE.MeshLambertMaterial({ color: 0xf0f0f0, side: THREE.DoubleSide });
+
+            // Corridor spans the full width of both rooms
+            const totalSpan = THREE_STAR_WIDTH + SPECIAL_SPECIAL_WIDTH;
+            const corridorWestEdge = SPECIAL_SPECIAL_X - SPECIAL_SPECIAL_WIDTH / 2;
+            const corridorEastEdge = THREE_STAR_X + THREE_STAR_WIDTH / 2;
+            const corridorCenterX = (corridorWestEdge + corridorEastEdge) / 2;
+            const corridorWidth = corridorEastEdge - corridorWestEdge;
+
+            const northWallZ = THREE_STAR_DEPTH / 2;  // Both rooms' north walls
+            const farWallZ = northWallZ + corridorDepth;
+
+            // Floor
+            const floor = new THREE.Mesh(
+                new THREE.PlaneGeometry(corridorWidth + 0.3, corridorDepth),
+                corridorFloorMat
+            );
+            floor.rotation.x = -Math.PI / 2;
+            floor.position.set(corridorCenterX, 0.001, northWallZ + corridorDepth / 2);
+            corridorGroup.add(floor);
+
+            // Ceiling
+            const ceiling = new THREE.Mesh(
+                new THREE.PlaneGeometry(corridorWidth + 0.3, corridorDepth),
+                corridorCeilMat
+            );
+            ceiling.rotation.x = Math.PI / 2;
+            ceiling.position.set(corridorCenterX, CEILING_HEIGHT, northWallZ + corridorDepth / 2);
+            ceiling.userData.isCeiling = true;
+            corridorGroup.add(ceiling);
+
+            // Far (north) corridor wall — the wall across from the room doors
+            const farWall = new THREE.Mesh(
+                new THREE.BoxGeometry(corridorWidth + 0.3, CEILING_HEIGHT, WALL_THICKNESS),
+                corridorWallMat
+            );
+            farWall.position.set(corridorCenterX, CEILING_HEIGHT / 2, farWallZ);
+            corridorGroup.add(farWall);
+
+            // West end wall (closes off left side of corridor)
+            const westEndWall = new THREE.Mesh(
+                new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, corridorDepth + WALL_THICKNESS),
+                corridorWallMat
+            );
+            westEndWall.position.set(corridorWestEdge - WALL_THICKNESS / 2, CEILING_HEIGHT / 2, northWallZ + corridorDepth / 2);
+            corridorGroup.add(westEndWall);
+
+            // East end wall (closes off right side of corridor)
+            const eastEndWall = new THREE.Mesh(
+                new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, corridorDepth + WALL_THICKNESS),
+                corridorWallMat
+            );
+            eastEndWall.position.set(corridorEastEdge + WALL_THICKNESS / 2, CEILING_HEIGHT / 2, northWallZ + corridorDepth / 2);
+            corridorGroup.add(eastEndWall);
+
+            // Corridor lighting — a couple of ceiling lights
+            const corrLight1 = new THREE.PointLight(0xfff8ee, 0.6, 8);
+            corrLight1.position.set(THREE_STAR_X, CEILING_HEIGHT - 0.3, northWallZ + corridorDepth / 2);
+            corridorGroup.add(corrLight1);
+            const corrLight2 = new THREE.PointLight(0xfff8ee, 0.6, 8);
+            corrLight2.position.set(SPECIAL_SPECIAL_X, CEILING_HEIGHT - 0.3, northWallZ + corridorDepth / 2);
+            corridorGroup.add(corrLight2);
+
+            scene.add(corridorGroup);
+        })();
+
+        // ========== SOUTH EXTERIOR VIEW — JACKSON AVENUE, LONG ISLAND CITY ==========
+        // Visible through the south-facing windows: Jackson Ave, buildings, Manhattan skyline
+        (function createExteriorView() {
+            const extGroup = new THREE.Group();
+
+            // The south wall (windows) of Three Star is at Z = -THREE_STAR_DEPTH/2
+            // Place exterior elements south of that
+            const windowWallZ = -THREE_STAR_DEPTH / 2;
+            const streetZ = windowWallZ - 8;  // Jackson Avenue ~8m from building face
+            const buildingsZ = windowWallZ - 20; // Buildings across the street
+            const skylineZ = windowWallZ - 80;  // Manhattan skyline in far distance
+
+            // --- SIDEWALK + STREET ---
+            const sidewalkMat = new THREE.MeshLambertMaterial({ color: 0x999990 });
+            const sidewalk = new THREE.Mesh(
+                new THREE.PlaneGeometry(30, 3),
+                sidewalkMat
+            );
+            sidewalk.rotation.x = -Math.PI / 2;
+            sidewalk.position.set(0, 0.01, windowWallZ - 2);
+            extGroup.add(sidewalk);
+
+            const streetMat = new THREE.MeshLambertMaterial({ color: 0x3a3a3a });
+            const street = new THREE.Mesh(
+                new THREE.PlaneGeometry(30, 10),
+                streetMat
+            );
+            street.rotation.x = -Math.PI / 2;
+            street.position.set(0, 0.005, streetZ);
+            extGroup.add(street);
+
+            // Lane markings
+            const laneMat = new THREE.MeshBasicMaterial({ color: 0xcccc77 });
+            for (let i = -12; i < 12; i += 3) {
+                const dash = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 0.1), laneMat);
+                dash.rotation.x = -Math.PI / 2;
+                dash.position.set(i, 0.01, streetZ);
+                extGroup.add(dash);
+            }
+
+            // Far sidewalk
+            const farSidewalk = new THREE.Mesh(
+                new THREE.PlaneGeometry(30, 2.5),
+                sidewalkMat
+            );
+            farSidewalk.rotation.x = -Math.PI / 2;
+            farSidewalk.position.set(0, 0.01, streetZ - 6.5);
+            extGroup.add(farSidewalk);
+
+            // --- BUILDINGS ACROSS JACKSON AVE ---
+            const bldgMat1 = new THREE.MeshLambertMaterial({ color: 0xc8b898 }); // beige brick
+            const bldgMat2 = new THREE.MeshLambertMaterial({ color: 0x889098 }); // modern grey
+            const bldgMat3 = new THREE.MeshLambertMaterial({ color: 0xb04030 }); // red brick
+            const bldgWindowMat = new THREE.MeshLambertMaterial({ color: 0x445566, transparent: true, opacity: 0.7 });
+
+            function createBuilding(x, z, w, h, d, mat) {
+                const bldg = new THREE.Group();
+                const body = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+                body.position.set(0, h / 2, 0);
+                bldg.add(body);
+                // Window grid on front face
+                const winRows = Math.floor(h / 1.2);
+                const winCols = Math.floor(w / 1.5);
+                for (let r = 0; r < winRows; r++) {
+                    for (let c = 0; c < winCols; c++) {
+                        const win = new THREE.Mesh(
+                            new THREE.PlaneGeometry(0.8, 0.9),
+                            bldgWindowMat
+                        );
+                        win.position.set(
+                            -w / 2 + 0.8 + c * (w / winCols),
+                            1.5 + r * 1.2,
+                            d / 2 + 0.01
+                        );
+                        bldg.add(win);
+                    }
+                }
+                bldg.position.set(x, 0, z);
+                return bldg;
+            }
+
+            // Court Square Diner (small, one-story with awning)
+            const diner = new THREE.Group();
+            const dinerBody = new THREE.Mesh(new THREE.BoxGeometry(6, 3.5, 4), new THREE.MeshLambertMaterial({ color: 0xd0d0c8 }));
+            dinerBody.position.set(0, 1.75, 0);
+            diner.add(dinerBody);
+            // Awning
+            const awningMat = new THREE.MeshLambertMaterial({ color: 0xcc3333, side: THREE.DoubleSide });
+            const awning = new THREE.Mesh(new THREE.PlaneGeometry(6.5, 1.5), awningMat);
+            awning.rotation.x = -0.3;
+            awning.position.set(0, 3.2, 2.3);
+            diner.add(awning);
+            // Sign
+            const signMat = new THREE.MeshBasicMaterial({ color: 0xffeecc });
+            const sign = new THREE.Mesh(new THREE.PlaneGeometry(4, 0.6), signMat);
+            sign.position.set(0, 3.8, 2.01);
+            diner.add(sign);
+            diner.position.set(-3, 0, buildingsZ);
+            extGroup.add(diner);
+
+            // Modern residential building (taller)
+            extGroup.add(createBuilding(6, buildingsZ - 2, 8, 18, 8, bldgMat2));
+
+            // Red brick building
+            extGroup.add(createBuilding(-10, buildingsZ - 1, 6, 12, 6, bldgMat3));
+
+            // Office building
+            extGroup.add(createBuilding(14, buildingsZ - 3, 7, 22, 7, bldgMat2));
+
+            // --- MANHATTAN SKYLINE (far background) ---
+            const skylineMat = new THREE.MeshLambertMaterial({ color: 0x8090a0 }); // hazy blue-grey
+            const skylineAccent = new THREE.MeshLambertMaterial({ color: 0x708090 });
+
+            // Simplified skyline silhouette — a row of tall shapes
+            const skylineBuildings = [
+                { x: -25, w: 4, h: 45, d: 4 },  // residential tower
+                { x: -18, w: 5, h: 60, d: 5 },  // office tower
+                { x: -10, w: 3, h: 50, d: 3 },  // slim tower
+                { x: -4, w: 6, h: 80, d: 5 },   // tall midtown tower
+                { x: 3, w: 4, h: 70, d: 4 },    // Empire State scale
+                { x: 9, w: 7, h: 55, d: 6 },    // broad tower
+                { x: 16, w: 3, h: 65, d: 3 },   // slim spire
+                { x: 22, w: 5, h: 48, d: 5 },   // another tower
+                { x: 28, w: 4, h: 58, d: 4 },   // far tower
+            ];
+            skylineBuildings.forEach(b => {
+                const tower = new THREE.Mesh(
+                    new THREE.BoxGeometry(b.w, b.h, b.d),
+                    b.h > 65 ? skylineAccent : skylineMat
+                );
+                tower.position.set(b.x, b.h / 2, skylineZ);
+                extGroup.add(tower);
+            });
+
+            // SKY backdrop — large blue-grey plane behind everything
+            const skyMat = new THREE.MeshBasicMaterial({ color: 0xc4cdd6, side: THREE.DoubleSide });
+            const sky = new THREE.Mesh(new THREE.PlaneGeometry(200, 100), skyMat);
+            sky.position.set(0, 40, skylineZ - 20);
+            extGroup.add(sky);
+
+            // Ground plane extending south
+            const groundMat = new THREE.MeshLambertMaterial({ color: 0x707068 });
+            const ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 120), groundMat);
+            ground.rotation.x = -Math.PI / 2;
+            ground.position.set(0, -0.01, windowWallZ - 60);
+            extGroup.add(ground);
+
+            scene.add(extGroup);
+        })();
+
         // ============================================================
         // MAKE ALL DEFAULT FURNITURE EDITABLE
         // Items marked with userData.isFurniture are moved to scene root
