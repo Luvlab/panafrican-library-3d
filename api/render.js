@@ -59,7 +59,7 @@ export default async function handler(req, res) {
           ],
           generationConfig: {
             responseModalities: ['TEXT', 'IMAGE'],
-            temperature: 0.7,
+            temperature: 0.4,
           }
         })
       }
@@ -104,19 +104,19 @@ export default async function handler(req, res) {
 }
 
 function buildRenderPrompt(customPrompt, style) {
-  const basePrompt = `Transform this 3D room visualization into a photorealistic architectural render.
+  const basePrompt = `Transform this 3D room screenshot into a photorealistic architectural render.
 
-This is "The Panafrican Library Will Not Be Colonized" Reading Room at MoMA PS1.
-It's a curatorial space designed as a living archive of panafrican and diasporic publishing.
+CRITICAL RULES:
+- ONLY render what is visible in the input image. Do NOT add, invent, or hallucinate any objects, furniture, windows, shelves, books, or architectural elements that are not already shown in the screenshot.
+- Maintain the EXACT same room layout, wall positions, window positions, and furniture arrangement as shown.
+- Do NOT add extra windows, doors, bookshelves, or any objects not present in the 3D model screenshot.
+- The number and position of windows must match the input EXACTLY.
 
-REQUIREMENTS:
-- Maintain the exact same room layout, furniture positions, and spatial arrangement
-- Add photorealistic lighting with warm, inviting ambiance
-- Add realistic material textures (wood grain, fabric, carpet patterns)
+RENDERING REQUIREMENTS:
+- Apply photorealistic lighting with warm, inviting ambiance to the existing scene
+- Add realistic material textures (wood grain, fabric, carpet patterns) to existing surfaces
 - Include subtle atmospheric effects (soft shadows, ambient occlusion)
-- Keep the African/diasporic cultural aesthetic
-- Natural daylight through the industrial windows
-- Visible book spines and publication covers on displays`;
+- Enhance the existing colors and materials without changing the composition`;
 
   const styleGuides = {
     'photorealistic': `
