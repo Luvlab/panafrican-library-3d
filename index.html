@@ -1931,7 +1931,42 @@
             </div>
         </div>
 
-        <!-- NEW PANAFRICAN LIBRARY FURNITURE -->
+        <!-- CUSTOM UPLOADS AT TOP -->
+        <div class="decorator-category" id="cat-custom3d">
+            <h3 onclick="toggleCategory('cat-custom3d')">📦 Custom 3D Models</h3>
+            <div class="upload-section">
+                <div class="file-drop-zone" id="model-drop-zone" onclick="document.getElementById('model-file-input').click()">
+                    <div class="drop-icon">📦</div>
+                    <div class="drop-text">Drop 3D model files here or click to browse</div>
+                    <div class="drop-formats">Supports: GLB, GLTF, OBJ • Multiple files OK</div>
+                </div>
+                <input type="file" id="model-file-input" accept=".glb,.gltf,.obj" multiple style="display:none" onchange="handleModelUpload(event)">
+                <input type="text" id="model-name-input" class="edit-inline-input" placeholder="Model name (optional)" style="margin-bottom: 8px;">
+                <div class="uploaded-models-list" id="uploaded-models-list">
+                    <!-- Uploaded models appear here -->
+                </div>
+            </div>
+            <div class="item-grid" id="custom-models-grid">
+                <!-- Custom model cards appear here -->
+            </div>
+        </div>
+
+        <div class="decorator-category" id="cat-custom-posters">
+            <h3 onclick="toggleCategory('cat-custom-posters')">🖼️ Custom Posters</h3>
+            <div class="upload-section">
+                <div class="file-drop-zone" id="poster-drop-zone" onclick="document.getElementById('poster-file-input').click()">
+                    <div class="drop-icon">🖼️</div>
+                    <div class="drop-text">Drop images here to create wall posters</div>
+                    <div class="drop-formats">Supports: JPG, PNG, WebP • Multiple files OK</div>
+                </div>
+                <input type="file" id="poster-file-input" accept="image/*" multiple style="display:none" onchange="handlePosterUpload(event)">
+            </div>
+            <div class="item-grid" id="custom-posters-grid">
+                <!-- Custom poster cards appear here -->
+            </div>
+        </div>
+
+        <!-- PANAFRICAN LIBRARY FURNITURE -->
         <div class="decorator-category" id="cat-banquette">
             <h3 onclick="toggleCategory('cat-banquette')">📚 Banquette-Shelf Units</h3>
             <div class="item-grid">
@@ -2296,25 +2331,6 @@
             </div>
         </div>
 
-        <div class="decorator-category" id="cat-custom3d">
-            <h3 onclick="toggleCategory('cat-custom3d')">📦 Custom 3D Models</h3>
-            <div class="upload-section">
-                <div class="file-drop-zone" id="model-drop-zone" onclick="document.getElementById('model-file-input').click()">
-                    <div class="drop-icon">📦</div>
-                    <div class="drop-text">Drop 3D model file here or click to browse</div>
-                    <div class="drop-formats">Supports: GLB, GLTF, OBJ</div>
-                </div>
-                <input type="file" id="model-file-input" accept=".glb,.gltf,.obj" style="display:none" onchange="handleModelUpload(event)">
-                <input type="text" id="model-name-input" class="edit-inline-input" placeholder="Model name (optional)" style="margin-bottom: 8px;">
-                <div class="uploaded-models-list" id="uploaded-models-list">
-                    <!-- Uploaded models appear here -->
-                </div>
-            </div>
-            <div class="item-grid" id="custom-models-grid">
-                <!-- Custom model cards appear here -->
-            </div>
-        </div>
-
         <div class="decorator-actions">
             <button class="decorator-action-btn danger" onclick="resetLayout()">🔄 Clear All</button>
         </div>
@@ -2461,59 +2477,57 @@
             }
         }
 
-        // Handle 3D model file upload
+        // Handle 3D model file upload (supports multiple files)
         window.handleModelUpload = async function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
+            const files = Array.from(event.target.files || []);
+            if (files.length === 0) return;
 
             const dropZone = document.getElementById('model-drop-zone');
             const nameInput = document.getElementById('model-name-input');
-            const customName = nameInput.value.trim() || file.name.replace(/\.[^/.]+$/, '');
-
-            // Check file type
-            const ext = file.name.split('.').pop().toLowerCase();
-            if (!['glb', 'gltf', 'obj'].includes(ext)) {
-                alert('Unsupported file format. Please use GLB, GLTF, or OBJ.');
-                return;
-            }
+            let successCount = 0;
 
             dropZone.classList.add('has-file');
-            dropZone.querySelector('.drop-text').textContent = 'Processing...';
+            dropZone.querySelector('.drop-text').textContent = `Processing ${files.length} file(s)...`;
 
-            try {
-                // Read file as ArrayBuffer
-                const arrayBuffer = await file.arrayBuffer();
+            for (const file of files) {
+                const ext = file.name.split('.').pop().toLowerCase();
+                if (!['glb', 'gltf', 'obj'].includes(ext)) {
+                    console.warn('Skipping unsupported file:', file.name);
+                    continue;
+                }
 
-                const modelData = {
-                    name: customName,
-                    fileName: file.name,
-                    type: ext,
-                    size: file.size,
-                    data: arrayBuffer,
-                    createdAt: new Date().toISOString()
-                };
+                const customName = (files.length === 1 && nameInput.value.trim())
+                    ? nameInput.value.trim()
+                    : file.name.replace(/\.[^/.]+$/, '');
 
-                // Save to IndexedDB
-                const id = await saveModelToDB(modelData);
-                modelData.id = id;
-                uploadedModels.push(modelData);
+                try {
+                    const arrayBuffer = await file.arrayBuffer();
+                    const modelData = {
+                        name: customName,
+                        fileName: file.name,
+                        type: ext,
+                        size: file.size,
+                        data: arrayBuffer,
+                        createdAt: new Date().toISOString()
+                    };
 
-                // Update UI
-                nameInput.value = '';
-                dropZone.classList.remove('has-file');
-                dropZone.querySelector('.drop-text').textContent = 'Drop 3D model file here or click to browse';
-
-                renderUploadedModelsList();
-                alert(`Model "${customName}" uploaded successfully!`);
-
-            } catch (err) {
-                console.error('Error uploading model:', err);
-                alert('Failed to upload model: ' + err.message);
-                dropZone.classList.remove('has-file');
-                dropZone.querySelector('.drop-text').textContent = 'Drop 3D model file here or click to browse';
+                    const id = await saveModelToDB(modelData);
+                    modelData.id = id;
+                    uploadedModels.push(modelData);
+                    successCount++;
+                } catch (err) {
+                    console.error('Error uploading model:', file.name, err);
+                }
             }
 
-            // Reset file input
+            nameInput.value = '';
+            dropZone.classList.remove('has-file');
+            dropZone.querySelector('.drop-text').textContent = 'Drop 3D model files here or click to browse';
+            renderUploadedModelsList();
+
+            if (successCount > 0) {
+                alert(`${successCount} model(s) uploaded successfully!`);
+            }
             event.target.value = '';
         };
 
@@ -2672,6 +2686,137 @@
             }
         };
 
+        // ============ CUSTOM POSTER UPLOAD ============
+        let uploadedPosters = JSON.parse(localStorage.getItem('uploadedPosters') || '[]');
+
+        window.handlePosterUpload = async function(event) {
+            const files = Array.from(event.target.files || []);
+            if (files.length === 0) return;
+
+            const dropZone = document.getElementById('poster-drop-zone');
+            dropZone.querySelector('.drop-text').textContent = `Processing ${files.length} image(s)...`;
+            let successCount = 0;
+
+            for (const file of files) {
+                if (!file.type.startsWith('image/')) { continue; }
+
+                try {
+                    const dataUrl = await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = () => resolve(reader.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(file);
+                    });
+
+                    // Get image dimensions for aspect ratio
+                    const dims = await new Promise((resolve) => {
+                        const img = new Image();
+                        img.onload = () => resolve({ w: img.width, h: img.height });
+                        img.onerror = () => resolve({ w: 1, h: 1 });
+                        img.src = dataUrl;
+                    });
+
+                    const posterData = {
+                        id: Date.now() + successCount,
+                        name: file.name.replace(/\.[^/.]+$/, ''),
+                        dataUrl: dataUrl,
+                        width: dims.w,
+                        height: dims.h,
+                        createdAt: new Date().toISOString()
+                    };
+
+                    uploadedPosters.push(posterData);
+                    successCount++;
+                } catch (err) {
+                    console.error('Error processing poster image:', file.name, err);
+                }
+            }
+
+            if (successCount > 0) {
+                try {
+                    localStorage.setItem('uploadedPosters', JSON.stringify(uploadedPosters));
+                } catch (e) {
+                    console.warn('localStorage full, posters kept in memory only');
+                }
+                renderPosterGrid();
+            }
+
+            dropZone.querySelector('.drop-text').textContent = 'Drop images here to create wall posters';
+            event.target.value = '';
+        };
+
+        function renderPosterGrid() {
+            const grid = document.getElementById('custom-posters-grid');
+            if (!grid) return;
+
+            if (uploadedPosters.length === 0) {
+                grid.innerHTML = '<div style="color:#666; font-size:11px; text-align:center; padding:10px;">No custom posters yet</div>';
+                return;
+            }
+
+            grid.innerHTML = uploadedPosters.map(p => `
+                <div class="item-card" style="position:relative;" onclick="selectPosterForPlacement(${p.id})">
+                    <div class="item-preview" style="padding:2px;">
+                        <img src="${p.dataUrl}" style="max-width:100%; max-height:48px; object-fit:contain; border-radius:2px;">
+                    </div>
+                    <div class="item-name">${p.name}</div>
+                    <button class="model-action-btn delete" onclick="event.stopPropagation(); deletePoster(${p.id})" style="position:absolute; top:2px; right:2px; font-size:8px; width:14px; height:14px; padding:0; line-height:14px;">✕</button>
+                </div>
+            `).join('');
+        }
+
+        window.selectPosterForPlacement = function(id) {
+            selectedFurnitureType = `custom-poster-${id}`;
+            document.querySelectorAll('.item-card').forEach(c => c.classList.remove('selected'));
+            event.target.closest('.item-card')?.classList.add('selected');
+        };
+
+        window.deletePoster = function(id) {
+            if (!confirm('Delete this poster?')) return;
+            uploadedPosters = uploadedPosters.filter(p => p.id !== id);
+            try { localStorage.setItem('uploadedPosters', JSON.stringify(uploadedPosters)); } catch(e) {}
+            renderPosterGrid();
+        };
+
+        // Create a 3D poster object from image data
+        function createPosterObject(posterData) {
+            const aspect = posterData.width / posterData.height;
+            const posterHeight = 0.8; // 80cm tall
+            const posterWidth = posterHeight * aspect;
+            const frameThickness = 0.02;
+
+            const group = new THREE.Group();
+
+            // Frame (slightly larger than poster)
+            const frameGeo = new THREE.BoxGeometry(posterWidth + frameThickness * 2, posterHeight + frameThickness * 2, 0.02);
+            const frameMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1a });
+            const frame = new THREE.Mesh(frameGeo, frameMat);
+            group.add(frame);
+
+            // Poster face with image texture
+            const texture = new THREE.TextureLoader().load(posterData.dataUrl);
+            texture.encoding = THREE.sRGBEncoding;
+            const posterGeo = new THREE.PlaneGeometry(posterWidth, posterHeight);
+            const posterMat = new THREE.MeshStandardMaterial({ map: texture, side: THREE.DoubleSide });
+            const posterMesh = new THREE.Mesh(posterGeo, posterMat);
+            posterMesh.position.z = 0.011;
+            group.add(posterMesh);
+
+            // Default position on wall: eye level
+            group.position.y = 1.6;
+
+            group.userData.isPlacedItem = true;
+            group.userData.itemType = `custom-poster-${posterData.id}`;
+            group.userData.customPosterId = posterData.id;
+            group.userData.customPosterName = posterData.name;
+            group.userData.isPoster = true;
+
+            return group;
+        }
+
+        // Initialize poster grid on load
+        setTimeout(() => renderPosterGrid(), 500);
+
         // Setup drag-drop for model upload
         document.addEventListener('DOMContentLoaded', () => {
             const dropZone = document.getElementById('model-drop-zone');
@@ -2686,14 +2831,35 @@
                 dropZone.addEventListener('drop', (e) => {
                     e.preventDefault();
                     dropZone.classList.remove('dragover');
-                    const file = e.dataTransfer.files[0];
-                    if (file) {
-                        // Trigger the file input handler
+                    if (e.dataTransfer.files.length > 0) {
                         const input = document.getElementById('model-file-input');
                         const dt = new DataTransfer();
-                        dt.items.add(file);
+                        Array.from(e.dataTransfer.files).forEach(f => dt.items.add(f));
                         input.files = dt.files;
                         handleModelUpload({ target: input });
+                    }
+                });
+            }
+
+            // Setup drag-drop for poster upload
+            const posterDrop = document.getElementById('poster-drop-zone');
+            if (posterDrop) {
+                posterDrop.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    posterDrop.classList.add('dragover');
+                });
+                posterDrop.addEventListener('dragleave', () => {
+                    posterDrop.classList.remove('dragover');
+                });
+                posterDrop.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    posterDrop.classList.remove('dragover');
+                    if (e.dataTransfer.files.length > 0) {
+                        const input = document.getElementById('poster-file-input');
+                        const dt = new DataTransfer();
+                        Array.from(e.dataTransfer.files).forEach(f => dt.items.add(f));
+                        input.files = dt.files;
+                        handlePosterUpload({ target: input });
                     }
                 });
             }
@@ -4451,6 +4617,10 @@
         camera.position.set(0, 18 * Math.sin(0.5), -18 * Math.cos(0.5));
         camera.lookAt(cameraTarget);
 
+        let isShiftDown = false;
+        document.addEventListener('keydown', (e) => { if (e.key === 'Shift') isShiftDown = true; });
+        document.addEventListener('keyup', (e) => { if (e.key === 'Shift') isShiftDown = false; });
+
         container.addEventListener('mousedown', (e) => {
             if (!isCameraOrbitBlocked) {
                 isMouseDown = true;
@@ -4463,9 +4633,24 @@
 
         container.addEventListener('mousemove', (e) => {
             if (!isMouseDown || isCameraOrbitBlocked) return;
-            targetRotationX += (e.clientX - mouseX) * 0.005;
-            targetRotationY += (e.clientY - mouseY) * 0.005;
-            targetRotationY = Math.max(-0.5, Math.min(1.2, targetRotationY));
+            const dx = e.clientX - mouseX;
+            const dy = e.clientY - mouseY;
+
+            if (isShiftDown || e.shiftKey) {
+                // Shift+drag = PAN camera target left/right/up/down
+                const panSpeed = 0.005 * cameraDistance;
+                // Calculate camera right and up vectors for panning in view space
+                const forward = new THREE.Vector3().subVectors(cameraTarget, camera.position).normalize();
+                const right = new THREE.Vector3().crossVectors(forward, camera.up).normalize();
+                const up = new THREE.Vector3().crossVectors(right, forward).normalize();
+                cameraTarget.add(right.multiplyScalar(-dx * panSpeed));
+                cameraTarget.add(up.multiplyScalar(dy * panSpeed));
+            } else {
+                // Normal drag = ORBIT camera around target
+                targetRotationX += dx * 0.005;
+                targetRotationY += dy * 0.005;
+                targetRotationY = Math.max(-0.5, Math.min(1.2, targetRotationY));
+            }
             mouseX = e.clientX; mouseY = e.clientY;
         });
 
@@ -4478,14 +4663,32 @@
         document.addEventListener('keydown', (e) => keys[e.key.toLowerCase()] = true);
         document.addEventListener('keyup', (e) => keys[e.key.toLowerCase()] = false);
 
-        // Touch controls
-        container.addEventListener('touchstart', (e) => { isMouseDown = true; mouseX = e.touches[0].clientX; mouseY = e.touches[0].clientY; });
-        container.addEventListener('touchend', () => isMouseDown = false);
+        // Touch controls (2-finger = pan, 1-finger = orbit)
+        let touchCount = 0;
+        container.addEventListener('touchstart', (e) => {
+            touchCount = e.touches.length;
+            isMouseDown = true;
+            mouseX = e.touches[0].clientX;
+            mouseY = e.touches[0].clientY;
+        });
+        container.addEventListener('touchend', () => { isMouseDown = false; touchCount = 0; });
         container.addEventListener('touchmove', (e) => {
             if (!isMouseDown) return;
-            targetRotationX += (e.touches[0].clientX - mouseX) * 0.005;
-            targetRotationY += (e.touches[0].clientY - mouseY) * 0.005;
-            targetRotationY = Math.max(-0.5, Math.min(1.2, targetRotationY));
+            const dx = e.touches[0].clientX - mouseX;
+            const dy = e.touches[0].clientY - mouseY;
+            if (touchCount >= 2) {
+                // Two-finger = PAN
+                const panSpeed = 0.005 * cameraDistance;
+                const forward = new THREE.Vector3().subVectors(cameraTarget, camera.position).normalize();
+                const right = new THREE.Vector3().crossVectors(forward, camera.up).normalize();
+                const up = new THREE.Vector3().crossVectors(right, forward).normalize();
+                cameraTarget.add(right.multiplyScalar(-dx * panSpeed));
+                cameraTarget.add(up.multiplyScalar(dy * panSpeed));
+            } else {
+                targetRotationX += dx * 0.005;
+                targetRotationY += dy * 0.005;
+                targetRotationY = Math.max(-0.5, Math.min(1.2, targetRotationY));
+            }
             mouseX = e.touches[0].clientX; mouseY = e.touches[0].clientY;
         });
 
@@ -6190,8 +6393,15 @@
                     // Check if it's a custom model
                     if (type && type.startsWith('custom-model-')) {
                         const modelId = parseInt(type.replace('custom-model-', ''));
-                        // Return a placeholder - actual model loading happens async
                         item = createCustomModelPlaceholder(modelId);
+                    } else if (type && type.startsWith('custom-poster-')) {
+                        const posterId = parseInt(type.replace('custom-poster-', ''));
+                        const posterData = uploadedPosters.find(p => p.id === posterId);
+                        if (posterData) {
+                            item = createPosterObject(posterData);
+                        } else {
+                            item = createWallPoster(0x888888, 0.6, 0.8, 'Poster');
+                        }
                     } else {
                         item = createFloorCushion(0x888888, 0.5);
                     }
