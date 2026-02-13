@@ -3583,7 +3583,7 @@
         const floorMaterial = new THREE.MeshLambertMaterial({ color: 0xd4c8b8 });
         const darkBlueMaterial = new THREE.MeshLambertMaterial({ color: 0x2c3e5c });
         const windowFrameMaterial = new THREE.MeshLambertMaterial({ color: 0xe8e8e8 });
-        const glassMaterial = new THREE.MeshLambertMaterial({ color: 0x87CEEB, transparent: true, opacity: 0.25 });
+        const glassMaterial = new THREE.MeshLambertMaterial({ color: 0xc8d8e4, transparent: true, opacity: 0.35 });
         const woodMaterial = new THREE.MeshLambertMaterial({ color: 0xd4a76a });
         const ochreFloorMaterial = new THREE.MeshLambertMaterial({ color: 0xc9a227 });
         const redMaterial = new THREE.MeshLambertMaterial({ color: 0xc41e3a });
@@ -4744,15 +4744,15 @@
         labelsGroup.add(createLabel('S202 SPECIAL SPECIAL — SOUND LIBRARY', new THREE.Vector3(SPECIAL_SPECIAL_X, CEILING_HEIGHT + 0.5, 0)));
         scene.add(labelsGroup);
 
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        // Lighting — cloudy day: soft diffused window light, strong ceiling spots
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
         scene.add(ambientLight);
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.7);
-        directionalLight.position.set(10, 15, 10);
+        const directionalLight = new THREE.DirectionalLight(0xe8e8f0, 0.35);
+        directionalLight.position.set(5, 12, -8); // from south (window side), low angle
         directionalLight.castShadow = true;
         scene.add(directionalLight);
-        const fillLight = new THREE.DirectionalLight(0xffffff, 0.3);
-        fillLight.position.set(-10, 10, -10);
+        const fillLight = new THREE.DirectionalLight(0xe0e0e8, 0.25);
+        fillLight.position.set(-5, 10, -6);
         scene.add(fillLight);
         const threeStarRoomLight = new THREE.PointLight(0xffffee, 0.4, 12);
         threeStarRoomLight.position.set(THREE_STAR_X, CEILING_HEIGHT - 0.5, 0);
@@ -4798,8 +4798,8 @@
             group.userData.isCeiling = true;
             group.traverse(child => { child.userData.isCeiling = true; });
 
-            // Actual SpotLight for illumination
-            const spotLight = new THREE.SpotLight(0xffffff, 0.5, 8, Math.PI / 6, 0.6, 1.5);
+            // Actual SpotLight for illumination — gallery-bright
+            const spotLight = new THREE.SpotLight(0xffffff, 1.4, 10, Math.PI / 5, 0.7, 1.0);
             spotLight.position.set(worldX, CEILING_HEIGHT - 0.13, worldZ);
             spotLight.target.position.set(worldX, 0, worldZ);
             spotLight.userData.isCeiling = true;
