@@ -3840,18 +3840,10 @@
             group.add(rightBar);
 
             // Meeting rail — thick horizontal bar where the two sashes meet
+            // Classic NYC double-hung: only this horizontal divider, no vertical muntins
             const meetingRail = new THREE.Mesh(new THREE.BoxGeometry(width + 0.04, frameThickness * 1.4, frameThickness * 1.2), frameMat);
             meetingRail.position.set(0, splitY, 0.025);
             group.add(meetingRail);
-
-            // Vertical center muntin on each sash (divides each half into 2 panes)
-            const topMuntin = new THREE.Mesh(new THREE.BoxGeometry(frameThickness * 0.6, topH - 0.04, frameThickness), frameMat);
-            topMuntin.position.set(0, topH / 2, 0.02);
-            group.add(topMuntin);
-
-            const botMuntin = new THREE.Mesh(new THREE.BoxGeometry(frameThickness * 0.6, botH - 0.04, frameThickness), frameMat);
-            botMuntin.position.set(0, -botH / 2, 0.02);
-            group.add(botMuntin);
 
             // Window sill
             const sill = new THREE.Mesh(new THREE.BoxGeometry(width + 0.15, 0.06, 0.12), sillMat);
