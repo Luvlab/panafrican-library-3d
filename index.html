@@ -4662,7 +4662,7 @@
         container.addEventListener('wheel', (e) => {
             cameraDistance += e.deltaY * 0.01;
             cameraDistance = Math.max(3, Math.min(35, cameraDistance));
-        });
+        }, { passive: true });
 
         const keys = {};
         document.addEventListener('keydown', (e) => keys[e.key.toLowerCase()] = true);
@@ -4781,10 +4781,11 @@
 
         window.toggleCeiling = function() {
             showCeiling = !showCeiling;
-            // Find all ceilings in the scene
-            scene.traverse((obj) => {
-                if (obj.userData.isCeiling) obj.visible = showCeiling;
-            });
+            if (ceilingCacheDirty) buildCeilingCache();
+            for (let i = 0; i < ceilingObjects.length; i++) {
+                ceilingObjects[i].visible = showCeiling;
+            }
+            lastCeilingState = null; // Reset so auto-visibility rechecks
             document.getElementById('ceilingBtn').classList.toggle('active', showCeiling);
         };
 
@@ -8965,19 +8966,39 @@
             // (null or handled by Three Star's left wall which is always visible)
         }
 
-        // Auto ceiling visibility based on camera height
-        function updateCeilingVisibility() {
-            const camY = camera.position.y;
-            const isAbove = camY > CEILING_HEIGHT + 1;
+        // Ceiling objects cache — avoid scene.traverse() every frame
+        let ceilingObjects = [];
+        let ceilingCacheDirty = true;
 
-            if (showCeiling) {
-                // Auto-hide ceiling when viewing from above
-                scene.traverse((obj) => {
-                    if (obj.userData.isCeiling) {
-                        obj.visible = !isAbove;
-                    }
-                });
+        function buildCeilingCache() {
+            ceilingObjects = [];
+            scene.traverse((obj) => {
+                if (obj.userData.isCeiling) ceilingObjects.push(obj);
+            });
+            ceilingCacheDirty = false;
+        }
+
+        // Auto ceiling visibility based on camera height
+        let lastCeilingState = null;
+        function updateCeilingVisibility() {
+            if (!showCeiling) return;
+            const isAbove = camera.position.y > CEILING_HEIGHT + 1;
+            if (isAbove === lastCeilingState) return; // No change, skip
+            lastCeilingState = isAbove;
+
+            if (ceilingCacheDirty) buildCeilingCache();
+            for (let i = 0; i < ceilingObjects.length; i++) {
+                ceilingObjects[i].visible = !isAbove;
             }
+        }
+
+        // Throttled wall visibility — run max ~30fps instead of every frame
+        let lastWallUpdate = 0;
+        function throttledWallVisibility() {
+            const now = performance.now();
+            if (now - lastWallUpdate < 33) return; // ~30fps
+            lastWallUpdate = now;
+            updateWallVisibility();
         }
 
         function animate() {
@@ -8995,12 +9016,15 @@
             camera.position.z = cameraTarget.z + Math.cos(currentRotationX) * Math.cos(currentRotationY) * cameraDistance;
             camera.lookAt(cameraTarget);
 
-            updateWallVisibility();
+            throttledWallVisibility();
             updateCeilingVisibility();
 
             renderer.render(scene, camera);
         }
         animate();
+
+        // Build ceiling cache after scene is fully loaded
+        setTimeout(() => { ceilingCacheDirty = true; }, 1000);
 
         // Initialize transform controls for visual editing gizmos
         initTransformControls();
