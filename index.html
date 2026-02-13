@@ -9165,32 +9165,33 @@
             const ssCenterX = SPECIAL_SPECIAL_X;
             const ssCenterZ = ssZoff;
 
-            // THREE STAR walls — hide wall closest to camera (exterior walls only)
-            // South wall (windows) — hide when camera is south of room center
-            if (threeStarRoomWalls.front) threeStarRoomWalls.front.visible = camZ > tsCenterZ;
+            // THREE STAR — find the single closest EXTERIOR wall and hide only that one
+            // Exterior walls: front (south/windows), back (north/corridor), right (east)
+            // Shared wall (left/west) is NEVER hidden
+            const tsDistFront = Math.abs(camZ - tsSouthZ);  // south wall
+            const tsDistBack  = Math.abs(camZ - tsNorthZ);  // north wall
+            const tsDistRight = Math.abs(camX - tsEastX);   // east wall
 
-            // North wall (corridor entry) — hide when camera is north of room center
-            if (threeStarRoomWalls.back) threeStarRoomWalls.back.visible = camZ < tsNorthZ;
-            if (threeStarRoomWalls.vestibuleGroup) threeStarRoomWalls.vestibuleGroup.visible = camZ < tsNorthZ;
+            const tsClosest = Math.min(tsDistFront, tsDistBack, tsDistRight);
 
-            // East wall (solid exterior) — hide when camera is east of room center
-            if (threeStarRoomWalls.right) threeStarRoomWalls.right.visible = camX < tsCenterX;
+            if (threeStarRoomWalls.front) threeStarRoomWalls.front.visible = !(tsClosest === tsDistFront);
+            if (threeStarRoomWalls.back) threeStarRoomWalls.back.visible = !(tsClosest === tsDistBack);
+            if (threeStarRoomWalls.vestibuleGroup) threeStarRoomWalls.vestibuleGroup.visible = !(tsClosest === tsDistBack);
+            if (threeStarRoomWalls.right) threeStarRoomWalls.right.visible = !(tsClosest === tsDistRight);
+            if (threeStarRoomWalls.left) threeStarRoomWalls.left.visible = true; // shared wall — NEVER hide
 
-            // West/shared wall (connecting door) — NEVER hide, always visible
-            if (threeStarRoomWalls.left) threeStarRoomWalls.left.visible = true;
+            // SPECIAL SPECIAL — find the single closest EXTERIOR wall and hide only that one
+            // Exterior walls: front (south/windows), back (north/corridor), left (west)
+            // Shared wall (east, built by TS left) is NEVER hidden
+            const ssDistFront = Math.abs(camZ - ssSouthZ);  // south wall
+            const ssDistBack  = Math.abs(camZ - ssNorthZ);  // north wall
+            const ssDistLeft  = Math.abs(camX - ssWestX);   // west wall
 
-            // SPECIAL SPECIAL walls — hide wall closest to camera (exterior walls only)
-            // South wall (windows) — hide when camera is south of room center
-            if (specialSpecialRoomWalls.front) specialSpecialRoomWalls.front.visible = camZ > ssCenterZ;
+            const ssClosest = Math.min(ssDistFront, ssDistBack, ssDistLeft);
 
-            // North wall (corridor entry) — hide when camera is north of room center
-            if (specialSpecialRoomWalls.back) specialSpecialRoomWalls.back.visible = camZ < ssNorthZ;
-
-            // West wall (solid exterior) — hide when camera is west of room center
-            if (specialSpecialRoomWalls.left) specialSpecialRoomWalls.left.visible = camX > ssCenterX;
-
-            // East wall (shared with Three Star) — NEVER hide, always visible
-            // (null or handled by Three Star's left wall which is always visible)
+            if (specialSpecialRoomWalls.front) specialSpecialRoomWalls.front.visible = !(ssClosest === ssDistFront);
+            if (specialSpecialRoomWalls.back) specialSpecialRoomWalls.back.visible = !(ssClosest === ssDistBack);
+            if (specialSpecialRoomWalls.left) specialSpecialRoomWalls.left.visible = !(ssClosest === ssDistLeft);
         }
 
         // Ceiling objects cache — avoid scene.traverse() every frame
