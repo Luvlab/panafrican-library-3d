@@ -3929,90 +3929,55 @@
                 group.add(item);
             }
 
-            // === AFRICAN RUGS on floor ===
-            // Large wax print rug in center
+            // === FLOOR RUG - large rug covering main floor area ===
             const mainRug = createWaxPrintRug(0xc41e3a, 0xffd700);  // Red with gold circles
             mainRug.position.set(0, 0, mainRoomZ);
             mainRug.scale.set(1.5, 1, 1.5);
             addFurniture(mainRug, 'rug-main');
 
-            // Geometric rug near entry
-            const entryRug = createGeometricRug();
-            entryRug.position.set(1.0, 0, entryZ);
-            addFurniture(entryRug, 'rug-entry');
+            // === BANQUETTE-SHELF UNITS along walls (seating against walls, center clear) ===
+            // Long banquette against east wall (exterior, +X) — full length
+            const banquetteEast = createBanquetteShelfUnit(5.0);
+            banquetteEast.position.set(THREE_STAR_WIDTH / 2 - 0.3, 0, 0);
+            banquetteEast.rotation.y = -Math.PI / 2;
+            addFurniture(banquetteEast, 'banquette-east');
 
-            // Checkered rug near window seating
-            const windowRug = createCheckeredRug(0x8b4513, 0xf5f0e8);  // Brown and cream
-            windowRug.position.set(-1.0, 0, windowZ + 0.8);
-            addFurniture(windowRug, 'rug-window');
+            // Banquette against west wall (shared wall, -X) — shorter, north of connecting door
+            const banquetteWest = createBanquetteShelfUnit(3.5);
+            banquetteWest.position.set(-THREE_STAR_WIDTH / 2 + 0.3, 0, 1.2);
+            banquetteWest.rotation.y = Math.PI / 2;
+            addFurniture(banquetteWest, 'banquette-west');
 
-            // === BANQUETTE-SHELF UNITS along walls ===
-            // Long banquette against west wall (left)
-            const banquetteLeft = createBanquetteShelfUnit(4.0);
-            banquetteLeft.position.set(-THREE_STAR_WIDTH / 2 + 0.3, 0, 0);
-            banquetteLeft.rotation.y = Math.PI / 2;
-            addFurniture(banquetteLeft, 'banquette-left');
+            // === COFFEE TABLES next to banquettes ===
+            const coffeeTable1 = createLowCoffeeTable();
+            coffeeTable1.position.set(THREE_STAR_WIDTH / 2 - 0.9, 0, -1.5);
+            addFurniture(coffeeTable1, 'coffee-table-1');
 
-            // Banquette against east wall (right) - shorter to avoid connecting door at south end
-            const banquetteRight = createBanquetteShelfUnit(3.2);
-            banquetteRight.position.set(THREE_STAR_WIDTH / 2 - 0.3, 0, 1.0);  // Offset north to avoid door
-            banquetteRight.rotation.y = -Math.PI / 2;
-            addFurniture(banquetteRight, 'banquette-right');
+            const coffeeTable2 = createLowCoffeeTable();
+            coffeeTable2.position.set(THREE_STAR_WIDTH / 2 - 0.9, 0, 1.5);
+            addFurniture(coffeeTable2, 'coffee-table-2');
 
-            // Banquette along south wall (near windows)
-            const banquetteSouth = createBanquetteShelfUnit(3.5);
-            banquetteSouth.position.set(0, 0, windowZ + 0.3);
-            banquetteSouth.rotation.y = Math.PI;  // Facing north into room
-            addFurniture(banquetteSouth, 'banquette-south');
+            const coffeeTable3 = createLowCoffeeTable();
+            coffeeTable3.position.set(-THREE_STAR_WIDTH / 2 + 0.9, 0, 1.2);
+            addFurniture(coffeeTable3, 'coffee-table-3');
 
-            // === VINYL RECORD TABLES in center area ===
-            const recordTable1 = createVinylRecordTable('ngoma');
-            recordTable1.position.set(-1.2, 0, mainRoomZ);
-            addFurniture(recordTable1, 'table-ngoma');
+            // === BOOKSHELVES along walls ===
+            const bookshelf1 = createWallBookcase();
+            bookshelf1.position.set(THREE_STAR_WIDTH / 2 - 0.15, 0, -3.0);
+            bookshelf1.rotation.y = -Math.PI / 2;
+            addFurniture(bookshelf1, 'bookshelf-east-1');
 
-            const recordTable2 = createVinylRecordTable('bantou');
-            recordTable2.position.set(0, 0, mainRoomZ + 1.0);
-            addFurniture(recordTable2, 'table-bantou');
+            const bookshelf2 = createWallBookcase();
+            bookshelf2.position.set(-THREE_STAR_WIDTH / 2 + 0.15, 0, -2.0);
+            bookshelf2.rotation.y = Math.PI / 2;
+            addFurniture(bookshelf2, 'bookshelf-west-1');
 
-            const recordTable3 = createVinylRecordTable('african-jazz');
-            recordTable3.position.set(1.2, 0, mainRoomZ);
-            addFurniture(recordTable3, 'table-jazz');
-
-            const recordTable4 = createVinylRecordTable('pathe');
-            recordTable4.position.set(0, 0, mainRoomZ - 1.0);
-            addFurniture(recordTable4, 'table-pathe');
-
-            // === CARDBOARD CUBE STOOLS scattered around tables ===
-            const cubeStool1 = createCardboardCubeStool('branches');
-            cubeStool1.position.set(-1.6, 0, mainRoomZ + 0.5);
-            addFurniture(cubeStool1, 'stool-branches-1');
-
-            const cubeStool2 = createCardboardCubeStool('african-pattern');
-            cubeStool2.position.set(-0.6, 0, mainRoomZ + 1.5);
-            addFurniture(cubeStool2, 'stool-pattern-1');
-
-            const cubeStool3 = createCardboardCubeStool('benin');
-            cubeStool3.position.set(0.6, 0, mainRoomZ + 1.5);
-            addFurniture(cubeStool3, 'stool-benin-1');
-
-            const cubeStool4 = createCardboardCubeStool('text');
-            cubeStool4.position.set(1.6, 0, mainRoomZ + 0.5);
-            addFurniture(cubeStool4, 'stool-text-1');
-
-            const cubeStool5 = createCardboardCubeStool('branches');
-            cubeStool5.position.set(-0.8, 0, mainRoomZ + 0.5);
-            addFurniture(cubeStool5, 'stool-branches-2');
-
-            const cubeStool6 = createCardboardCubeStool('african-pattern');
-            cubeStool6.position.set(0.8, 0, mainRoomZ + 0.5);
-            addFurniture(cubeStool6, 'stool-pattern-2');
-
-            // === WOVEN MATS on floor ===
+            // === WOVEN MAT on floor (center) ===
             const listeningMat = createAfricanNatte();
             listeningMat.position.set(0, 0.01, mainRoomZ);
             addFurniture(listeningMat, 'natte-mat');
 
-            // === AFRIKADAA WALL ART (on walls not covered by banquettes) ===
+            // === AFRIKADAA WALL ART ===
             const posterWallX = -THREE_STAR_WIDTH / 2 + 0.16;
 
             const afrikadaaPoster1 = createAfrikadaaPoster('AFRIKADAA', 0xc41e3a, 0.5, 0.7);
@@ -4048,43 +4013,81 @@
             floor.position.set(0, 0.01, 0);
             group.add(floor);
 
-            // ========== ENTRY CORRIDOR - Two THICK SHAFTS/BOXES extending SOUTH from north wall ==========
-            // Looking at floor plan: corridor is CENTERED on north wall
-            // The corridor shafts extend about 1/3 of room depth into the room
-            // Corridor opening width: 2'-9⅝" = 0.85m
-            // Corridor shaft depth: ~1/3 of room = ~1.5m (much deeper than the 0.65m I had before)
-            const corridorShaftDepth = 3.105;  // ~10'-2¼" corridor partitions: total depth 7.715m minus main room 4.61m (15'-1½")
-            const corridorCenterX = 0;  // CENTERED
+            // ========== ENTRY CORRIDOR - Partition walls from side walls creating enclosed corridor ==========
+            // Per floor plan: The corridor is formed by TWO partition walls that run SOUTH
+            // from the north wall. Each partition connects to its respective side wall,
+            // creating a narrow corridor passage in the center and closed-off zones on each side.
+            //
+            // Layout (looking from above, north at top):
+            //   NORTH WALL (with door opening in center)
+            //   |  closed  |  corridor  |  closed  |
+            //   | west zone|  (0.85m)   | east zone|
+            //   WEST WALL  | partition  | partition |  EAST (shared wall)
+            //              | wall west  | wall east |
+            //              +============+===========+ <-- partition ends ~3.1m south of north wall
+            //              |      MAIN ROOM         |
+            //
+            const corridorShaftDepth = 3.105;  // ~10'-2¼" partition depth into room
+            const corridorCenterX = 0;  // Corridor centered in room
             const corridorLeftEdge = corridorCenterX - SPECIAL_SPECIAL_CORRIDOR_WIDTH / 2;
             const corridorRightEdge = corridorCenterX + SPECIAL_SPECIAL_CORRIDOR_WIDTH / 2;
+            const partitionThickness = WALL_THICKNESS;  // Same thickness as room walls (0.152m / 6")
 
-            // The corridor shafts are THICK boxes, not thin walls
-            // Looking at floor plan, they appear to be about 0.3-0.4m thick
-            const shaftThickness = 0.35;
+            // WEST partition wall — runs from corridor left edge to west exterior wall
+            // This wall extends from north wall southward, closing off the west zone
+            const westPartitionWidth = SPECIAL_SPECIAL_WIDTH / 2 + corridorLeftEdge;  // distance from west wall to corridor
+            if (westPartitionWidth > 0.05) {
+                const westPartition = new THREE.Mesh(
+                    new THREE.BoxGeometry(westPartitionWidth, CEILING_HEIGHT, partitionThickness),
+                    brickMaterial
+                );
+                westPartition.position.set(
+                    -SPECIAL_SPECIAL_WIDTH / 2 + westPartitionWidth / 2,
+                    CEILING_HEIGHT / 2,
+                    SPECIAL_SPECIAL_DEPTH / 2 - corridorShaftDepth  // South end of partition
+                );
+                group.add(westPartition);
 
-            // WEST corridor shaft - thick box extending from north wall southward
-            const corridorWestShaft = new THREE.Mesh(
-                new THREE.BoxGeometry(shaftThickness, CEILING_HEIGHT, corridorShaftDepth),
-                brickMaterial
-            );
-            corridorWestShaft.position.set(
-                corridorLeftEdge - shaftThickness / 2,
-                CEILING_HEIGHT / 2,
-                SPECIAL_SPECIAL_DEPTH / 2 - corridorShaftDepth / 2
-            );
-            group.add(corridorWestShaft);
+                // West corridor side wall — thin wall along the corridor's west side
+                const westCorridorWall = new THREE.Mesh(
+                    new THREE.BoxGeometry(partitionThickness, CEILING_HEIGHT, corridorShaftDepth),
+                    brickMaterial
+                );
+                westCorridorWall.position.set(
+                    corridorLeftEdge - partitionThickness / 2,
+                    CEILING_HEIGHT / 2,
+                    SPECIAL_SPECIAL_DEPTH / 2 - corridorShaftDepth / 2
+                );
+                group.add(westCorridorWall);
+            }
 
-            // EAST corridor shaft - thick box extending from north wall southward
-            const corridorEastShaft = new THREE.Mesh(
-                new THREE.BoxGeometry(shaftThickness, CEILING_HEIGHT, corridorShaftDepth),
-                brickMaterial
-            );
-            corridorEastShaft.position.set(
-                corridorRightEdge + shaftThickness / 2,
-                CEILING_HEIGHT / 2,
-                SPECIAL_SPECIAL_DEPTH / 2 - corridorShaftDepth / 2
-            );
-            group.add(corridorEastShaft);
+            // EAST partition wall — runs from corridor right edge to east shared wall
+            // This wall extends from north wall southward, closing off the east zone
+            const eastPartitionWidth = SPECIAL_SPECIAL_WIDTH / 2 - corridorRightEdge;  // distance from corridor to east wall
+            if (eastPartitionWidth > 0.05) {
+                const eastPartition = new THREE.Mesh(
+                    new THREE.BoxGeometry(eastPartitionWidth, CEILING_HEIGHT, partitionThickness),
+                    brickMaterial
+                );
+                eastPartition.position.set(
+                    SPECIAL_SPECIAL_WIDTH / 2 - eastPartitionWidth / 2,
+                    CEILING_HEIGHT / 2,
+                    SPECIAL_SPECIAL_DEPTH / 2 - corridorShaftDepth  // South end of partition
+                );
+                group.add(eastPartition);
+
+                // East corridor side wall — thin wall along the corridor's east side
+                const eastCorridorWall = new THREE.Mesh(
+                    new THREE.BoxGeometry(partitionThickness, CEILING_HEIGHT, corridorShaftDepth),
+                    brickMaterial
+                );
+                eastCorridorWall.position.set(
+                    corridorRightEdge + partitionThickness / 2,
+                    CEILING_HEIGHT / 2,
+                    SPECIAL_SPECIAL_DEPTH / 2 - corridorShaftDepth / 2
+                );
+                group.add(eastCorridorWall);
+            }
 
             // ========== SOUTH WALL (-Z) - PS1 Industrial Windows (BOTTOM of floor plan) ==========
             const southWallGroup = new THREE.Group();
@@ -4154,15 +4157,13 @@
             group.add(southWallGroup);
             specialSpecialRoomWalls.front = southWallGroup;  // Windows (south)
 
-            // ========== NORTH WALL (+Z) - Entry door opening centered, with shaft walls on sides ==========
+            // ========== NORTH WALL (+Z) - Entry door opening centered ==========
             const northWallGroup = new THREE.Group();
 
-            // The north wall has the door opening in the center
-            // Wall sections are on either side of the corridor opening (outside the shafts)
-            // Total opening = corridor width + 2 shaft thicknesses
-            const totalOpeningWidth = SPECIAL_SPECIAL_CORRIDOR_WIDTH + 2 * shaftThickness;
-            const openingLeftEdge = -totalOpeningWidth / 2;
-            const openingRightEdge = totalOpeningWidth / 2;
+            // The north wall has the corridor door opening in the center
+            // The partition walls connect to the side walls, so the opening is just the corridor width
+            const openingLeftEdge = corridorLeftEdge;
+            const openingRightEdge = corridorRightEdge;
 
             // Wall section WEST of opening
             const westOfOpeningWidth = SPECIAL_SPECIAL_WIDTH / 2 + openingLeftEdge;
@@ -4245,137 +4246,82 @@
             }
 
             // === SOUND LIBRARY MAIN ROOM ===
-            // Windows at SOUTH (-Z), entry corridor at NORTH-CENTER (+Z)
-            // Door to THREE STAR at SOUTH-WEST (bottom-left)
-            const mainRoomZ = 0;  // Center of main room
+            // The main room is the area SOUTH of the partition walls
+            // Windows at SOUTH (-Z), corridor opens at ~3.1m from north
+            // Connecting door to Three Star on east side near south end
+            // CENTER MUST BE CLEAR — people walk through both rooms via connecting door
+            const mainRoomCenterZ = -corridorShaftDepth / 2;  // Center of usable main room area
             const windowZ = -SPECIAL_SPECIAL_DEPTH / 2 + 1.0;  // Near south window wall
-            const entryZ = SPECIAL_SPECIAL_DEPTH / 2 - 1.0;    // Near north entry corridor
 
-            // === AFRICAN RUGS on floor ===
-            // Main natte in center
-            const mainNatte = createAfricanNatte();
-            mainNatte.position.set(0, 0, mainRoomZ);
-            addFurniture(mainNatte, 'natte-main');
+            // === FLOOR RUG — dark blue wax print covering main area ===
+            const mainRug = createWaxPrintRug(0x1a3a5c, 0xffd700);  // Dark blue with gold
+            mainRug.position.set(0, 0, mainRoomCenterZ);
+            mainRug.scale.set(1.2, 1, 1.2);
+            addFurniture(mainRug, 'rug-main-ss');
 
-            // Wax print rug near entry
-            const entryRug = createWaxPrintRug(0x1a3a5c, 0xffd700);  // Dark blue with gold
-            entryRug.position.set(0, 0, entryZ);
-            addFurniture(entryRug, 'rug-entry-ss');
+            // === BANQUETTE-SHELF against west wall (exterior, -X) ===
+            const banquetteWest = createBanquetteShelfUnit(3.0);
+            banquetteWest.position.set(-SPECIAL_SPECIAL_WIDTH / 2 + 0.3, 0, mainRoomCenterZ);
+            banquetteWest.rotation.y = Math.PI / 2;
+            addFurniture(banquetteWest, 'banquette-west-ss');
 
-            // Striped rug near windows
-            const windowRug = createStripedRug();
-            windowRug.position.set(0, 0, windowZ + 0.5);
-            addFurniture(windowRug, 'rug-window-ss');
+            // === BANQUETTE-SHELF against east wall (shared wall, +X) — north of connecting door ===
+            const banquetteEast = createBanquetteShelfUnit(2.0);
+            banquetteEast.position.set(SPECIAL_SPECIAL_WIDTH / 2 - 0.3, 0, mainRoomCenterZ + 0.8);
+            banquetteEast.rotation.y = -Math.PI / 2;
+            addFurniture(banquetteEast, 'banquette-east-ss');
 
-            // === BANQUETTE-SHELF along east wall (right) ===
-            const banquetteSound = createBanquetteShelfUnit(2.8);
-            banquetteSound.position.set(SPECIAL_SPECIAL_WIDTH / 2 - 0.3, 0, 0);
-            banquetteSound.rotation.y = -Math.PI / 2;
-            addFurniture(banquetteSound, 'banquette-sound');
+            // === COFFEE TABLES next to banquettes ===
+            const coffeeTableSS1 = createLowCoffeeTable();
+            coffeeTableSS1.position.set(-SPECIAL_SPECIAL_WIDTH / 2 + 0.9, 0, mainRoomCenterZ - 0.8);
+            addFurniture(coffeeTableSS1, 'coffee-table-ss-1');
 
-            // === DJ / AUDIO STATION - against west wall (left), north of connecting door ===
-            const audioStation = createAudioStation();
-            audioStation.position.set(-SPECIAL_SPECIAL_WIDTH / 2 + 0.5, 0, 0.5);  // North of door area
-            audioStation.rotation.y = Math.PI / 2;
-            addFurniture(audioStation, 'dj-station');
+            const coffeeTableSS2 = createLowCoffeeTable();
+            coffeeTableSS2.position.set(SPECIAL_SPECIAL_WIDTH / 2 - 0.9, 0, mainRoomCenterZ + 0.8);
+            addFurniture(coffeeTableSS2, 'coffee-table-ss-2');
 
-            // === VINYL RECORD TABLES ===
-            const recordTable1 = createVinylRecordTable('ngoma');
-            recordTable1.position.set(0, 0, mainRoomZ);
-            addFurniture(recordTable1, 'sound-table-1');
+            // === BOOKSHELVES along walls ===
+            const bookshelfSS1 = createWallBookcase();
+            bookshelfSS1.position.set(-SPECIAL_SPECIAL_WIDTH / 2 + 0.15, 0, windowZ + 0.5);
+            bookshelfSS1.rotation.y = Math.PI / 2;
+            addFurniture(bookshelfSS1, 'bookshelf-west-ss');
 
-            const recordTable2 = createVinylRecordTable('bantou');
-            recordTable2.position.set(0.6, 0, mainRoomZ - 1.0);
-            addFurniture(recordTable2, 'sound-table-2');
-
-            // === CARDBOARD CUBE STOOLS ===
-            const cubeStool1 = createCardboardCubeStool('branches');
-            cubeStool1.position.set(0.5, 0, mainRoomZ + 0.6);
-            addFurniture(cubeStool1, 'sound-stool-1');
-
-            const cubeStool2 = createCardboardCubeStool('african-pattern');
-            cubeStool2.position.set(-0.5, 0, mainRoomZ - 0.6);
-            addFurniture(cubeStool2, 'sound-stool-2');
-
-            const cubeStool3 = createCardboardCubeStool('benin');
-            cubeStool3.position.set(0.8, 0, mainRoomZ - 1.5);
-            addFurniture(cubeStool3, 'sound-stool-3');
-
-            // === FLOOR SEATING (poufs and mats) ===
-            const pouf1 = createSimplePouf(0xc41e3a);
-            pouf1.position.set(-0.3, 0, mainRoomZ + 1.8);
-            addFurniture(pouf1, 'pouf-sound-1');
-
-            const pouf2 = createSimplePouf(0x8b4513);
-            pouf2.position.set(0.6, 0, mainRoomZ + 2.0);
-            addFurniture(pouf2, 'pouf-sound-2');
-
-            const natteSound = createAfricanNatte();
-            natteSound.position.set(0, 0.01, mainRoomZ + 1.5);
-            addFurniture(natteSound, 'natte-sound');
-
-            // === SPEAKERS ===
+            // === SPEAKERS against walls (corners) ===
             const speaker1 = createFloorSpeaker();
-            speaker1.position.set(-SPECIAL_SPECIAL_WIDTH / 2 + 0.25, 0, mainRoomZ + SPECIAL_SPECIAL_DEPTH / 2 - 0.3);
-            speaker1.rotation.y = Math.PI * 0.75;
+            speaker1.position.set(-SPECIAL_SPECIAL_WIDTH / 2 + 0.25, 0, windowZ + 0.2);
+            speaker1.rotation.y = Math.PI * 0.25;
             addFurniture(speaker1, 'speaker-left');
 
             const speaker2 = createFloorSpeaker();
-            speaker2.position.set(SPECIAL_SPECIAL_WIDTH / 2 - 0.25, 0, mainRoomZ + SPECIAL_SPECIAL_DEPTH / 2 - 0.3);
-            speaker2.rotation.y = Math.PI * 1.25;
+            speaker2.position.set(SPECIAL_SPECIAL_WIDTH / 2 - 0.25, 0, windowZ + 0.2);
+            speaker2.rotation.y = -Math.PI * 0.25;
             addFurniture(speaker2, 'speaker-right');
 
-            // === HEADPHONE STATIONS ===
+            // === HEADPHONE STATIONS against west wall ===
             const headphones1 = createHeadphoneStation();
-            headphones1.position.set(-SPECIAL_SPECIAL_WIDTH / 2 + 0.35, 0, mainRoomZ + 1.0);
+            headphones1.position.set(-SPECIAL_SPECIAL_WIDTH / 2 + 0.35, 0, mainRoomCenterZ + 1.0);
             addFurniture(headphones1, 'headphone-station-1');
 
-            const headphones2 = createHeadphoneStation();
-            headphones2.position.set(-SPECIAL_SPECIAL_WIDTH / 2 + 0.35, 0, mainRoomZ - 0.5);
-            addFurniture(headphones2, 'headphone-station-2');
-
-            const viewStool1 = createSimpleStool();
-            viewStool1.position.set(-0.8, 0, 1.8);
-            addFurniture(viewStool1, 'stool-1');
-
-            const viewStool2 = createSimpleStool();
-            viewStool2.position.set(0.8, 0, 1.8);
-            addFurniture(viewStool2, 'stool-2');
-
-            // === AFRIKADAA POSTER WALL ===
+            // === AFRIKADAA POSTER WALL — on west wall above banquette ===
             const posterA1 = createAfrikadaaPoster('AFRIKADAA', 0xd32f2f, 0.55, 0.75);
-            posterA1.position.set(-SPECIAL_SPECIAL_WIDTH / 2 + 0.02, 1.7, -1.8);
+            posterA1.position.set(-SPECIAL_SPECIAL_WIDTH / 2 + 0.02, 1.7, mainRoomCenterZ - 1.0);
             posterA1.rotation.y = Math.PI / 2;
-            addFurniture(posterA1, 'poster-s203-1', true);
+            addFurniture(posterA1, 'poster-ss-1', true);
 
-            const posterA2 = createAfrikadaaPoster('AFRICA', 0xfbc02d, 0.45, 0.6);
-            posterA2.position.set(-SPECIAL_SPECIAL_WIDTH / 2 + 0.02, 1.5, -0.8);
+            const posterA2 = createAfrikadaaPoster('SOUND', 0xfbc02d, 0.45, 0.6);
+            posterA2.position.set(-SPECIAL_SPECIAL_WIDTH / 2 + 0.02, 1.5, mainRoomCenterZ);
             posterA2.rotation.y = Math.PI / 2;
-            addFurniture(posterA2, 'poster-s203-2', true);
+            addFurniture(posterA2, 'poster-ss-2', true);
 
-            const posterA3 = createAfrikadaaPoster('DIASPORA', 0x1976d2, 0.5, 0.65);
-            posterA3.position.set(-SPECIAL_SPECIAL_WIDTH / 2 + 0.02, 1.75, 0.3);
+            const posterA3 = createAfrikadaaPoster('LIBRARY', 0x1976d2, 0.5, 0.65);
+            posterA3.position.set(-SPECIAL_SPECIAL_WIDTH / 2 + 0.02, 1.75, mainRoomCenterZ + 1.0);
             posterA3.rotation.y = Math.PI / 2;
-            addFurniture(posterA3, 'poster-s203-3', true);
-
-            const posterA4 = createAfrikadaaPoster('PANAFRICAN', 0x388e3c, 0.4, 0.55);
-            posterA4.position.set(-SPECIAL_SPECIAL_WIDTH / 2 + 0.02, 1.45, 1.4);
-            posterA4.rotation.y = Math.PI / 2;
-            addFurniture(posterA4, 'poster-s203-4', true);
-
-            const posterA5 = createAfrikadaaPoster('LIBRARY', 0x7b1fa2, 0.48, 0.68);
-            posterA5.position.set(-SPECIAL_SPECIAL_WIDTH / 2 + 0.02, 1.65, 2.5);
-            posterA5.rotation.y = Math.PI / 2;
-            addFurniture(posterA5, 'poster-s203-5', true);
+            addFurniture(posterA3, 'poster-ss-3', true);
 
             // === MINIMAL LIGHTING ===
             const pendant1 = createSimplePendant();
-            pendant1.position.set(0, CEILING_HEIGHT - 0.4, -0.5);
-            addFurniture(pendant1, 'pendant-s203-1');
-
-            const pendant2 = createSimplePendant();
-            pendant2.position.set(0, CEILING_HEIGHT - 0.4, 2.0);
-            addFurniture(pendant2, 'pendant-s203-2');
+            pendant1.position.set(0, CEILING_HEIGHT - 0.4, mainRoomCenterZ);
+            addFurniture(pendant1, 'pendant-ss-1');
 
             return group;
         }
