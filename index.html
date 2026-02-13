@@ -8607,33 +8607,32 @@
             const ssCenterX = SPECIAL_SPECIAL_X;
             const ssCenterZ = ssZoff;
 
-            // THREE STAR walls — hide wall closest to camera
+            // THREE STAR walls — hide wall closest to camera (exterior walls only)
             // South wall (windows) — hide when camera is south of room center
             if (threeStarRoomWalls.front) threeStarRoomWalls.front.visible = camZ > tsCenterZ;
 
             // North wall (corridor entry) — hide when camera is north of room center
-            const tsHideNorth = camZ < tsCenterZ;
-            if (threeStarRoomWalls.back) threeStarRoomWalls.back.visible = !tsHideNorth;
-            if (threeStarRoomWalls.vestibuleGroup) threeStarRoomWalls.vestibuleGroup.visible = !tsHideNorth;
+            if (threeStarRoomWalls.back) threeStarRoomWalls.back.visible = camZ < tsNorthZ;
+            if (threeStarRoomWalls.vestibuleGroup) threeStarRoomWalls.vestibuleGroup.visible = camZ < tsNorthZ;
 
             // East wall (solid exterior) — hide when camera is east of room center
             if (threeStarRoomWalls.right) threeStarRoomWalls.right.visible = camX < tsCenterX;
 
-            // West/shared wall (connecting door) — hide when camera is west of room center
-            // But only if camera is closer to this room than to Special Special
-            if (threeStarRoomWalls.left) threeStarRoomWalls.left.visible = camX > tsCenterX;
+            // West/shared wall (connecting door) — NEVER hide, always visible
+            if (threeStarRoomWalls.left) threeStarRoomWalls.left.visible = true;
 
-            // SPECIAL SPECIAL walls — hide wall closest to camera
+            // SPECIAL SPECIAL walls — hide wall closest to camera (exterior walls only)
             // South wall (windows) — hide when camera is south of room center
             if (specialSpecialRoomWalls.front) specialSpecialRoomWalls.front.visible = camZ > ssCenterZ;
 
             // North wall (corridor entry) — hide when camera is north of room center
-            if (specialSpecialRoomWalls.back) specialSpecialRoomWalls.back.visible = camZ < ssCenterZ;
+            if (specialSpecialRoomWalls.back) specialSpecialRoomWalls.back.visible = camZ < ssNorthZ;
 
             // West wall (solid exterior) — hide when camera is west of room center
             if (specialSpecialRoomWalls.left) specialSpecialRoomWalls.left.visible = camX > ssCenterX;
 
-            // East wall (shared with Three Star) — null, handled by Three Star's left wall
+            // East wall (shared with Three Star) — NEVER hide, always visible
+            // (null or handled by Three Star's left wall which is always visible)
         }
 
         // Auto ceiling visibility based on camera height
