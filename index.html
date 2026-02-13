@@ -1901,12 +1901,17 @@
                 <button class="item-control-btn" onclick="moveItem(0.2, 0)">X →</button>
                 <button class="item-control-btn" onclick="moveItem(0, -0.2)">↑ Z</button>
                 <button class="item-control-btn" onclick="moveItem(0, 0.2)">Z ↓</button>
-                <button class="item-control-btn" onclick="rotateItem(15)">↻ 15°</button>
-                <button class="item-control-btn" onclick="rotateItem(-15)">↺ 15°</button>
+                <button class="item-control-btn" onclick="moveItemY(0.1)">↑ Y</button>
+                <button class="item-control-btn" onclick="moveItemY(-0.1)">↓ Y</button>
+                <button class="item-control-btn" onclick="rotateItem(15)">↻ Y</button>
+                <button class="item-control-btn" onclick="rotateItem(-15)">↺ Y</button>
+                <button class="item-control-btn" onclick="tiltItem(5)">⤴ Tilt</button>
+                <button class="item-control-btn" onclick="tiltItem(-5)">⤵ Tilt</button>
+                <button class="item-control-btn" onclick="snapToWall()" title="Snap to nearest wall">🧲 Wall</button>
                 <button class="item-control-btn danger" onclick="deleteItem()">🗑️</button>
             </div>
             <div style="font-size:9px; color:#888; margin-top:8px;">
-                Keys: G=move, R=rotate, Del=delete, Esc=deselect
+                Keys: G=move, R=rotate, T=tilt, Del=delete, Esc=deselect
             </div>
 
             <!-- TEXTURE CUSTOMIZATION PANEL -->
@@ -6227,8 +6232,9 @@
                 const constrainedPos = constrainToRoom(intersectPoint);
                 if (constrainedPos) {
                     item.position.copy(constrainedPos);
-                    if (item.userData.isWallArt) {
+                    if (item.userData.isWallArt || item.userData.isPoster) {
                         item.position.y = 1.5;
+                        autoSnapToWall(item);
                     }
                     scene.add(item);
                     placedItems.push(item);
@@ -8440,7 +8446,10 @@
                     // VALID position - move item
                     selectedPlacedItem.position.x = constrained.x;
                     selectedPlacedItem.position.z = constrained.z;
-                    if (!selectedPlacedItem.userData.isWallArt) {
+                    if (selectedPlacedItem.userData.isWallArt || selectedPlacedItem.userData.isPoster) {
+                        // Auto-snap posters/wall art to nearest wall while dragging
+                        autoSnapToWall(selectedPlacedItem);
+                    } else {
                         selectedPlacedItem.position.y = 0;
                     }
                     mouseDragLastValidPos = selectedPlacedItem.position.clone();
@@ -8642,6 +8651,110 @@
             }
         };
 
+        window.tiltItem = function(degrees) {
+            if (selectedPlacedItem) {
+                selectedPlacedItem.rotation.z += degrees * Math.PI / 180;
+            }
+        };
+
+        window.moveItemY = function(dy) {
+            if (selectedPlacedItem) {
+                selectedPlacedItem.position.y = Math.max(0, selectedPlacedItem.position.y + dy);
+            }
+        };
+
+        // Snap item to nearest wall — auto-position flush against wall and face into room
+        window.snapToWall = function() {
+            if (!selectedPlacedItem) return;
+
+            const pos = selectedPlacedItem.position;
+            const x = pos.x;
+            const z = pos.z;
+            const ssZoff = SPECIAL_SPECIAL_Z_OFFSET;
+
+            // Determine which room
+            const tsBounds = ROOM_GEOMETRY['THREE_STAR'].bounds;
+            const ssBounds = ROOM_GEOMETRY['SPECIAL_SPECIAL'].bounds;
+            const inTS = x >= tsBounds.minX && x <= tsBounds.maxX && z >= tsBounds.minZ && z <= tsBounds.maxZ;
+            const inSS = x >= ssBounds.minX && x <= ssBounds.maxX && z >= ssBounds.minZ && z <= ssBounds.maxZ;
+
+            let walls = [];
+            if (inTS) {
+                walls = [
+                    { name: 'north', dist: Math.abs(z - tsBounds.maxZ), snapZ: tsBounds.maxZ - 0.03, snapX: x, rotY: Math.PI },     // North wall: face south
+                    { name: 'south', dist: Math.abs(z - tsBounds.minZ), snapZ: tsBounds.minZ + 0.03, snapX: x, rotY: 0 },             // South wall: face north
+                    { name: 'east',  dist: Math.abs(x - tsBounds.maxX), snapX: tsBounds.maxX - 0.03, snapZ: z, rotY: -Math.PI / 2 },  // East wall: face west
+                    { name: 'west',  dist: Math.abs(x - tsBounds.minX), snapX: tsBounds.minX + 0.03, snapZ: z, rotY: Math.PI / 2 }    // West wall: face east
+                ];
+            } else if (inSS) {
+                walls = [
+                    { name: 'north', dist: Math.abs(z - ssBounds.maxZ), snapZ: ssBounds.maxZ - 0.03, snapX: x, rotY: Math.PI },
+                    { name: 'south', dist: Math.abs(z - ssBounds.minZ), snapZ: ssBounds.minZ + 0.03, snapX: x, rotY: 0 },
+                    { name: 'east',  dist: Math.abs(x - ssBounds.maxX), snapX: ssBounds.maxX - 0.03, snapZ: z, rotY: -Math.PI / 2 },
+                    { name: 'west',  dist: Math.abs(x - ssBounds.minX), snapX: ssBounds.minX + 0.03, snapZ: z, rotY: Math.PI / 2 }
+                ];
+            } else {
+                return; // Not in a room
+            }
+
+            // Find nearest wall
+            walls.sort((a, b) => a.dist - b.dist);
+            const nearest = walls[0];
+
+            // Snap position
+            if (nearest.snapX !== undefined) pos.x = nearest.snapX;
+            if (nearest.snapZ !== undefined) pos.z = nearest.snapZ;
+
+            // Set Y rotation to face into room
+            selectedPlacedItem.rotation.y = nearest.rotY;
+
+            // Wall art & posters: ensure at eye level if on floor
+            if (selectedPlacedItem.userData.isWallArt || selectedPlacedItem.userData.isPoster) {
+                if (pos.y < 0.5) pos.y = 1.5;
+            }
+        };
+
+        // Auto-snap posters/wall art to nearest wall on placement
+        function autoSnapToWall(item) {
+            if (!item.userData.isWallArt && !item.userData.isPoster) return;
+
+            const pos = item.position;
+            const x = pos.x;
+            const z = pos.z;
+
+            const tsBounds = ROOM_GEOMETRY['THREE_STAR'].bounds;
+            const ssBounds = ROOM_GEOMETRY['SPECIAL_SPECIAL'].bounds;
+            const inTS = x >= tsBounds.minX && x <= tsBounds.maxX && z >= tsBounds.minZ && z <= tsBounds.maxZ;
+            const inSS = x >= ssBounds.minX && x <= ssBounds.maxX && z >= ssBounds.minZ && z <= ssBounds.maxZ;
+
+            let walls = [];
+            if (inTS) {
+                walls = [
+                    { dist: Math.abs(z - tsBounds.maxZ), snapZ: tsBounds.maxZ - 0.03, snapX: x, rotY: Math.PI },
+                    { dist: Math.abs(z - tsBounds.minZ), snapZ: tsBounds.minZ + 0.03, snapX: x, rotY: 0 },
+                    { dist: Math.abs(x - tsBounds.maxX), snapX: tsBounds.maxX - 0.03, snapZ: z, rotY: -Math.PI / 2 },
+                    { dist: Math.abs(x - tsBounds.minX), snapX: tsBounds.minX + 0.03, snapZ: z, rotY: Math.PI / 2 }
+                ];
+            } else if (inSS) {
+                walls = [
+                    { dist: Math.abs(z - ssBounds.maxZ), snapZ: ssBounds.maxZ - 0.03, snapX: x, rotY: Math.PI },
+                    { dist: Math.abs(z - ssBounds.minZ), snapZ: ssBounds.minZ + 0.03, snapX: x, rotY: 0 },
+                    { dist: Math.abs(x - ssBounds.maxX), snapX: ssBounds.maxX - 0.03, snapZ: z, rotY: -Math.PI / 2 },
+                    { dist: Math.abs(x - ssBounds.minX), snapX: ssBounds.minX + 0.03, snapZ: z, rotY: Math.PI / 2 }
+                ];
+            } else {
+                return;
+            }
+
+            walls.sort((a, b) => a.dist - b.dist);
+            const nearest = walls[0];
+
+            if (nearest.snapX !== undefined) pos.x = nearest.snapX;
+            if (nearest.snapZ !== undefined) pos.z = nearest.snapZ;
+            item.rotation.y = nearest.rotY;
+            if (pos.y < 0.5) pos.y = 1.5;
+        }
+
         window.deleteItem = function() {
             if (selectedPlacedItem) {
                 if (transformControls) transformControls.detach();
@@ -8654,15 +8767,20 @@
 
         // Keyboard shortcuts for transform modes (when decorator mode active)
         document.addEventListener('keydown', (e) => {
-            if (!decoratorMode || !transformControls) return;
+            if (!decoratorMode) return;
 
             switch(e.key.toLowerCase()) {
                 case 'g': // Grab/translate mode
-                case 't':
-                    transformControls.setMode('translate');
+                    if (transformControls) transformControls.setMode('translate');
                     break;
-                case 'r': // Rotate mode
-                    transformControls.setMode('rotate');
+                case 'r': // Rotate Y
+                    if (selectedPlacedItem) rotateItem(15);
+                    break;
+                case 't': // Tilt (Z-axis rotation)
+                    if (selectedPlacedItem) tiltItem(e.shiftKey ? -5 : 5);
+                    break;
+                case 'w': // Snap to wall
+                    if (selectedPlacedItem) snapToWall();
                     break;
                 case 'delete':
                 case 'backspace':
@@ -8681,7 +8799,7 @@
             const layout = placedItems.map(item => ({
                 type: item.userData.itemType,
                 position: { x: item.position.x, y: item.position.y, z: item.position.z },
-                rotation: { y: item.rotation.y }
+                rotation: { x: item.rotation.x || 0, y: item.rotation.y, z: item.rotation.z || 0 }
             }));
 
             // Save to localStorage as backup
@@ -8739,8 +8857,10 @@
             // Recreate items
             layout.forEach(data => {
                 const item = createFurnitureItem(data.type);
-                item.position.set(data.position.x, data.position.y, data.position.z);
+                item.position.set(data.position.x, data.position.y || 0, data.position.z);
                 item.rotation.y = data.rotation.y;
+                if (data.rotation.x) item.rotation.x = data.rotation.x;
+                if (data.rotation.z) item.rotation.z = data.rotation.z;
                 scene.add(item);
                 placedItems.push(item);
             });
@@ -8777,7 +8897,7 @@
             const layout = placedItems.map(item => ({
                 type: item.userData.itemType,
                 position: { x: item.position.x, y: item.position.y, z: item.position.z },
-                rotation: { y: item.rotation.y }
+                rotation: { x: item.rotation.x || 0, y: item.rotation.y, z: item.rotation.z || 0 }
             }));
             const blob = new Blob([JSON.stringify(layout, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
@@ -9113,7 +9233,7 @@
             const layout = placedItems.map(item => ({
                 type: item.userData.itemType,
                 position: { x: item.position.x, y: item.position.y, z: item.position.z },
-                rotation: { y: item.rotation.y }
+                rotation: { x: item.rotation.x || 0, y: item.rotation.y, z: item.rotation.z || 0 }
             }));
 
             const layoutEntry = {
@@ -9364,7 +9484,7 @@
             const layout = placedItems.map(item => ({
                 type: item.userData.itemType,
                 position: { x: item.position.x, y: item.position.y, z: item.position.z },
-                rotation: { y: item.rotation.y }
+                rotation: { x: item.rotation.x || 0, y: item.rotation.y, z: item.rotation.z || 0 }
             }));
             const blob = new Blob([JSON.stringify(layout, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
