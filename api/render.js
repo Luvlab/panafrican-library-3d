@@ -33,9 +33,9 @@ export default async function handler(req, res) {
     // Build the prompt for photorealistic rendering
     const renderPrompt = buildRenderPrompt(prompt, style);
 
-    // Call Gemini API with image input
+    // Call Gemini API with image input (gemini-2.5-flash-image supports responseModalities IMAGE)
     const geminiResponse = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: {
