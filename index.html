@@ -1292,6 +1292,46 @@
             height: 100%;
             object-fit: contain;
         }
+        .render-views-bar {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding: 8px 0;
+            margin-bottom: 12px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.2) transparent;
+        }
+        .render-views-bar::-webkit-scrollbar { height: 4px; }
+        .render-views-bar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+        .render-view-btn {
+            flex: 0 0 auto;
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 4px;
+            color: #ccc;
+            font-size: 11px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .render-view-btn:hover {
+            background: rgba(255,255,255,0.12);
+            border-color: rgba(255,255,255,0.3);
+            color: #fff;
+        }
+        .render-view-btn.active {
+            background: rgba(102,126,234,0.25);
+            border-color: #667eea;
+            color: #fff;
+        }
+        .render-views-label {
+            font-size: 10px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
         .render-options {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -1856,6 +1896,11 @@
         <div class="render-box">
             <h2>✨ AI Photorealistic Render</h2>
             <p>Transform your 3D scene into a stunning photorealistic image using Nano Banana AI</p>
+
+            <div class="render-views-label">Quick Views — click to switch &amp; capture</div>
+            <div class="render-views-bar" id="render-views-bar">
+                <!-- Populated dynamically from savedViews -->
+            </div>
 
             <div class="render-preview">
                 <div class="render-preview-box">
@@ -9925,10 +9970,59 @@
 
         window.openRenderModal = function() {
             document.getElementById('render-modal').classList.add('visible');
+            populateRenderViewsBar();
             // Defer heavy render capture so click handler returns fast (fixes INP)
             requestAnimationFrame(() => {
                 captureForRender();
             });
+        };
+
+        // Populate the quick-view buttons in the render modal from savedViews
+        function populateRenderViewsBar() {
+            const bar = document.getElementById('render-views-bar');
+            if (!bar || !savedViews || savedViews.length === 0) return;
+            bar.innerHTML = savedViews.map((v, i) => {
+                const icon = v.icon || '📷';
+                const name = v.name || 'View ' + (i + 1);
+                return `<button class="render-view-btn" onclick="renderSwitchView(${i}, this)" title="${name}">${icon} ${name}</button>`;
+            }).join('');
+        }
+
+        // Switch to a saved view from the render modal, then recapture
+        window.renderSwitchView = function(index, btn) {
+            const view = savedViews[index];
+            if (!view || !view.data) return;
+
+            // Highlight active button
+            document.querySelectorAll('.render-view-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            // Hide the modal briefly so we can see the 3D view animate
+            const modal = document.getElementById('render-modal');
+            modal.style.opacity = '0.15';
+            modal.style.pointerEvents = 'none';
+
+            const data = view.data;
+            animateToView({
+                rotX: data.rotationX,
+                rotY: data.rotationY,
+                dist: data.distance,
+                target: new THREE.Vector3(data.target.x, data.target.y, data.target.z)
+            }, 800);
+
+            // After animation completes, recapture and restore modal
+            setTimeout(() => {
+                captureForRender();
+                // Reset output preview for new view
+                document.getElementById('render-output-preview').innerHTML = 'Generated image will appear here';
+                const status = document.getElementById('render-status');
+                status.style.display = 'none';
+                status.innerHTML = '<span class="render-spinner"></span><span id="render-status-text">Generating render...</span>';
+                document.getElementById('generate-render-btn').disabled = false;
+
+                modal.style.opacity = '1';
+                modal.style.pointerEvents = '';
+            }, 900);
         };
 
         window.closeRenderModal = function() {
