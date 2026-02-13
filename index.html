@@ -125,16 +125,17 @@
             display: inline-block;
             padding: 8px 14px;
             margin: 4px 4px 4px 0;
-            background: rgba(100, 149, 237, 0.3);
-            border: 1px solid cornflowerblue;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.4);
             color: #fff;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 13px;
             transition: all 0.3s;
         }
         .room-btn:hover {
-            background: cornflowerblue;
+            background: rgba(255,255,255,0.15);
+            border-color: #fff;
         }
         .room-buttons {
             margin-bottom: 12px;
@@ -151,10 +152,10 @@
             padding: 8px 10px;
             background: rgba(255,255,255,0.05);
             border-radius: 4px;
-            border-left: 3px solid cornflowerblue;
+            border-left: 3px solid rgba(255,255,255,0.3);
         }
         .room-desc strong {
-            color: cornflowerblue;
+            color: #fff;
             font-size: 12px;
         }
         #controls-panel {
@@ -187,21 +188,22 @@
             width: 100%;
             padding: 8px 12px;
             margin: 4px 0;
-            background: rgba(255,255,255,0.1);
-            border: none;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
             color: #fff;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 11px;
+            font-size: 13px;
             text-align: left;
             transition: all 0.3s;
         }
         .control-btn:hover {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.4);
         }
         .control-btn.active {
-            background: rgba(100, 149, 237, 0.4);
-            border: 1px solid cornflowerblue;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.5);
         }
         #dimensions-panel {
             position: absolute;
@@ -271,16 +273,16 @@
         }
         .toggle-btn {
             padding: 6px 12px;
-            background: rgba(0,0,0,0.7);
-            border: 1px solid rgba(255,255,255,0.2);
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.3);
             color: #fff;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 11px;
+            font-size: 12px;
         }
         .toggle-btn.active {
-            background: rgba(100, 149, 237, 0.5);
-            border-color: cornflowerblue;
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.6);
         }
         #capture-btn {
             position: absolute;
@@ -288,14 +290,15 @@
             left: 50%;
             transform: translateX(-50%);
             padding: 10px 20px;
-            background: cornflowerblue;
-            border: none;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.4);
             color: #fff;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 13px;
             z-index: 100;
         }
+        #capture-btn:hover { background: rgba(255,255,255,0.1); }
         .icon { margin-right: 6px; }
         #moodboard-btn {
             position: absolute;
@@ -303,15 +306,15 @@
             left: 50%;
             transform: translateX(calc(-50% - 70px));
             padding: 10px 20px;
-            background: #8b2942;
-            border: none;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.4);
             color: #fff;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 13px;
             z-index: 100;
         }
-        #moodboard-btn:hover { background: #a03050; }
+        #moodboard-btn:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
         #capture-btn { transform: translateX(calc(-50% - 210px)); }
         .modal-hidden { display: none; }
         #moodboard-modal {
@@ -725,15 +728,15 @@
             left: 50%;
             transform: translateX(calc(-50% + 70px));
             padding: 10px 20px;
-            background: #20c997;
-            border: none;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.4);
             color: #fff;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 13px;
             z-index: 100;
         }
-        #decorator-btn:hover { background: #1aa87c; }
+        #decorator-btn:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
         #decorator-panel {
             position: fixed;
             top: 0;
@@ -974,15 +977,15 @@
             top: 20px;
             right: 20px;
             padding: 8px 16px;
-            background: rgba(139, 41, 66, 0.8);
-            border: 1px solid #8b2942;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.3);
             color: #fff;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 11px;
+            font-size: 12px;
             z-index: 100;
         }
-        #admin-btn:hover { background: #8b2942; }
+        #admin-btn:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
         #admin-profile {
             position: absolute;
             top: 20px;
@@ -1096,7 +1099,8 @@
         #admin-panel.open { left: 0; }
         .admin-header {
             padding: 20px;
-            background: linear-gradient(135deg, #8b2942 0%, #5a1a2a 100%);
+            background: rgba(0,0,0,0.5);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -1125,14 +1129,14 @@
             border-bottom: 2px solid transparent;
         }
         .admin-tab:hover { color: #fff; }
-        .admin-tab.active { color: #fff; border-bottom-color: #8b2942; }
+        .admin-tab.active { color: #fff; border-bottom-color: #fff; }
         .admin-content { padding: 20px; }
         .admin-section {
             margin-bottom: 25px;
         }
         .admin-section h3 {
             font-size: 12px;
-            color: #8b2942;
+            color: rgba(255,255,255,0.7);
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 12px;
@@ -1155,7 +1159,7 @@
             color: #fff;
             font-size: 12px;
         }
-        .admin-input:focus { outline: none; border-color: #8b2942; }
+        .admin-input:focus { outline: none; border-color: rgba(255,255,255,0.5); }
         .admin-textarea {
             min-height: 80px;
             resize: vertical;
@@ -1169,9 +1173,9 @@
             margin-right: 8px;
             margin-bottom: 8px;
         }
-        .admin-btn-primary { background: #8b2942; color: #fff; }
-        .admin-btn-secondary { background: rgba(255,255,255,0.1); color: #fff; }
-        .admin-btn-success { background: #20c997; color: #fff; }
+        .admin-btn-primary { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+        .admin-btn-secondary { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+        .admin-btn-success { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
         .admin-btn:hover { opacity: 0.8; }
         .saved-config-list {
             max-height: 200px;
@@ -1910,8 +1914,12 @@
                 <button class="item-control-btn" onclick="snapToWall()" title="Snap to nearest wall">🧲 Wall</button>
                 <button class="item-control-btn danger" onclick="deleteItem()">🗑️</button>
             </div>
+            <div class="item-controls" style="margin-top:4px;">
+                <button class="item-control-btn" onclick="undoAction()" title="Undo (Ctrl/Cmd+Z)">↩ Undo</button>
+                <button class="item-control-btn" onclick="redoAction()" title="Redo (Ctrl/Cmd+Shift+Z)">↪ Redo</button>
+            </div>
             <div style="font-size:9px; color:#888; margin-top:8px;">
-                Keys: G=move, R=rotate, T=tilt, Del=delete, Esc=deselect
+                Keys: R=rotate, T=tilt, W=wall, Del=delete | Ctrl+Z undo, Ctrl+Shift+Z redo
             </div>
 
             <!-- TEXTURE CUSTOMIZATION PANEL -->
@@ -6239,6 +6247,7 @@
                     }
                     scene.add(item);
                     placedItems.push(item);
+                    pushUndo({ type: 'add', item: item });
 
                     // Select the newly placed item
                     selectedPlacedItem = item;
@@ -8392,12 +8401,14 @@
         let mouseDownPos = { x: 0, y: 0 };
 
         // Mousedown - start potential drag or selection
+        let dragStartState = null;
         container.addEventListener('mousedown', function(event) {
             if (!decoratorMode) return;
             if (event.button !== 0) return; // Left click only
 
             mouseDownTime = Date.now();
             mouseDownPos = { x: event.clientX, y: event.clientY };
+            dragStartState = null;
 
             const rect = container.getBoundingClientRect();
             mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
@@ -8412,6 +8423,7 @@
                 while (obj.parent && !obj.userData.isPlacedItem) obj = obj.parent;
                 if (obj.userData.isPlacedItem) {
                     selectedPlacedItem = obj;
+                    dragStartState = captureItemState(obj); // Capture for undo
                     selectedFurnitureType = null;
                     document.querySelectorAll('.item-card').forEach(c => c.classList.remove('selected'));
                     updateSelectedInfo();
@@ -8472,8 +8484,14 @@
             isCameraOrbitBlocked = false; // UNBLOCK camera orbit
             container.style.cursor = '';
 
-            // If we were dragging an item, don't place a new one
-            if (wasDragging) return;
+            // If we were dragging an item, record undo and don't place a new one
+            if (wasDragging) {
+                if (dragStartState && selectedPlacedItem) {
+                    pushUndo({ type: 'transform', item: selectedPlacedItem, before: dragStartState, after: captureItemState(selectedPlacedItem) });
+                }
+                dragStartState = null;
+                return;
+            }
 
             // Short click with minimal movement = place new item
             if (clickDuration < 300 && moveDistance < 10 && selectedFurnitureType) {
@@ -8632,8 +8650,90 @@
             }, 1000);
         }
 
+        // ============ UNDO / REDO SYSTEM (199 steps) ============
+        const UNDO_MAX = 199;
+        const undoStack = [];
+        const redoStack = [];
+
+        function pushUndo(action) {
+            undoStack.push(action);
+            if (undoStack.length > UNDO_MAX) undoStack.shift();
+            redoStack.length = 0; // Clear redo on new action
+        }
+
+        function captureItemState(item) {
+            return {
+                px: item.position.x, py: item.position.y, pz: item.position.z,
+                rx: item.rotation.x, ry: item.rotation.y, rz: item.rotation.z
+            };
+        }
+
+        function restoreItemState(item, state) {
+            item.position.set(state.px, state.py, state.pz);
+            item.rotation.set(state.rx, state.ry, state.rz);
+        }
+
+        function applyUndoRedo(action, isUndo) {
+            switch (action.type) {
+                case 'add':
+                    if (isUndo) {
+                        scene.remove(action.item);
+                        placedItems = placedItems.filter(i => i !== action.item);
+                        if (selectedPlacedItem === action.item) { selectedPlacedItem = null; updateSelectedInfo(); }
+                    } else {
+                        scene.add(action.item);
+                        placedItems.push(action.item);
+                        selectedPlacedItem = action.item;
+                        updateSelectedInfo();
+                    }
+                    break;
+
+                case 'remove':
+                    if (isUndo) {
+                        scene.add(action.item);
+                        placedItems.push(action.item);
+                        selectedPlacedItem = action.item;
+                        updateSelectedInfo();
+                    } else {
+                        scene.remove(action.item);
+                        placedItems = placedItems.filter(i => i !== action.item);
+                        if (selectedPlacedItem === action.item) { selectedPlacedItem = null; updateSelectedInfo(); }
+                    }
+                    break;
+
+                case 'transform':
+                    // Swap before/after states
+                    const currentState = captureItemState(action.item);
+                    restoreItemState(action.item, isUndo ? action.before : action.after);
+                    if (isUndo) {
+                        action.after = currentState;
+                    } else {
+                        action.before = currentState;
+                    }
+                    selectedPlacedItem = action.item;
+                    updateSelectedInfo();
+                    break;
+            }
+        }
+
+        window.undoAction = function() {
+            if (undoStack.length === 0) return;
+            const action = undoStack.pop();
+            applyUndoRedo(action, true);
+            redoStack.push(action);
+            if (redoStack.length > UNDO_MAX) redoStack.shift();
+        };
+
+        window.redoAction = function() {
+            if (redoStack.length === 0) return;
+            const action = redoStack.pop();
+            applyUndoRedo(action, false);
+            undoStack.push(action);
+        };
+
         window.moveItem = function(dx, dz) {
             if (selectedPlacedItem) {
+                const before = captureItemState(selectedPlacedItem);
                 const newPos = selectedPlacedItem.position.clone();
                 newPos.x += dx;
                 newPos.z += dz;
@@ -8641,32 +8741,42 @@
                 if (constrained) {
                     selectedPlacedItem.position.x = constrained.x;
                     selectedPlacedItem.position.z = constrained.z;
-                    selectedPlacedItem.position.y = 0; // Snap to floor
+                    if (!selectedPlacedItem.userData.isWallArt && !selectedPlacedItem.userData.isPoster) {
+                        selectedPlacedItem.position.y = 0;
+                    }
+                    pushUndo({ type: 'transform', item: selectedPlacedItem, before, after: captureItemState(selectedPlacedItem) });
                 }
             }
         };
 
         window.rotateItem = function(degrees) {
             if (selectedPlacedItem) {
+                const before = captureItemState(selectedPlacedItem);
                 selectedPlacedItem.rotation.y += degrees * Math.PI / 180;
+                pushUndo({ type: 'transform', item: selectedPlacedItem, before, after: captureItemState(selectedPlacedItem) });
             }
         };
 
         window.tiltItem = function(degrees) {
             if (selectedPlacedItem) {
+                const before = captureItemState(selectedPlacedItem);
                 selectedPlacedItem.rotation.z += degrees * Math.PI / 180;
+                pushUndo({ type: 'transform', item: selectedPlacedItem, before, after: captureItemState(selectedPlacedItem) });
             }
         };
 
         window.moveItemY = function(dy) {
             if (selectedPlacedItem) {
+                const before = captureItemState(selectedPlacedItem);
                 selectedPlacedItem.position.y = Math.max(0, selectedPlacedItem.position.y + dy);
+                pushUndo({ type: 'transform', item: selectedPlacedItem, before, after: captureItemState(selectedPlacedItem) });
             }
         };
 
         // Snap item to nearest wall — auto-position flush against wall and face into room
         window.snapToWall = function() {
             if (!selectedPlacedItem) return;
+            const before = captureItemState(selectedPlacedItem);
 
             const pos = selectedPlacedItem.position;
             const x = pos.x;
@@ -8713,6 +8823,7 @@
             if (selectedPlacedItem.userData.isWallArt || selectedPlacedItem.userData.isPoster) {
                 if (pos.y < 0.5) pos.y = 1.5;
             }
+            pushUndo({ type: 'transform', item: selectedPlacedItem, before, after: captureItemState(selectedPlacedItem) });
         };
 
         // Auto-snap posters/wall art to nearest wall on placement
@@ -8758,6 +8869,7 @@
 
         window.deleteItem = function() {
             if (selectedPlacedItem) {
+                pushUndo({ type: 'remove', item: selectedPlacedItem });
                 if (transformControls) transformControls.detach();
                 scene.remove(selectedPlacedItem);
                 placedItems = placedItems.filter(i => i !== selectedPlacedItem);
@@ -8766,8 +8878,19 @@
             }
         };
 
-        // Keyboard shortcuts for transform modes (when decorator mode active)
+        // Keyboard shortcuts for decorator mode
         document.addEventListener('keydown', (e) => {
+            // Undo/Redo works whenever decorator mode is on (Ctrl/Cmd + Z / Shift+Z)
+            if (decoratorMode && (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+                e.preventDefault();
+                if (e.shiftKey) {
+                    redoAction();
+                } else {
+                    undoAction();
+                }
+                return;
+            }
+
             if (!decoratorMode) return;
 
             switch(e.key.toLowerCase()) {
@@ -9006,10 +9129,15 @@
             currentRotationX += (targetRotationX - currentRotationX) * 0.05;
             currentRotationY += (targetRotationY - currentRotationY) * 0.05;
 
-            if (keys['w']) cameraTarget.z -= 0.1;
-            if (keys['s']) cameraTarget.z += 0.1;
-            if (keys['a']) cameraTarget.x -= 0.1;
-            if (keys['d']) cameraTarget.x += 0.1;
+            // WASD movement only when no text input is focused
+            const activeEl = document.activeElement;
+            const isTyping = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.tagName === 'SELECT' || activeEl.isContentEditable);
+            if (!isTyping) {
+                if (keys['w']) cameraTarget.z -= 0.1;
+                if (keys['s']) cameraTarget.z += 0.1;
+                if (keys['a']) cameraTarget.x -= 0.1;
+                if (keys['d']) cameraTarget.x += 0.1;
+            }
 
             camera.position.x = cameraTarget.x + Math.sin(currentRotationX) * Math.cos(currentRotationY) * cameraDistance;
             camera.position.y = cameraTarget.y + Math.sin(currentRotationY) * cameraDistance;
