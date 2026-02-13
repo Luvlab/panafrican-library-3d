@@ -1747,8 +1747,8 @@
                         <label>Category (groups views in menu)</label>
                         <select class="admin-input" id="view-category">
                             <option value="Overview">Overview</option>
-                            <option value="S202 Three Stars — Panafrican Library">Three Stars — Panafrican Library</option>
-                            <option value="S202 Special Special — Sound Library">Special Special — Sound Library</option>
+                            <option value="Panafrican Library">Panafrican Library</option>
+                            <option value="Sound Library">Sound Library</option>
                             <option value="Custom">Custom</option>
                         </select>
                     </div>
@@ -4825,10 +4825,10 @@
         window.focusRoom = function(room) {
             // Find matching saved view by name or fall back to legacy views
             if (room === 'threeStarRoom') {
-                const idx = savedViews.findIndex(v => v.name === 'Inside View' && v.category && v.category.includes('Three Stars'));
+                const idx = savedViews.findIndex(v => v.name === 'Inside View' && v.category && v.category.includes('Panafrican'));
                 if (idx >= 0) loadView(idx); else setView('threeStarRoomInside');
             } else if (room === 'specialSpecialRoom') {
-                const idx = savedViews.findIndex(v => v.name === 'Inside View' && v.category && v.category.includes('Special Special'));
+                const idx = savedViews.findIndex(v => v.name === 'Inside View' && v.category && v.category.includes('Sound'));
                 if (idx >= 0) loadView(idx); else setView('specialSpecialRoomInside');
             }
         };
@@ -9360,7 +9360,7 @@
             const panel = document.getElementById('admin-panel');
             panel.classList.toggle('open');
             if (panel.classList.contains('open')) {
-                loadAdminConfigs();
+                initAdminLists(); // Render localStorage-based layouts & views
                 updateCameraPositionDisplay();
             }
         };
@@ -9441,15 +9441,15 @@
         const DEFAULT_VIEW_PRESETS = [
             { name: 'Bird\'s Eye', icon: '🏠', category: 'Overview', description: 'Both rooms from above', rotX: Math.PI, rotY: 0.5, dist: 18, tx: 0, ty: 2, tz: 0 },
             { name: 'Floor Plan View', icon: '📐', category: 'Overview', description: 'Top-down floor plan view', rotX: Math.PI, rotY: 1.5, dist: 14, tx: 0, ty: 0, tz: 0 },
-            { name: 'Entry Vestibule', icon: '🚪', category: 'S202 Three Stars — Panafrican Library', description: 'Three Star room from entry door', rotX: Math.PI, rotY: 0.15, dist: 3, tx: THREE_STAR_X, ty: 1.5, tz: THREE_STAR_DEPTH / 2 - 1 },
-            { name: 'Inside View', icon: '🔊', category: 'S202 Three Stars — Panafrican Library', description: 'Three Star room interior', rotX: Math.PI, rotY: 0.2, dist: 5, tx: THREE_STAR_X, ty: 1.5, tz: 0 },
-            { name: 'Window Wall', icon: '🪟', category: 'S202 Three Stars — Panafrican Library', description: 'Three Star south windows', rotX: Math.PI, rotY: 0.15, dist: 4, tx: THREE_STAR_X, ty: 1.5, tz: -THREE_STAR_DEPTH / 4 },
-            { name: 'Display Table', icon: '📚', category: 'S202 Three Stars — Panafrican Library', description: 'Three Star reading table', rotX: Math.PI * 0.8, rotY: 0.25, dist: 4, tx: THREE_STAR_X, ty: 0.8, tz: 0 },
-            { name: 'Entry (from door)', icon: '🚪', category: 'S202 Special Special — Sound Library', description: 'Special Special entry corridor', rotX: Math.PI, rotY: 0.15, dist: 3, tx: SPECIAL_SPECIAL_X, ty: 1.5, tz: SPECIAL_SPECIAL_DEPTH / 2 - 1 },
-            { name: 'Inside View', icon: '📖', category: 'S202 Special Special — Sound Library', description: 'Special Special room interior', rotX: Math.PI, rotY: 0.2, dist: 6, tx: SPECIAL_SPECIAL_X, ty: 1.5, tz: 0 },
-            { name: 'Arched Windows', icon: '🪟', category: 'S202 Special Special — Sound Library', description: 'Special Special south windows', rotX: Math.PI, rotY: 0.15, dist: 4, tx: SPECIAL_SPECIAL_X, ty: 1.5, tz: -SPECIAL_SPECIAL_DEPTH / 4 },
-            { name: 'Seating Area', icon: '🛋️', category: 'S202 Special Special — Sound Library', description: 'Special Special seating area', rotX: Math.PI * 0.7, rotY: 0.2, dist: 4, tx: SPECIAL_SPECIAL_X, ty: 0.5, tz: 0.5 },
-            { name: 'Book Displays', icon: '📚', category: 'S202 Special Special — Sound Library', description: 'Special Special bookshelf wall', rotX: Math.PI * 1.2, rotY: 0.2, dist: 5, tx: SPECIAL_SPECIAL_X, ty: 1.2, tz: SPECIAL_SPECIAL_DEPTH / 3 }
+            { name: 'Entry Vestibule', icon: '🚪', category: 'Panafrican Library', description: 'Three Star room from entry door', rotX: Math.PI, rotY: 0.15, dist: 3, tx: THREE_STAR_X, ty: 1.5, tz: THREE_STAR_DEPTH / 2 - 1 },
+            { name: 'Inside View', icon: '🔊', category: 'Panafrican Library', description: 'Three Star room interior', rotX: Math.PI, rotY: 0.2, dist: 5, tx: THREE_STAR_X, ty: 1.5, tz: 0 },
+            { name: 'Window Wall', icon: '🪟', category: 'Panafrican Library', description: 'Three Star south windows', rotX: Math.PI, rotY: 0.15, dist: 4, tx: THREE_STAR_X, ty: 1.5, tz: -THREE_STAR_DEPTH / 4 },
+            { name: 'Display Table', icon: '📚', category: 'Panafrican Library', description: 'Three Star reading table', rotX: Math.PI * 0.8, rotY: 0.25, dist: 4, tx: THREE_STAR_X, ty: 0.8, tz: 0 },
+            { name: 'Entry (from door)', icon: '🚪', category: 'Sound Library', description: 'Special Special entry corridor', rotX: Math.PI, rotY: 0.15, dist: 3, tx: SPECIAL_SPECIAL_X, ty: 1.5, tz: SPECIAL_SPECIAL_DEPTH / 2 - 1 },
+            { name: 'Inside View', icon: '📖', category: 'Sound Library', description: 'Special Special room interior', rotX: Math.PI, rotY: 0.2, dist: 6, tx: SPECIAL_SPECIAL_X, ty: 1.5, tz: 0 },
+            { name: 'Arched Windows', icon: '🪟', category: 'Sound Library', description: 'Special Special south windows', rotX: Math.PI, rotY: 0.15, dist: 4, tx: SPECIAL_SPECIAL_X, ty: 1.5, tz: -SPECIAL_SPECIAL_DEPTH / 4 },
+            { name: 'Seating Area', icon: '🛋️', category: 'Sound Library', description: 'Special Special seating area', rotX: Math.PI * 0.7, rotY: 0.2, dist: 4, tx: SPECIAL_SPECIAL_X, ty: 0.5, tz: 0.5 },
+            { name: 'Book Displays', icon: '📚', category: 'Sound Library', description: 'Special Special bookshelf wall', rotX: Math.PI * 1.2, rotY: 0.2, dist: 5, tx: SPECIAL_SPECIAL_X, ty: 1.2, tz: SPECIAL_SPECIAL_DEPTH / 3 }
         ];
 
         function buildViewFromPreset(v, i) {
@@ -9470,18 +9470,13 @@
             };
         }
 
-        // Seed default view presets if no views saved yet
-        if (savedViews.length === 0) {
+        // Seed default views if empty OR if old format (no category/icon on any view)
+        const viewsNeedReseed = savedViews.length === 0 ||
+            (savedViews.length > 0 && savedViews.every(v => !v.category || v.category === 'General'));
+        if (viewsNeedReseed) {
             savedViews = DEFAULT_VIEW_PRESETS.map((v, i) => buildViewFromPreset(v, i));
             saveViewsToStorage();
         }
-        // Migrate: add icon/category to old views that lack them
-        let needsMigration = false;
-        savedViews.forEach(v => {
-            if (!v.icon) { v.icon = '📷'; needsMigration = true; }
-            if (!v.category) { v.category = 'General'; needsMigration = true; }
-        });
-        if (needsMigration) saveViewsToStorage();
 
         function saveLayoutsToStorage() {
             localStorage.setItem('savedLayouts', JSON.stringify(savedLayouts));
