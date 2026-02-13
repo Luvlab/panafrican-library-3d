@@ -1412,16 +1412,16 @@
         <h2>Reading Room • Interactive 3D</h2>
         <p>A curatorial Reading Room conceived as a living archive of panafrican and diasporic publishing. A space to read, listen, and slow down.</p>
         <div class="room-buttons">
-            <button class="room-btn" onclick="focusRoom('threeStarRoom')">Three Star — Panafrican Library</button>
-            <button class="room-btn" onclick="focusRoom('specialSpecialRoom')">Special Special — Sound Library</button>
+            <button class="room-btn" onclick="focusRoom('threeStarRoom')">S202 Three Stars — Panafrican Library</button>
+            <button class="room-btn" onclick="focusRoom('specialSpecialRoom')">S202 Special Special — Sound Library</button>
         </div>
         <div class="room-descriptions">
             <div class="room-desc" id="desc-THREE_STAR">
-                <strong>Three Star — Panafrican Library</strong><br>
+                <strong>S202 Three Stars — Panafrican Library</strong><br>
                 Curatorial selection of ~50 independent publications — zines, fanzines, essays, archives, catalogues, and experimental editions. AABF 10-year archives with posters, visuals, documents, and manifestos. Video space with filmed interviews with publishers and activists. Mapping African publishing networks across the continent.
             </div>
             <div class="room-desc" id="desc-SPECIAL_SPECIAL">
-                <strong>Special Special — Sound Library</strong><br>
+                <strong>S202 Special Special — Sound Library</strong><br>
                 Audio/radio listening station with speakers, headphones, DJ table & vinyl. Screens with media players. Floor cushions and woven mats. Sound works from Afrikadaa collective and Station of Commons radio. Collective listening and reading sessions, performances, poetry.
             </div>
         </div>
@@ -1434,14 +1434,14 @@
             <button class="control-btn" onclick="setView('floorPlan')"><span class="icon">📐</span>Floor Plan View</button>
         </div>
         <div class="control-section">
-            <div class="section-title">Three Star (West) — Panafrican Library</div>
+            <div class="section-title">S202 Three Stars — Panafrican Library</div>
             <button class="control-btn" onclick="setView('threeStarRoomEntry')"><span class="icon">🚪</span>Entry Vestibule</button>
             <button class="control-btn" onclick="setView('threeStarRoomInside')"><span class="icon">🔊</span>Inside View</button>
             <button class="control-btn" onclick="setView('threeStarRoomWindows')"><span class="icon">🪟</span>Window Wall</button>
             <button class="control-btn" onclick="setView('threeStarRoomTable')"><span class="icon">📚</span>Display Table</button>
         </div>
         <div class="control-section">
-            <div class="section-title">Special Special (East) — Sound Library</div>
+            <div class="section-title">S202 Special Special — Sound Library</div>
             <button class="control-btn" onclick="setView('specialSpecialRoomEntry')"><span class="icon">🚪</span>Entry (from door)</button>
             <button class="control-btn" onclick="setView('specialSpecialRoomInside')"><span class="icon">📖</span>Inside View</button>
             <button class="control-btn" onclick="setView('specialSpecialRoomWindows')"><span class="icon">🪟</span>Arched Windows</button>
@@ -1456,15 +1456,15 @@
     <div id="dimensions-panel">
         <h3>Room Dimensions (from floor plan)</h3>
         <div class="dim-row">
-            <span class="dim-label">Three Star (West)</span>
+            <span class="dim-label">Three Stars</span>
             <span class="dim-value">17'-4½" × 25'-3¾" | 5.29m × 7.71m</span>
         </div>
         <div class="dim-row">
-            <span class="dim-label">Three Star Area</span>
+            <span class="dim-label">Three Stars Area</span>
             <span class="dim-value">438.7 sq ft | 40.8 m²</span>
         </div>
         <div class="dim-row">
-            <span class="dim-label">Special Special (East)</span>
+            <span class="dim-label">Special Special</span>
             <span class="dim-value">11'-5⅝" × 15'-1½" | 3.49m × 4.61m</span>
         </div>
         <div class="dim-row">
@@ -2827,12 +2827,16 @@
 
         // ============================================================
         // EXACT DIMENSIONS FROM FLOOR PLAN (converted to meters)
-        // LAYOUT: Windows on NORTH (+Z), Entries on SOUTH (-Z)
+        // FLOOR PLAN ORIENTATION: STUDIO corridor at TOP (NORTH = +Z)
+        // LAYOUT: Windows on SOUTH (-Z), Entries from STUDIO on NORTH (+Z)
         // Both rooms are labeled S202 on the floor plan
+        // THREE STAR is WEST (left), SPECIAL SPECIAL is EAST (right)
+        // THREE STAR: Entry at north-west, Door to SS at south-east
+        // SPECIAL SPECIAL: Entry corridor at north-center, Door to TS at south-west
         // ============================================================
         // SPECIAL SPECIAL (East Room - Sound Library)
         const SPECIAL_SPECIAL_WIDTH = 3.496;  // 11'-5⅝" (X direction)
-        const SPECIAL_SPECIAL_DEPTH = 4.61;   // 15'-1½" (Z direction) main room
+        const SPECIAL_SPECIAL_DEPTH = 7.715;  // 25'-3¾" (Z direction) - same depth as west room per floor plan
         const SPECIAL_SPECIAL_CORRIDOR_WIDTH = 0.85;  // 2'-9⅝" entry corridor width
         const SPECIAL_SPECIAL_CORRIDOR_DEPTH = 0.65;  // 2'-1 5/16" entry corridor depth
         // THREE STAR (West Room - Pan-African Library)
@@ -2849,6 +2853,15 @@
         // Entry vestibule for SPECIAL SPECIAL (small corridor at south)
         const VESTIBULE_WIDTH = SPECIAL_SPECIAL_CORRIDOR_WIDTH;
         const VESTIBULE_DEPTH = SPECIAL_SPECIAL_CORRIDOR_DEPTH;
+
+        // Room positioning constants - define here for use in ROOM_GEOMETRY
+        // In the 3D view (floor plan view looking down):
+        // - THREE STAR (larger room) should appear on LEFT = WEST
+        // - SPECIAL SPECIAL (smaller room with corridor) should appear on RIGHT = EAST
+        // Swapped signs to match visual expectation in floor plan view
+        const TOTAL_WIDTH = THREE_STAR_WIDTH + WALL_THICKNESS + SPECIAL_SPECIAL_WIDTH;
+        const THREE_STAR_X = TOTAL_WIDTH / 2 - THREE_STAR_WIDTH / 2;  // Appears on LEFT in floor plan view
+        const SPECIAL_SPECIAL_X = -(TOTAL_WIDTH / 2) + SPECIAL_SPECIAL_WIDTH / 2;  // Appears on RIGHT in floor plan view
 
         // ============================================================
         // LAYOUT VALIDATION SYSTEM
@@ -2972,27 +2985,33 @@
         };
 
         // Room Geometry - Defines boundaries and keep-out zones
+        // Note: These are in WORLD coordinates after room positioning
+        // THREE_STAR is at X = THREE_STAR_X, Z = 0
+        // SPECIAL_SPECIAL is at X = SPECIAL_SPECIAL_X, Z offset to align NORTH walls
+        // Positive offset moves Special Special south so north walls align
+        const SS_Z_OFFSET = THREE_STAR_DEPTH/2 - SPECIAL_SPECIAL_DEPTH/2;
         const ROOM_GEOMETRY = {
             'THREE_STAR': {
                 id: 'THREE_STAR',
-                name: 'Three Star - Panafrican Library',
+                name: 'S202 Three Stars - Panafrican Library',
                 bounds: {
-                    minX: -THREE_STAR_WIDTH / 2 - SPECIAL_SPECIAL_WIDTH / 2 - WALL_THICKNESS / 2,
-                    maxX: -SPECIAL_SPECIAL_WIDTH / 2 - WALL_THICKNESS / 2,
+                    minX: THREE_STAR_X - THREE_STAR_WIDTH / 2,
+                    maxX: THREE_STAR_X + THREE_STAR_WIDTH / 2,
                     minZ: -THREE_STAR_DEPTH / 2,
                     maxZ: THREE_STAR_DEPTH / 2
                 },
                 doorZone: {
-                    minX: -THREE_STAR_WIDTH / 2 - SPECIAL_SPECIAL_WIDTH / 2 - WALL_THICKNESS / 2 + THREE_STAR_WIDTH / 2 - DOOR_WIDTH,
-                    maxX: -THREE_STAR_WIDTH / 2 - SPECIAL_SPECIAL_WIDTH / 2 - WALL_THICKNESS / 2 + THREE_STAR_WIDTH / 2 + DOOR_WIDTH,
-                    minZ: -THREE_STAR_DEPTH / 2,
-                    maxZ: -THREE_STAR_DEPTH / 2 + 1.2
+                    // Entry door at NORTH-WEST corner (from STUDIO)
+                    minX: THREE_STAR_X - THREE_STAR_WIDTH / 2,
+                    maxX: THREE_STAR_X - THREE_STAR_WIDTH / 2 + DOOR_WIDTH + 1.0,
+                    minZ: THREE_STAR_DEPTH / 2 - 1.5,
+                    maxZ: THREE_STAR_DEPTH / 2
                 },
                 circulationZones: [
                     {
-                        minX: -THREE_STAR_WIDTH / 2 - SPECIAL_SPECIAL_WIDTH / 2 - WALL_THICKNESS / 2 + 0.8,
-                        maxX: -SPECIAL_SPECIAL_WIDTH / 2 - WALL_THICKNESS / 2 - 0.8,
-                        minZ: -THREE_STAR_DEPTH / 2 + 1.2,
+                        minX: THREE_STAR_X - THREE_STAR_WIDTH / 2 + 0.8,
+                        maxX: THREE_STAR_X + THREE_STAR_WIDTH / 2 - 0.8,
+                        minZ: -THREE_STAR_DEPTH / 2 + 0.8,
                         maxZ: THREE_STAR_DEPTH / 2 - 1.0
                     }
                 ],
@@ -3000,25 +3019,26 @@
             },
             'SPECIAL_SPECIAL': {
                 id: 'SPECIAL_SPECIAL',
-                name: 'Special Special - Sound Library',
+                name: 'S202 Special Special - Sound Library',
                 bounds: {
-                    minX: WALL_THICKNESS / 2,
-                    maxX: SPECIAL_SPECIAL_WIDTH + WALL_THICKNESS / 2,
-                    minZ: -SPECIAL_SPECIAL_DEPTH / 2,
-                    maxZ: SPECIAL_SPECIAL_DEPTH / 2
+                    minX: SPECIAL_SPECIAL_X - SPECIAL_SPECIAL_WIDTH / 2,
+                    maxX: SPECIAL_SPECIAL_X + SPECIAL_SPECIAL_WIDTH / 2,
+                    minZ: SS_Z_OFFSET - SPECIAL_SPECIAL_DEPTH / 2,
+                    maxZ: SS_Z_OFFSET + SPECIAL_SPECIAL_DEPTH / 2
                 },
                 doorZone: {
-                    minX: WALL_THICKNESS / 2 + SPECIAL_SPECIAL_WIDTH / 2 - DOOR_WIDTH,
-                    maxX: WALL_THICKNESS / 2 + SPECIAL_SPECIAL_WIDTH / 2 + DOOR_WIDTH,
-                    minZ: -SPECIAL_SPECIAL_DEPTH / 2,
-                    maxZ: -SPECIAL_SPECIAL_DEPTH / 2 + 1.2
+                    // Entry corridor at NORTH-CENTER (from STUDIO)
+                    minX: SPECIAL_SPECIAL_X - SPECIAL_SPECIAL_CORRIDOR_WIDTH / 2 - 0.3,
+                    maxX: SPECIAL_SPECIAL_X + SPECIAL_SPECIAL_CORRIDOR_WIDTH / 2 + 0.3,
+                    minZ: SS_Z_OFFSET + SPECIAL_SPECIAL_DEPTH / 2 - 0.5,
+                    maxZ: SS_Z_OFFSET + SPECIAL_SPECIAL_DEPTH / 2 + SPECIAL_SPECIAL_CORRIDOR_DEPTH
                 },
                 circulationZones: [
                     {
-                        minX: WALL_THICKNESS / 2 + 0.6,
-                        maxX: SPECIAL_SPECIAL_WIDTH + WALL_THICKNESS / 2 - 0.6,
-                        minZ: -SPECIAL_SPECIAL_DEPTH / 2 + 1.2,
-                        maxZ: -SPECIAL_SPECIAL_DEPTH / 2 + 2.5
+                        minX: SPECIAL_SPECIAL_X - SPECIAL_SPECIAL_WIDTH / 2 + 0.6,
+                        maxX: SPECIAL_SPECIAL_X + SPECIAL_SPECIAL_WIDTH / 2 - 0.6,
+                        minZ: SS_Z_OFFSET - SPECIAL_SPECIAL_DEPTH / 2 + 0.8,
+                        maxZ: SS_Z_OFFSET + SPECIAL_SPECIAL_DEPTH / 2 - 0.8
                     }
                 ],
                 usableArea: null
@@ -3411,10 +3431,7 @@
         const gridHelper = new THREE.GridHelper(20, 40, 0x444444, 0x333333);
         scene.add(gridHelper);
 
-        // Position rooms side by side (Three Star WEST/LEFT, Special Special EAST/RIGHT)
-        const TOTAL_WIDTH = THREE_STAR_WIDTH + WALL_THICKNESS + SPECIAL_SPECIAL_WIDTH;
-        const THREE_STAR_X = -TOTAL_WIDTH / 2 + THREE_STAR_WIDTH / 2;  // West (left)
-        const SPECIAL_SPECIAL_X = TOTAL_WIDTH / 2 - SPECIAL_SPECIAL_WIDTH / 2;  // East (right)
+        // Note: TOTAL_WIDTH, THREE_STAR_X, SPECIAL_SPECIAL_X defined earlier (before ROOM_GEOMETRY)
 
         // ============ HELPER FUNCTIONS ============
 
@@ -3701,245 +3718,192 @@
             return group;
         }
 
-        // ============ PAN-AFRICAN LIBRARY (WEST) ============
-        // LAYOUT: Windows on FRONT (+Z), Door to corridor on BACK (-Z) via VESTIBULE, Door to Sound Library on RIGHT (+X)
-        // Has an entry vestibule/corridor - a narrow enclosed passage before the main room
+        // ============ PAN-AFRICAN LIBRARY (WEST) - THREE STAR ============
+        // LAYOUT FROM FLOOR PLAN (STUDIO corridor at TOP = NORTH = +Z):
+        // - Windows on SOUTH wall (-Z) - 2 windows with column - BOTTOM of floor plan
+        // - Entry door from STUDIO on NORTH wall (+Z), at WEST (left) side - TOP LEFT
+        // - Door to SPECIAL SPECIAL on EAST wall (+X), near SOUTH end - BOTTOM RIGHT
+        // - Solid WEST wall (-X) - exterior
         function createThreeStar() {
             const group = new THREE.Group();
 
-            // Vestibule corridor dimensions - enclosed passage with side walls
-            const CORRIDOR_WIDTH = 1.2;  // Narrow corridor width (~4 feet)
-            const CORRIDOR_OFFSET_X = 0;  // Corridor centered on door
-
-            // ========== FLOOR (entire room) ==========
+            // ========== FLOOR ==========
             const floor = new THREE.Mesh(new THREE.PlaneGeometry(THREE_STAR_WIDTH, THREE_STAR_DEPTH), floorMaterial);
             floor.rotation.x = -Math.PI / 2;
             floor.position.set(0, 0.01, 0);
             group.add(floor);
 
-            // Dark blue carpet in main area (not in vestibule)
-            const carpet = new THREE.Mesh(new THREE.PlaneGeometry(THREE_STAR_WIDTH - 0.5, THREE_STAR_DEPTH - VESTIBULE_DEPTH - 0.5), new THREE.MeshLambertMaterial({ color: 0x1a3a5c }));
-            carpet.rotation.x = -Math.PI / 2;
-            carpet.position.set(0, 0.02, VESTIBULE_DEPTH / 2);
-            group.add(carpet);
+            // African pattern rugs will be added as furniture items (moveable)
 
-            // ========== BACK WALL (-Z) - Door to corridor/STUDIO ==========
-            const backWallGroup = new THREE.Group();
-            const backWall1 = new THREE.Mesh(new THREE.BoxGeometry((THREE_STAR_WIDTH - DOOR_WIDTH) / 2, CEILING_HEIGHT, WALL_THICKNESS), wallMaterial);
-            backWall1.position.set(-THREE_STAR_WIDTH / 4 - DOOR_WIDTH / 4, CEILING_HEIGHT / 2, -THREE_STAR_DEPTH / 2);
-            backWallGroup.add(backWall1);
-            const backWall2 = new THREE.Mesh(new THREE.BoxGeometry((THREE_STAR_WIDTH - DOOR_WIDTH) / 2, CEILING_HEIGHT, WALL_THICKNESS), wallMaterial);
-            backWall2.position.set(THREE_STAR_WIDTH / 4 + DOOR_WIDTH / 4, CEILING_HEIGHT / 2, -THREE_STAR_DEPTH / 2);
-            backWallGroup.add(backWall2);
-            const backDoorHeader = new THREE.Mesh(new THREE.BoxGeometry(DOOR_WIDTH, CEILING_HEIGHT - DOOR_HEIGHT, WALL_THICKNESS), wallMaterial);
-            backDoorHeader.position.set(0, DOOR_HEIGHT + (CEILING_HEIGHT - DOOR_HEIGHT) / 2, -THREE_STAR_DEPTH / 2);
-            backWallGroup.add(backDoorHeader);
-            group.add(backWallGroup);
-            threeStarRoomWalls.back = backWallGroup;
-
-            // ========== VESTIBULE CORRIDOR WALLS ==========
-            // The vestibule is an enclosed corridor with:
-            // - Two SIDE walls running from back wall (-Z) toward the room (+Z)
-            // - One FRONT wall (partition) with a door opening to main room
-            const vestibuleGroup = new THREE.Group();
-
-            // LEFT side wall of vestibule (runs along Z axis)
-            const vestibuleLeftSide = new THREE.Mesh(
-                new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, VESTIBULE_DEPTH),
-                wallMaterial
-            );
-            vestibuleLeftSide.position.set(
-                CORRIDOR_OFFSET_X - CORRIDOR_WIDTH / 2,
-                CEILING_HEIGHT / 2,
-                -THREE_STAR_DEPTH / 2 + VESTIBULE_DEPTH / 2
-            );
-            vestibuleGroup.add(vestibuleLeftSide);
-
-            // RIGHT side wall of vestibule (runs along Z axis)
-            const vestibuleRightSide = new THREE.Mesh(
-                new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, VESTIBULE_DEPTH),
-                wallMaterial
-            );
-            vestibuleRightSide.position.set(
-                CORRIDOR_OFFSET_X + CORRIDOR_WIDTH / 2,
-                CEILING_HEIGHT / 2,
-                -THREE_STAR_DEPTH / 2 + VESTIBULE_DEPTH / 2
-            );
-            vestibuleGroup.add(vestibuleRightSide);
-
-            // FRONT partition wall of vestibule (with door opening to main room)
-            // Left section of front partition
-            const partitionLeftWidth = (THREE_STAR_WIDTH / 2) - (CORRIDOR_WIDTH / 2) - CORRIDOR_OFFSET_X;
-            if (partitionLeftWidth > 0) {
-                const partitionLeft = new THREE.Mesh(
-                    new THREE.BoxGeometry(partitionLeftWidth, CEILING_HEIGHT, WALL_THICKNESS),
-                    wallMaterial
-                );
-                partitionLeft.position.set(
-                    -THREE_STAR_WIDTH / 2 + partitionLeftWidth / 2,
-                    CEILING_HEIGHT / 2,
-                    -THREE_STAR_DEPTH / 2 + VESTIBULE_DEPTH
-                );
-                vestibuleGroup.add(partitionLeft);
-            }
-
-            // Right section of front partition
-            const partitionRightWidth = (THREE_STAR_WIDTH / 2) - (CORRIDOR_WIDTH / 2) + CORRIDOR_OFFSET_X;
-            if (partitionRightWidth > 0) {
-                const partitionRight = new THREE.Mesh(
-                    new THREE.BoxGeometry(partitionRightWidth, CEILING_HEIGHT, WALL_THICKNESS),
-                    wallMaterial
-                );
-                partitionRight.position.set(
-                    THREE_STAR_WIDTH / 2 - partitionRightWidth / 2,
-                    CEILING_HEIGHT / 2,
-                    -THREE_STAR_DEPTH / 2 + VESTIBULE_DEPTH
-                );
-                vestibuleGroup.add(partitionRight);
-            }
-
-            // Header above vestibule door opening
-            const vestibuleDoorHeader = new THREE.Mesh(
-                new THREE.BoxGeometry(CORRIDOR_WIDTH, CEILING_HEIGHT - DOOR_HEIGHT, WALL_THICKNESS),
-                wallMaterial
-            );
-            vestibuleDoorHeader.position.set(
-                CORRIDOR_OFFSET_X,
-                DOOR_HEIGHT + (CEILING_HEIGHT - DOOR_HEIGHT) / 2,
-                -THREE_STAR_DEPTH / 2 + VESTIBULE_DEPTH
-            );
-            vestibuleGroup.add(vestibuleDoorHeader);
-
-            group.add(vestibuleGroup);
-            threeStarRoomWalls.vestibuleLeft = vestibuleLeftSide;
-            threeStarRoomWalls.vestibuleRight = vestibuleRightSide;
-            threeStarRoomWalls.vestibuleGroup = vestibuleGroup;  // Store entire vestibule for hiding
-
-            // ========== FRONT WALL (+Z) - PS1 Industrial Windows ==========
-            const frontWallGroup = new THREE.Group();
+            // ========== SOUTH WALL (-Z) - PS1 Industrial Windows (BOTTOM of floor plan) ==========
+            const southWallGroup = new THREE.Group();
 
             // Wall below windows (sill area)
-            const frontWallBase = new THREE.Mesh(
+            const southWallBase = new THREE.Mesh(
                 new THREE.BoxGeometry(THREE_STAR_WIDTH, PS1_WINDOW_SILL, WALL_THICKNESS),
                 wallMaterial
             );
-            frontWallBase.position.set(0, PS1_WINDOW_SILL / 2, THREE_STAR_DEPTH / 2);
-            frontWallGroup.add(frontWallBase);
+            southWallBase.position.set(0, PS1_WINDOW_SILL / 2, -THREE_STAR_DEPTH / 2);
+            southWallGroup.add(southWallBase);
 
             // Wall above windows
             const topWallHeight = CEILING_HEIGHT - PS1_WINDOW_SILL - PS1_WINDOW_HEIGHT;
-            const frontWallTop = new THREE.Mesh(
+            const southWallTop = new THREE.Mesh(
                 new THREE.BoxGeometry(THREE_STAR_WIDTH, topWallHeight, WALL_THICKNESS),
                 wallMaterial
             );
-            frontWallTop.position.set(0, PS1_WINDOW_SILL + PS1_WINDOW_HEIGHT + topWallHeight / 2, THREE_STAR_DEPTH / 2);
-            frontWallGroup.add(frontWallTop);
+            southWallTop.position.set(0, PS1_WINDOW_SILL + PS1_WINDOW_HEIGHT + topWallHeight / 2, -THREE_STAR_DEPTH / 2);
+            southWallGroup.add(southWallTop);
 
             // Two windows with fluted column between them
-            const windowSpacing = (THREE_STAR_WIDTH - PS1_COLUMN_WIDTH) / 2;
+            // Window layout: [side wall] [window1] [column] [window2] [side wall]
             const windowCenterY = PS1_WINDOW_SILL + PS1_WINDOW_HEIGHT / 2;
+
+            // Calculate positions: 2 windows + 1 column in center, wall on each side
+            const totalWindowsAndColumn = PS1_WINDOW_WIDTH * 2 + PS1_COLUMN_WIDTH;
+            const sideWallWidth = (THREE_STAR_WIDTH - totalWindowsAndColumn) / 2;
+
+            // Left window position: starts after left side wall
+            const leftWindowX = -THREE_STAR_WIDTH / 2 + sideWallWidth + PS1_WINDOW_WIDTH / 2;
+            // Right window position: ends before right side wall
+            const rightWindowX = THREE_STAR_WIDTH / 2 - sideWallWidth - PS1_WINDOW_WIDTH / 2;
 
             // Left window
             const win1 = createPS1Window(PS1_WINDOW_WIDTH, PS1_WINDOW_HEIGHT);
-            win1.position.set(-windowSpacing / 2, windowCenterY, THREE_STAR_DEPTH / 2 - 0.02);
-            frontWallGroup.add(win1);
+            win1.position.set(leftWindowX, windowCenterY, -THREE_STAR_DEPTH / 2 + 0.02);
+            win1.rotation.y = Math.PI;  // Face into room
+            southWallGroup.add(win1);
 
             // Right window
             const win2 = createPS1Window(PS1_WINDOW_WIDTH, PS1_WINDOW_HEIGHT);
-            win2.position.set(windowSpacing / 2, windowCenterY, THREE_STAR_DEPTH / 2 - 0.02);
-            frontWallGroup.add(win2);
+            win2.position.set(rightWindowX, windowCenterY, -THREE_STAR_DEPTH / 2 + 0.02);
+            win2.rotation.y = Math.PI;  // Face into room
+            southWallGroup.add(win2);
 
-            // Fluted column between windows
-            const columnS202 = createFlutedColumn(PS1_WINDOW_HEIGHT);
-            columnS202.position.set(0, PS1_WINDOW_SILL, THREE_STAR_DEPTH / 2 - 0.02);
-            frontWallGroup.add(columnS202);
+            // Fluted column between windows (centered)
+            const columnThreeStar = createFlutedColumn(PS1_WINDOW_HEIGHT);
+            columnThreeStar.position.set(0, PS1_WINDOW_SILL, -THREE_STAR_DEPTH / 2 + 0.02);
+            southWallGroup.add(columnThreeStar);
 
-            // Wall sections on either side of windows
-            const sideWallWidth = (THREE_STAR_WIDTH - windowSpacing * 2 - PS1_WINDOW_WIDTH * 2) / 2 + 0.3;
-            if (sideWallWidth > 0.1) {
+            // Wall sections on either side of windows - FULL HEIGHT in window zone
+            if (sideWallWidth > 0.05) {
                 const leftSide = new THREE.Mesh(
                     new THREE.BoxGeometry(sideWallWidth, PS1_WINDOW_HEIGHT, WALL_THICKNESS),
                     wallMaterial
                 );
-                leftSide.position.set(-THREE_STAR_WIDTH / 2 + sideWallWidth / 2, windowCenterY, THREE_STAR_DEPTH / 2);
-                frontWallGroup.add(leftSide);
+                leftSide.position.set(-THREE_STAR_WIDTH / 2 + sideWallWidth / 2, windowCenterY, -THREE_STAR_DEPTH / 2);
+                southWallGroup.add(leftSide);
 
                 const rightSide = new THREE.Mesh(
                     new THREE.BoxGeometry(sideWallWidth, PS1_WINDOW_HEIGHT, WALL_THICKNESS),
                     wallMaterial
                 );
-                rightSide.position.set(THREE_STAR_WIDTH / 2 - sideWallWidth / 2, windowCenterY, THREE_STAR_DEPTH / 2);
-                frontWallGroup.add(rightSide);
+                rightSide.position.set(THREE_STAR_WIDTH / 2 - sideWallWidth / 2, windowCenterY, -THREE_STAR_DEPTH / 2);
+                southWallGroup.add(rightSide);
             }
 
-            group.add(frontWallGroup);
-            threeStarRoomWalls.front = frontWallGroup;
+            group.add(southWallGroup);
+            threeStarRoomWalls.front = southWallGroup;  // Windows (south)
 
-            // ========== LEFT WALL (-X) - Wall with CLOSED DOOR to Pan-African Library ==========
-            // From floor plan: Pan-African Library door is near the SOUTH (window) end of the west wall
-            // The west wall runs the full depth of the room from north to south
-            const leftWallGroup = new THREE.Group();
+            // ========== NORTH WALL (+Z) - Entry door from STUDIO at EAST (exterior) side (TOP LEFT in floor plan) ==========
+            // With swapped positions: THREE STAR's exterior (away from SPECIAL SPECIAL) is at +X
+            // Entry is in the top-left corner of floor plan = north-east corner in local coords
+            const northWallGroup = new THREE.Group();
 
-            // Wall X position (west wall of room) - flush with room boundary
-            const leftWallX = -THREE_STAR_WIDTH / 2;
+            // Door position: East side (exterior) of north wall, about 0.5m from corner
+            const northDoorOffsetX = THREE_STAR_WIDTH / 2 - DOOR_WIDTH / 2 - 0.5;
 
-            // Room Z boundaries
-            const roomSouthZ = THREE_STAR_DEPTH / 2;    // South - windows (+Z)
-            const roomNorthZ = -THREE_STAR_DEPTH / 2;   // North - corridor entry (-Z)
+            // Wall section to the LEFT of door (large piece toward SPECIAL SPECIAL)
+            const leftOfDoorWidth = THREE_STAR_WIDTH / 2 + northDoorOffsetX - DOOR_WIDTH / 2;
+            if (leftOfDoorWidth > 0.05) {
+                const northWallLeft = new THREE.Mesh(
+                    new THREE.BoxGeometry(leftOfDoorWidth, CEILING_HEIGHT, WALL_THICKNESS),
+                    wallMaterial
+                );
+                northWallLeft.position.set(-THREE_STAR_WIDTH / 2 + leftOfDoorWidth / 2, CEILING_HEIGHT / 2, THREE_STAR_DEPTH / 2);
+                northWallGroup.add(northWallLeft);
+            }
 
-            // Pan-African Library door position - near the SOUTH (window) end
-            // From floor plan, door appears about 1.5m from the south wall
-            const threeStarDoorCenterZ = roomSouthZ - 1.5;  // 1.5m from south wall
-            const doorHalfWidth = DOOR_WIDTH / 2;
+            // Wall section to the RIGHT of door (small piece at exterior corner)
+            const rightOfDoorWidth = THREE_STAR_WIDTH / 2 - northDoorOffsetX - DOOR_WIDTH / 2;
+            if (rightOfDoorWidth > 0.05) {
+                const northWallRight = new THREE.Mesh(
+                    new THREE.BoxGeometry(rightOfDoorWidth, CEILING_HEIGHT, WALL_THICKNESS),
+                    wallMaterial
+                );
+                northWallRight.position.set(THREE_STAR_WIDTH / 2 - rightOfDoorWidth / 2, CEILING_HEIGHT / 2, THREE_STAR_DEPTH / 2);
+                northWallGroup.add(northWallRight);
+            }
 
-            // SOUTH segment: short wall between door and south wall (window wall)
-            const southSegmentLength = roomSouthZ - (threeStarDoorCenterZ + doorHalfWidth);
+            // Door header above entry door
+            const northDoorHeader = new THREE.Mesh(
+                new THREE.BoxGeometry(DOOR_WIDTH, CEILING_HEIGHT - DOOR_HEIGHT, WALL_THICKNESS),
+                wallMaterial
+            );
+            northDoorHeader.position.set(northDoorOffsetX, DOOR_HEIGHT + (CEILING_HEIGHT - DOOR_HEIGHT) / 2, THREE_STAR_DEPTH / 2);
+            northWallGroup.add(northDoorHeader);
+
+            group.add(northWallGroup);
+            threeStarRoomWalls.back = northWallGroup;  // Entry from STUDIO (north)
+
+            // ========== WEST WALL (-X) - Door to SPECIAL SPECIAL ==========
+            // This is the SHARED wall - SPECIAL SPECIAL is to the WEST (left) of THREE STAR
+            // Per floor plan: Door is 4'-5 15/16" (1.37m) from THREE STAR's south facade windows
+            // South facade is at -THREE_STAR_DEPTH/2, so door center is at:
+            const CONNECTING_DOOR_FROM_SOUTH = 1.37;  // 4'-5 15/16" from south facade
+            const westDoorCenterZ = -THREE_STAR_DEPTH / 2 + CONNECTING_DOOR_FROM_SOUTH + DOOR_WIDTH / 2;
+
+            const westWallGroup = new THREE.Group();
+
+            // SOUTH segment: wall from south corner to door (near windows)
+            const southSegmentLength = Math.abs(westDoorCenterZ - DOOR_WIDTH / 2 - (-THREE_STAR_DEPTH / 2));
             if (southSegmentLength > 0.05) {
-                const leftWallSouth = new THREE.Mesh(
+                const westWallSouth = new THREE.Mesh(
                     new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, southSegmentLength),
                     wallMaterial
                 );
-                leftWallSouth.position.set(leftWallX, CEILING_HEIGHT / 2, roomSouthZ - southSegmentLength / 2);
-                leftWallGroup.add(leftWallSouth);
+                westWallSouth.position.set(-THREE_STAR_WIDTH / 2, CEILING_HEIGHT / 2, -THREE_STAR_DEPTH / 2 + southSegmentLength / 2);
+                westWallGroup.add(westWallSouth);
             }
 
-            // NORTH segment: long wall from door to north wall (runs past vestibule area)
-            const northSegmentLength = (threeStarDoorCenterZ - doorHalfWidth) - roomNorthZ;
+            // NORTH segment: wall from door to north corner (toward STUDIO)
+            const northSegmentLength = THREE_STAR_DEPTH / 2 - (westDoorCenterZ + DOOR_WIDTH / 2);
             if (northSegmentLength > 0.05) {
-                const leftWallNorth = new THREE.Mesh(
+                const westWallNorth = new THREE.Mesh(
                     new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, northSegmentLength),
                     wallMaterial
                 );
-                leftWallNorth.position.set(leftWallX, CEILING_HEIGHT / 2, roomNorthZ + northSegmentLength / 2);
-                leftWallGroup.add(leftWallNorth);
+                westWallNorth.position.set(-THREE_STAR_WIDTH / 2, CEILING_HEIGHT / 2, THREE_STAR_DEPTH / 2 - northSegmentLength / 2);
+                westWallGroup.add(westWallNorth);
             }
 
-            // Door header above the Pan-African Library door
-            const leftDoorHeader = new THREE.Mesh(
+            // Door header above connecting door
+            const westDoorHeader = new THREE.Mesh(
                 new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT - DOOR_HEIGHT, DOOR_WIDTH),
                 wallMaterial
             );
-            leftDoorHeader.position.set(leftWallX, DOOR_HEIGHT + (CEILING_HEIGHT - DOOR_HEIGHT) / 2, threeStarDoorCenterZ);
-            leftWallGroup.add(leftDoorHeader);
+            westDoorHeader.position.set(-THREE_STAR_WIDTH / 2, DOOR_HEIGHT + (CEILING_HEIGHT - DOOR_HEIGHT) / 2, westDoorCenterZ);
+            westWallGroup.add(westDoorHeader);
 
-            // Door opening to Pan-African Library - NO DOOR, just the opening
-            // (Door and handle removed - just leaving the doorway)
+            group.add(westWallGroup);
+            threeStarRoomWalls.left = westWallGroup;
 
-            group.add(leftWallGroup);
-            threeStarRoomWalls.left = leftWallGroup;
-
-            // ========== RIGHT WALL (+X) - SHARED with Special Special ==========
-            // REMOVED: This wall is created ONLY by Special Special as its left wall
-            // to prevent duplicate walls and z-fighting/jumping issues
-            // The shared wall is positioned at the exact boundary between rooms
-            threeStarRoomWalls.right = null;  // No wall here - Special Special's left wall serves both rooms
+            // ========== EAST WALL (+X) - Solid exterior wall ==========
+            // Extend wall by WALL_THICKNESS at both ends to meet corner walls properly
+            const eastWall = new THREE.Mesh(
+                new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, THREE_STAR_DEPTH + 2 * WALL_THICKNESS),
+                wallMaterial
+            );
+            eastWall.position.set(THREE_STAR_WIDTH / 2, CEILING_HEIGHT / 2, 0);
+            group.add(eastWall);
+            threeStarRoomWalls.right = eastWall;
 
             // ========== CEILING ==========
-            const ceilingS202 = new THREE.Mesh(new THREE.PlaneGeometry(THREE_STAR_WIDTH, THREE_STAR_DEPTH), ceilingMaterial);
-            ceilingS202.rotation.x = Math.PI / 2;
-            ceilingS202.position.set(0, CEILING_HEIGHT, 0);
-            ceilingS202.userData.isCeiling = true;
-            group.add(ceilingS202);
+            const ceilingThreeStar = new THREE.Mesh(new THREE.PlaneGeometry(THREE_STAR_WIDTH, THREE_STAR_DEPTH), ceilingMaterial);
+            ceilingThreeStar.rotation.x = Math.PI / 2;
+            ceilingThreeStar.position.set(0, CEILING_HEIGHT, 0);
+            ceilingThreeStar.userData.isCeiling = true;
+            group.add(ceilingThreeStar);
 
             // ========== PAN-AFRICAN LIBRARY - Publications, Archives, Video ==========
             // CURATORIAL BRIEF: Collective listening space for sound library, radio,
@@ -3952,8 +3916,10 @@
             // - Speakers face inward, not blocked
             // - Minimum 1.1m circulation paths
 
-            const mainRoomZ = VESTIBULE_DEPTH / 2 + 0.8;  // Center after vestibule
-            const windowZ = THREE_STAR_DEPTH / 2 - 1.2;    // Near window wall (inside boundary)
+            // Windows at SOUTH (-Z), entry door at NORTH (+Z) on west side
+            const windowZ = -THREE_STAR_DEPTH / 2 + 1.2;   // Near window wall (south)
+            const entryZ = THREE_STAR_DEPTH / 2 - 1.5;     // Near entry (north)
+            const mainRoomZ = 0;                            // Center of room
 
             // Helper to add furniture with proper marking
             function addFurniture(item, name) {
@@ -3963,24 +3929,41 @@
                 group.add(item);
             }
 
+            // === AFRICAN RUGS on floor ===
+            // Large wax print rug in center
+            const mainRug = createWaxPrintRug(0xc41e3a, 0xffd700);  // Red with gold circles
+            mainRug.position.set(0, 0, mainRoomZ);
+            mainRug.scale.set(1.5, 1, 1.5);
+            addFurniture(mainRug, 'rug-main');
+
+            // Geometric rug near entry
+            const entryRug = createGeometricRug();
+            entryRug.position.set(1.0, 0, entryZ);
+            addFurniture(entryRug, 'rug-entry');
+
+            // Checkered rug near window seating
+            const windowRug = createCheckeredRug(0x8b4513, 0xf5f0e8);  // Brown and cream
+            windowRug.position.set(-1.0, 0, windowZ + 0.8);
+            addFurniture(windowRug, 'rug-window');
+
             // === BANQUETTE-SHELF UNITS along walls ===
-            // Long banquette against left wall (west)
+            // Long banquette against west wall (left)
             const banquetteLeft = createBanquetteShelfUnit(4.0);
-            banquetteLeft.position.set(-THREE_STAR_WIDTH / 2 + 0.3, 0, mainRoomZ);
+            banquetteLeft.position.set(-THREE_STAR_WIDTH / 2 + 0.3, 0, 0);
             banquetteLeft.rotation.y = Math.PI / 2;
             addFurniture(banquetteLeft, 'banquette-left');
 
-            // Banquette against right wall (east) - shorter to avoid door
+            // Banquette against east wall (right) - shorter to avoid connecting door at south end
             const banquetteRight = createBanquetteShelfUnit(3.2);
-            banquetteRight.position.set(THREE_STAR_WIDTH / 2 - 0.3, 0, mainRoomZ + 0.5);
+            banquetteRight.position.set(THREE_STAR_WIDTH / 2 - 0.3, 0, 1.0);  // Offset north to avoid door
             banquetteRight.rotation.y = -Math.PI / 2;
             addFurniture(banquetteRight, 'banquette-right');
 
-            // Banquette along back wall (near windows)
-            const banquetteBack = createBanquetteShelfUnit(3.5);
-            banquetteBack.position.set(0, 0, windowZ - 0.3);
-            banquetteBack.rotation.y = Math.PI;
-            addFurniture(banquetteBack, 'banquette-back');
+            // Banquette along south wall (near windows)
+            const banquetteSouth = createBanquetteShelfUnit(3.5);
+            banquetteSouth.position.set(0, 0, windowZ + 0.3);
+            banquetteSouth.rotation.y = Math.PI;  // Facing north into room
+            addFurniture(banquetteSouth, 'banquette-south');
 
             // === VINYL RECORD TABLES in center area ===
             const recordTable1 = createVinylRecordTable('ngoma');
@@ -3988,7 +3971,7 @@
             addFurniture(recordTable1, 'table-ngoma');
 
             const recordTable2 = createVinylRecordTable('bantou');
-            recordTable2.position.set(0, 0, mainRoomZ - 1.0);
+            recordTable2.position.set(0, 0, mainRoomZ + 1.0);
             addFurniture(recordTable2, 'table-bantou');
 
             const recordTable3 = createVinylRecordTable('african-jazz');
@@ -3996,24 +3979,24 @@
             addFurniture(recordTable3, 'table-jazz');
 
             const recordTable4 = createVinylRecordTable('pathe');
-            recordTable4.position.set(0, 0, mainRoomZ + 1.0);
+            recordTable4.position.set(0, 0, mainRoomZ - 1.0);
             addFurniture(recordTable4, 'table-pathe');
 
             // === CARDBOARD CUBE STOOLS scattered around tables ===
             const cubeStool1 = createCardboardCubeStool('branches');
-            cubeStool1.position.set(-1.6, 0, mainRoomZ - 0.5);
+            cubeStool1.position.set(-1.6, 0, mainRoomZ + 0.5);
             addFurniture(cubeStool1, 'stool-branches-1');
 
             const cubeStool2 = createCardboardCubeStool('african-pattern');
-            cubeStool2.position.set(-0.6, 0, mainRoomZ - 1.5);
+            cubeStool2.position.set(-0.6, 0, mainRoomZ + 1.5);
             addFurniture(cubeStool2, 'stool-pattern-1');
 
             const cubeStool3 = createCardboardCubeStool('benin');
-            cubeStool3.position.set(0.6, 0, mainRoomZ - 1.5);
+            cubeStool3.position.set(0.6, 0, mainRoomZ + 1.5);
             addFurniture(cubeStool3, 'stool-benin-1');
 
             const cubeStool4 = createCardboardCubeStool('text');
-            cubeStool4.position.set(1.6, 0, mainRoomZ - 0.5);
+            cubeStool4.position.set(1.6, 0, mainRoomZ + 0.5);
             addFurniture(cubeStool4, 'stool-text-1');
 
             const cubeStool5 = createCardboardCubeStool('branches');
@@ -4048,174 +4031,195 @@
         }
 
         // ============ SPECIAL SPECIAL / SOUND LIBRARY (EAST) ============
-        // LAYOUT: Windows on FRONT (+Z), Entry CORRIDOR on BACK (-Z), Door to Pan-African Library on LEFT (-X)
-        // The room has an L-shaped corridor entry from the main hallway
+        // LAYOUT FROM FLOOR PLAN (STUDIO corridor at TOP = NORTH = +Z):
+        // - Windows on SOUTH wall (-Z) - 3 windows with 2 columns - BOTTOM of floor plan
+        // - Entry corridor at NORTH-CENTER (+Z) projecting into STUDIO - TOP CENTER
+        // - Door to THREE STAR on WEST wall (-X), near SOUTH end - BOTTOM LEFT
+        // - EAST wall (+X) is solid exterior
         function createSpecialSpecial() {
             const group = new THREE.Group();
 
-            // Total depth including corridor
-            const TOTAL_DEPTH = SPECIAL_SPECIAL_DEPTH + SPECIAL_SPECIAL_CORRIDOR_DEPTH;
-
-            // Main room floor
-            const floor = new THREE.Mesh(new THREE.PlaneGeometry(SPECIAL_SPECIAL_WIDTH, SPECIAL_SPECIAL_DEPTH), floorMaterial);
+            // ========== MAIN ROOM FLOOR ==========
+            const floor = new THREE.Mesh(
+                new THREE.PlaneGeometry(SPECIAL_SPECIAL_WIDTH, SPECIAL_SPECIAL_DEPTH),
+                floorMaterial
+            );
             floor.rotation.x = -Math.PI / 2;
-            floor.position.set(0, 0.01, SPECIAL_SPECIAL_CORRIDOR_DEPTH / 2);  // Offset forward to make room for corridor
+            floor.position.set(0, 0.01, 0);
             group.add(floor);
 
-            // Corridor floor (entry corridor at back)
-            const corridorFloor = new THREE.Mesh(new THREE.PlaneGeometry(SPECIAL_SPECIAL_WIDTH, SPECIAL_SPECIAL_CORRIDOR_DEPTH), floorMaterial);
-            corridorFloor.rotation.x = -Math.PI / 2;
-            corridorFloor.position.set(0, 0.01, -SPECIAL_SPECIAL_DEPTH / 2);
-            group.add(corridorFloor);
+            // ========== ENTRY CORRIDOR - Two THICK SHAFTS/BOXES extending SOUTH from north wall ==========
+            // Looking at floor plan: corridor is CENTERED on north wall
+            // The corridor shafts extend about 1/3 of room depth into the room
+            // Corridor opening width: 2'-9⅝" = 0.85m
+            // Corridor shaft depth: ~1/3 of room = ~1.5m (much deeper than the 0.65m I had before)
+            const corridorShaftDepth = 3.105;  // ~10'-2¼" corridor partitions: total depth 7.715m minus main room 4.61m (15'-1½")
+            const corridorCenterX = 0;  // CENTERED
+            const corridorLeftEdge = corridorCenterX - SPECIAL_SPECIAL_CORRIDOR_WIDTH / 2;
+            const corridorRightEdge = corridorCenterX + SPECIAL_SPECIAL_CORRIDOR_WIDTH / 2;
 
-            // ========== CORRIDOR WALLS ==========
-            // Back wall of corridor (-Z) with entry door from main hallway
-            const corridorBackGroup = new THREE.Group();
-            const corridorBackZ = -SPECIAL_SPECIAL_DEPTH / 2 - SPECIAL_SPECIAL_CORRIDOR_DEPTH / 2;
+            // The corridor shafts are THICK boxes, not thin walls
+            // Looking at floor plan, they appear to be about 0.3-0.4m thick
+            const shaftThickness = 0.35;
 
-            // Door is on the right side of the corridor back wall
-            const corridorDoorOffsetX = SPECIAL_SPECIAL_WIDTH / 4;
-
-            // Left section of corridor back wall
-            const corridorBackLeftWidth = SPECIAL_SPECIAL_WIDTH / 2 + corridorDoorOffsetX - DOOR_WIDTH / 2;
-            const corridorBackLeft = new THREE.Mesh(
-                new THREE.BoxGeometry(corridorBackLeftWidth, CEILING_HEIGHT, WALL_THICKNESS),
+            // WEST corridor shaft - thick box extending from north wall southward
+            const corridorWestShaft = new THREE.Mesh(
+                new THREE.BoxGeometry(shaftThickness, CEILING_HEIGHT, corridorShaftDepth),
                 brickMaterial
             );
-            corridorBackLeft.position.set(-SPECIAL_SPECIAL_WIDTH / 2 + corridorBackLeftWidth / 2, CEILING_HEIGHT / 2, corridorBackZ);
-            corridorBackGroup.add(corridorBackLeft);
+            corridorWestShaft.position.set(
+                corridorLeftEdge - shaftThickness / 2,
+                CEILING_HEIGHT / 2,
+                SPECIAL_SPECIAL_DEPTH / 2 - corridorShaftDepth / 2
+            );
+            group.add(corridorWestShaft);
 
-            // Right section (small, door side)
-            const corridorBackRightWidth = SPECIAL_SPECIAL_WIDTH / 2 - corridorDoorOffsetX - DOOR_WIDTH / 2;
-            if (corridorBackRightWidth > 0.1) {
-                const corridorBackRight = new THREE.Mesh(
-                    new THREE.BoxGeometry(corridorBackRightWidth, CEILING_HEIGHT, WALL_THICKNESS),
-                    brickMaterial
-                );
-                corridorBackRight.position.set(SPECIAL_SPECIAL_WIDTH / 2 - corridorBackRightWidth / 2, CEILING_HEIGHT / 2, corridorBackZ);
-                corridorBackGroup.add(corridorBackRight);
-            }
-
-            // Door header above corridor entry
-            const corridorDoorHeader = new THREE.Mesh(
-                new THREE.BoxGeometry(DOOR_WIDTH, CEILING_HEIGHT - DOOR_HEIGHT, WALL_THICKNESS),
+            // EAST corridor shaft - thick box extending from north wall southward
+            const corridorEastShaft = new THREE.Mesh(
+                new THREE.BoxGeometry(shaftThickness, CEILING_HEIGHT, corridorShaftDepth),
                 brickMaterial
             );
-            corridorDoorHeader.position.set(corridorDoorOffsetX, DOOR_HEIGHT + (CEILING_HEIGHT - DOOR_HEIGHT) / 2, corridorBackZ);
-            corridorBackGroup.add(corridorDoorHeader);
-
-            group.add(corridorBackGroup);
-            specialSpecialRoomWalls.back = corridorBackGroup;
-
-            // Corridor side walls (short walls extending from main room to back)
-            // Left corridor wall (shared with Three Star room)
-            const corridorLeftWall = new THREE.Mesh(
-                new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, SPECIAL_SPECIAL_CORRIDOR_DEPTH),
-                brickMaterial
+            corridorEastShaft.position.set(
+                corridorRightEdge + shaftThickness / 2,
+                CEILING_HEIGHT / 2,
+                SPECIAL_SPECIAL_DEPTH / 2 - corridorShaftDepth / 2
             );
-            corridorLeftWall.position.set(-SPECIAL_SPECIAL_WIDTH / 2, CEILING_HEIGHT / 2, -SPECIAL_SPECIAL_DEPTH / 2);
-            group.add(corridorLeftWall);
+            group.add(corridorEastShaft);
 
-            // Right corridor wall
-            const corridorRightWall = new THREE.Mesh(
-                new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, SPECIAL_SPECIAL_CORRIDOR_DEPTH),
-                brickMaterial
-            );
-            corridorRightWall.position.set(SPECIAL_SPECIAL_WIDTH / 2, CEILING_HEIGHT / 2, -SPECIAL_SPECIAL_DEPTH / 2);
-            group.add(corridorRightWall);
-
-            // ========== MAIN ROOM WALLS ==========
-            // Transition wall between corridor and main room (partial wall with opening)
-            // This creates the L-shape entrance feel
-            const transitionZ = SPECIAL_SPECIAL_CORRIDOR_DEPTH / 2 - SPECIAL_SPECIAL_DEPTH / 2 + SPECIAL_SPECIAL_CORRIDOR_DEPTH / 2;
-            // (No physical wall here - open transition from corridor to main room)
-
-            // FRONT WALL (+Z) - PS1 Industrial Windows (same style as S202)
-            const frontWallGroup = new THREE.Group();
+            // ========== SOUTH WALL (-Z) - PS1 Industrial Windows (BOTTOM of floor plan) ==========
+            const southWallGroup = new THREE.Group();
 
             // Wall below windows
-            const frontWallBase = new THREE.Mesh(
+            const southWallBase = new THREE.Mesh(
                 new THREE.BoxGeometry(SPECIAL_SPECIAL_WIDTH, PS1_WINDOW_SILL, WALL_THICKNESS),
                 brickMaterial
             );
-            frontWallBase.position.set(0, PS1_WINDOW_SILL / 2, SPECIAL_SPECIAL_DEPTH / 2);
-            frontWallGroup.add(frontWallBase);
+            southWallBase.position.set(0, PS1_WINDOW_SILL / 2, -SPECIAL_SPECIAL_DEPTH / 2);
+            southWallGroup.add(southWallBase);
 
             // Wall above windows
-            const topWallHeightS203 = CEILING_HEIGHT - PS1_WINDOW_SILL - PS1_WINDOW_HEIGHT;
-            const frontWallTop = new THREE.Mesh(
-                new THREE.BoxGeometry(SPECIAL_SPECIAL_WIDTH, topWallHeightS203, WALL_THICKNESS),
+            const topWallHeightSS = CEILING_HEIGHT - PS1_WINDOW_SILL - PS1_WINDOW_HEIGHT;
+            const southWallTop = new THREE.Mesh(
+                new THREE.BoxGeometry(SPECIAL_SPECIAL_WIDTH, topWallHeightSS, WALL_THICKNESS),
                 brickMaterial
             );
-            frontWallTop.position.set(0, PS1_WINDOW_SILL + PS1_WINDOW_HEIGHT + topWallHeightS203 / 2, SPECIAL_SPECIAL_DEPTH / 2);
-            frontWallGroup.add(frontWallTop);
+            southWallTop.position.set(0, PS1_WINDOW_SILL + PS1_WINDOW_HEIGHT + topWallHeightSS / 2, -SPECIAL_SPECIAL_DEPTH / 2);
+            southWallGroup.add(southWallTop);
 
-            // Room S203 is wider, so it can have 3 windows with 2 columns
-            const windowCenterYS203 = PS1_WINDOW_SILL + PS1_WINDOW_HEIGHT / 2;
-            const totalWindowArea = SPECIAL_SPECIAL_WIDTH - 0.4;  // Leave some wall on sides
-            const numWindows = 3;
-            const numColumns = 2;
-            const windowWidthS203 = (totalWindowArea - numColumns * PS1_COLUMN_WIDTH) / numWindows;
-            const windowSpacingS203 = windowWidthS203 + PS1_COLUMN_WIDTH;
+            // 2 windows with 1 column (same as THREE STAR per floor plan)
+            const windowCenterYSS = PS1_WINDOW_SILL + PS1_WINDOW_HEIGHT / 2;
 
-            // Create 3 windows with columns between
-            for (let i = 0; i < numWindows; i++) {
-                const xPos = -totalWindowArea / 2 + windowWidthS203 / 2 + i * windowSpacingS203;
-                const win = createPS1Window(windowWidthS203 * 0.9, PS1_WINDOW_HEIGHT);
-                win.position.set(xPos, windowCenterYS203, SPECIAL_SPECIAL_DEPTH / 2 - 0.02);
-                frontWallGroup.add(win);
+            // Calculate positions: 2 windows + 1 column in center, wall on each side
+            const windowWidthSS = (SPECIAL_SPECIAL_WIDTH - 0.4 - PS1_COLUMN_WIDTH) / 2;  // 2 windows
+            const sideWallWidthSS = 0.2;  // Side wall sections
 
-                // Add column after each window except the last
-                if (i < numWindows - 1) {
-                    const col = createFlutedColumn(PS1_WINDOW_HEIGHT);
-                    col.position.set(xPos + windowSpacingS203 / 2, PS1_WINDOW_SILL, SPECIAL_SPECIAL_DEPTH / 2 - 0.02);
-                    frontWallGroup.add(col);
-                }
-            }
+            // Left window position
+            const leftWindowXSS = -SPECIAL_SPECIAL_WIDTH / 2 + sideWallWidthSS + windowWidthSS / 2;
+            // Right window position
+            const rightWindowXSS = SPECIAL_SPECIAL_WIDTH / 2 - sideWallWidthSS - windowWidthSS / 2;
+
+            // Left window
+            const win1SS = createPS1Window(windowWidthSS * 0.9, PS1_WINDOW_HEIGHT);
+            win1SS.position.set(leftWindowXSS, windowCenterYSS, -SPECIAL_SPECIAL_DEPTH / 2 + 0.02);
+            win1SS.rotation.y = Math.PI;  // Face into room
+            southWallGroup.add(win1SS);
+
+            // Right window
+            const win2SS = createPS1Window(windowWidthSS * 0.9, PS1_WINDOW_HEIGHT);
+            win2SS.position.set(rightWindowXSS, windowCenterYSS, -SPECIAL_SPECIAL_DEPTH / 2 + 0.02);
+            win2SS.rotation.y = Math.PI;  // Face into room
+            southWallGroup.add(win2SS);
+
+            // Fluted column between windows (centered)
+            const columnSS = createFlutedColumn(PS1_WINDOW_HEIGHT);
+            columnSS.position.set(0, PS1_WINDOW_SILL, -SPECIAL_SPECIAL_DEPTH / 2 + 0.02);
+            southWallGroup.add(columnSS);
 
             // Side wall sections
-            const sideWidthS203 = 0.2;
-            const leftSideS203 = new THREE.Mesh(
-                new THREE.BoxGeometry(sideWidthS203, PS1_WINDOW_HEIGHT, WALL_THICKNESS),
+            const sideWidthSS = 0.2;
+            const leftSideSS = new THREE.Mesh(
+                new THREE.BoxGeometry(sideWidthSS, PS1_WINDOW_HEIGHT, WALL_THICKNESS),
                 brickMaterial
             );
-            leftSideS203.position.set(-SPECIAL_SPECIAL_WIDTH / 2 + sideWidthS203 / 2, windowCenterYS203, SPECIAL_SPECIAL_DEPTH / 2);
-            frontWallGroup.add(leftSideS203);
+            leftSideSS.position.set(-SPECIAL_SPECIAL_WIDTH / 2 + sideWidthSS / 2, windowCenterYSS, -SPECIAL_SPECIAL_DEPTH / 2);
+            southWallGroup.add(leftSideSS);
 
-            const rightSideS203 = new THREE.Mesh(
-                new THREE.BoxGeometry(sideWidthS203, PS1_WINDOW_HEIGHT, WALL_THICKNESS),
+            const rightSideSS = new THREE.Mesh(
+                new THREE.BoxGeometry(sideWidthSS, PS1_WINDOW_HEIGHT, WALL_THICKNESS),
                 brickMaterial
             );
-            rightSideS203.position.set(SPECIAL_SPECIAL_WIDTH / 2 - sideWidthS203 / 2, windowCenterYS203, SPECIAL_SPECIAL_DEPTH / 2);
-            frontWallGroup.add(rightSideS203);
+            rightSideSS.position.set(SPECIAL_SPECIAL_WIDTH / 2 - sideWidthSS / 2, windowCenterYSS, -SPECIAL_SPECIAL_DEPTH / 2);
+            southWallGroup.add(rightSideSS);
 
-            group.add(frontWallGroup);
-            specialSpecialRoomWalls.front = frontWallGroup;
+            group.add(southWallGroup);
+            specialSpecialRoomWalls.front = southWallGroup;  // Windows (south)
 
-            // LEFT WALL (-X) - SHARED WALL with Room S202
-            // This is the ONLY dividing wall between rooms (S202 does not create a right wall)
-            // Position it at the left edge of S203, centered on the wall thickness
-            const leftWall = new THREE.Mesh(
-                new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, SPECIAL_SPECIAL_DEPTH),
+            // ========== NORTH WALL (+Z) - Entry door opening centered, with shaft walls on sides ==========
+            const northWallGroup = new THREE.Group();
+
+            // The north wall has the door opening in the center
+            // Wall sections are on either side of the corridor opening (outside the shafts)
+            // Total opening = corridor width + 2 shaft thicknesses
+            const totalOpeningWidth = SPECIAL_SPECIAL_CORRIDOR_WIDTH + 2 * shaftThickness;
+            const openingLeftEdge = -totalOpeningWidth / 2;
+            const openingRightEdge = totalOpeningWidth / 2;
+
+            // Wall section WEST of opening
+            const westOfOpeningWidth = SPECIAL_SPECIAL_WIDTH / 2 + openingLeftEdge;
+            if (westOfOpeningWidth > 0.05) {
+                const northWallWest = new THREE.Mesh(
+                    new THREE.BoxGeometry(westOfOpeningWidth, CEILING_HEIGHT, WALL_THICKNESS),
+                    brickMaterial
+                );
+                northWallWest.position.set(-SPECIAL_SPECIAL_WIDTH / 2 + westOfOpeningWidth / 2, CEILING_HEIGHT / 2, SPECIAL_SPECIAL_DEPTH / 2);
+                northWallGroup.add(northWallWest);
+            }
+
+            // Wall section EAST of opening
+            const eastOfOpeningWidth = SPECIAL_SPECIAL_WIDTH / 2 - openingRightEdge;
+            if (eastOfOpeningWidth > 0.05) {
+                const northWallEast = new THREE.Mesh(
+                    new THREE.BoxGeometry(eastOfOpeningWidth, CEILING_HEIGHT, WALL_THICKNESS),
+                    brickMaterial
+                );
+                northWallEast.position.set(SPECIAL_SPECIAL_WIDTH / 2 - eastOfOpeningWidth / 2, CEILING_HEIGHT / 2, SPECIAL_SPECIAL_DEPTH / 2);
+                northWallGroup.add(northWallEast);
+            }
+
+            // Door header above the entry (spans the corridor width between the shafts)
+            const northDoorHeader = new THREE.Mesh(
+                new THREE.BoxGeometry(SPECIAL_SPECIAL_CORRIDOR_WIDTH, CEILING_HEIGHT - DOOR_HEIGHT, WALL_THICKNESS),
                 brickMaterial
             );
-            // Position exactly at room edge minus half wall thickness so it's centered between rooms
-            leftWall.position.set(-SPECIAL_SPECIAL_WIDTH / 2 - WALL_THICKNESS / 2, CEILING_HEIGHT / 2, 0);
-            group.add(leftWall);
-            specialSpecialRoomWalls.left = leftWall;
+            northDoorHeader.position.set(corridorCenterX, DOOR_HEIGHT + (CEILING_HEIGHT - DOOR_HEIGHT) / 2, SPECIAL_SPECIAL_DEPTH / 2);
+            northWallGroup.add(northDoorHeader);
 
-            // RIGHT WALL (+X) - Solid exterior wall
-            const rightWall = new THREE.Mesh(new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, SPECIAL_SPECIAL_DEPTH), brickMaterial);
-            rightWall.position.set(SPECIAL_SPECIAL_WIDTH / 2, CEILING_HEIGHT / 2, 0);
-            group.add(rightWall);
-            specialSpecialRoomWalls.right = rightWall;
+            group.add(northWallGroup);
+            specialSpecialRoomWalls.back = northWallGroup;  // Entry from STUDIO
 
-            // Ceiling
-            const ceilingS203 = new THREE.Mesh(new THREE.PlaneGeometry(SPECIAL_SPECIAL_WIDTH, SPECIAL_SPECIAL_DEPTH), ceilingMaterial);
-            ceilingS203.rotation.x = Math.PI / 2;
-            ceilingS203.position.set(0, CEILING_HEIGHT, 0);
-            ceilingS203.userData.isCeiling = true;
-            group.add(ceilingS203);
+            // ========== WEST WALL (-X) - Solid exterior wall ==========
+            // Extend wall by WALL_THICKNESS at both ends to meet corner walls properly
+            const westWall = new THREE.Mesh(
+                new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, SPECIAL_SPECIAL_DEPTH + 2 * WALL_THICKNESS),
+                brickMaterial
+            );
+            westWall.position.set(-SPECIAL_SPECIAL_WIDTH / 2, CEILING_HEIGHT / 2, 0);
+            group.add(westWall);
+            specialSpecialRoomWalls.left = westWall;
+
+            // ========== EAST WALL (+X) - NO wall here, connects to THREE STAR ==========
+            // The wall between rooms is created by THREE STAR's west wall with the connecting door
+            specialSpecialRoomWalls.right = null;
+
+            // ========== CEILING ==========
+            const ceilingSS = new THREE.Mesh(
+                new THREE.PlaneGeometry(SPECIAL_SPECIAL_WIDTH, SPECIAL_SPECIAL_DEPTH),
+                ceilingMaterial
+            );
+            ceilingSS.rotation.x = Math.PI / 2;
+            ceilingSS.position.set(0, CEILING_HEIGHT, 0);
+            ceilingSS.userData.isCeiling = true;
+            group.add(ceilingSS);
 
             // ========== SOUND LIBRARY - Audio/Radio/DJ/Collective Listening ==========
             // CURATORIAL BRIEF: Reading room for ~50 publications, AABF archives,
@@ -4241,74 +4245,93 @@
             }
 
             // === SOUND LIBRARY MAIN ROOM ===
-            // Offset for main room (corridor is at back)
-            const mainRoomOffsetZ = SPECIAL_SPECIAL_CORRIDOR_DEPTH / 2;
+            // Windows at SOUTH (-Z), entry corridor at NORTH-CENTER (+Z)
+            // Door to THREE STAR at SOUTH-WEST (bottom-left)
+            const mainRoomZ = 0;  // Center of main room
+            const windowZ = -SPECIAL_SPECIAL_DEPTH / 2 + 1.0;  // Near south window wall
+            const entryZ = SPECIAL_SPECIAL_DEPTH / 2 - 1.0;    // Near north entry corridor
 
-            // === BANQUETTE-SHELF along right wall ===
+            // === AFRICAN RUGS on floor ===
+            // Main natte in center
+            const mainNatte = createAfricanNatte();
+            mainNatte.position.set(0, 0, mainRoomZ);
+            addFurniture(mainNatte, 'natte-main');
+
+            // Wax print rug near entry
+            const entryRug = createWaxPrintRug(0x1a3a5c, 0xffd700);  // Dark blue with gold
+            entryRug.position.set(0, 0, entryZ);
+            addFurniture(entryRug, 'rug-entry-ss');
+
+            // Striped rug near windows
+            const windowRug = createStripedRug();
+            windowRug.position.set(0, 0, windowZ + 0.5);
+            addFurniture(windowRug, 'rug-window-ss');
+
+            // === BANQUETTE-SHELF along east wall (right) ===
             const banquetteSound = createBanquetteShelfUnit(2.8);
-            banquetteSound.position.set(SPECIAL_SPECIAL_WIDTH / 2 - 0.3, 0, mainRoomOffsetZ + 0.5);
+            banquetteSound.position.set(SPECIAL_SPECIAL_WIDTH / 2 - 0.3, 0, 0);
             banquetteSound.rotation.y = -Math.PI / 2;
             addFurniture(banquetteSound, 'banquette-sound');
 
-            // === DJ / AUDIO STATION ===
+            // === DJ / AUDIO STATION - against west wall (left), north of connecting door ===
             const audioStation = createAudioStation();
-            audioStation.position.set(-SPECIAL_SPECIAL_WIDTH / 2 + 0.5, 0, mainRoomOffsetZ);
+            audioStation.position.set(-SPECIAL_SPECIAL_WIDTH / 2 + 0.5, 0, 0.5);  // North of door area
             audioStation.rotation.y = Math.PI / 2;
             addFurniture(audioStation, 'dj-station');
 
             // === VINYL RECORD TABLES ===
             const recordTable1 = createVinylRecordTable('ngoma');
-            recordTable1.position.set(0, 0, mainRoomOffsetZ);
+            recordTable1.position.set(0, 0, mainRoomZ);
             addFurniture(recordTable1, 'sound-table-1');
 
             const recordTable2 = createVinylRecordTable('bantou');
-            recordTable2.position.set(-0.8, 0, mainRoomOffsetZ + 1.2);
+            recordTable2.position.set(0.6, 0, mainRoomZ - 1.0);
             addFurniture(recordTable2, 'sound-table-2');
 
             // === CARDBOARD CUBE STOOLS ===
             const cubeStool1 = createCardboardCubeStool('branches');
-            cubeStool1.position.set(0.5, 0, mainRoomOffsetZ - 0.6);
+            cubeStool1.position.set(0.5, 0, mainRoomZ + 0.6);
             addFurniture(cubeStool1, 'sound-stool-1');
 
             const cubeStool2 = createCardboardCubeStool('african-pattern');
-            cubeStool2.position.set(-0.5, 0, mainRoomOffsetZ + 0.6);
+            cubeStool2.position.set(-0.5, 0, mainRoomZ - 0.6);
             addFurniture(cubeStool2, 'sound-stool-2');
 
             const cubeStool3 = createCardboardCubeStool('benin');
-            cubeStool3.position.set(0.8, 0, mainRoomOffsetZ + 1.5);
+            cubeStool3.position.set(0.8, 0, mainRoomZ - 1.5);
             addFurniture(cubeStool3, 'sound-stool-3');
 
             // === FLOOR SEATING (poufs and mats) ===
             const pouf1 = createSimplePouf(0xc41e3a);
-            pouf1.position.set(-0.3, 0, mainRoomOffsetZ + 1.8);
+            pouf1.position.set(-0.3, 0, mainRoomZ + 1.8);
             addFurniture(pouf1, 'pouf-sound-1');
 
             const pouf2 = createSimplePouf(0x8b4513);
-            pouf2.position.set(0.6, 0, mainRoomOffsetZ + 2.0);
+            pouf2.position.set(0.6, 0, mainRoomZ + 2.0);
             addFurniture(pouf2, 'pouf-sound-2');
 
             const natteSound = createAfricanNatte();
-            natteSound.position.set(0, 0.01, mainRoomOffsetZ + 1.5);
+            natteSound.position.set(0, 0.01, mainRoomZ + 1.5);
             addFurniture(natteSound, 'natte-sound');
 
             // === SPEAKERS ===
             const speaker1 = createFloorSpeaker();
-            speaker1.position.set(-SPECIAL_SPECIAL_WIDTH / 2 + 0.25, 0, mainRoomOffsetZ + SPECIAL_SPECIAL_DEPTH / 2 - 0.3);
+            speaker1.position.set(-SPECIAL_SPECIAL_WIDTH / 2 + 0.25, 0, mainRoomZ + SPECIAL_SPECIAL_DEPTH / 2 - 0.3);
             speaker1.rotation.y = Math.PI * 0.75;
             addFurniture(speaker1, 'speaker-left');
 
             const speaker2 = createFloorSpeaker();
-            speaker2.position.set(SPECIAL_SPECIAL_WIDTH / 2 - 0.25, 0, mainRoomOffsetZ + SPECIAL_SPECIAL_DEPTH / 2 - 0.3);
+            speaker2.position.set(SPECIAL_SPECIAL_WIDTH / 2 - 0.25, 0, mainRoomZ + SPECIAL_SPECIAL_DEPTH / 2 - 0.3);
             speaker2.rotation.y = Math.PI * 1.25;
             addFurniture(speaker2, 'speaker-right');
 
             // === HEADPHONE STATIONS ===
             const headphones1 = createHeadphoneStation();
-            headphones1.position.set(-SPECIAL_SPECIAL_WIDTH / 2 + 0.35, 0, mainRoomOffsetZ + 1.0);
+            headphones1.position.set(-SPECIAL_SPECIAL_WIDTH / 2 + 0.35, 0, mainRoomZ + 1.0);
             addFurniture(headphones1, 'headphone-station-1');
 
             const headphones2 = createHeadphoneStation();
-            headphones2.position.set(-SPECIAL_SPECIAL_WIDTH / 2 + 0.35, 0, mainRoomOffsetZ - 0.5);
+            headphones2.position.set(-SPECIAL_SPECIAL_WIDTH / 2 + 0.35, 0, mainRoomZ - 0.5);
             addFurniture(headphones2, 'headphone-station-2');
 
             const viewStool1 = createSimpleStool();
@@ -4358,12 +4381,23 @@
         }
 
         // Create and position rooms
+        // Looking at floor plan CAREFULLY:
+        // - The NORTH walls are ALIGNED at the STUDIO corridor
+        // - SPECIAL SPECIAL is shorter, so its SOUTH wall (windows) is set back from THREE STAR's
+        //
+        // Align NORTH walls (both flush with STUDIO corridor):
+        // THREE STAR north wall: +THREE_STAR_DEPTH/2
+        // SPECIAL SPECIAL north wall (in world coords): offset + SPECIAL_SPECIAL_DEPTH/2 = THREE_STAR_DEPTH/2
+        // offset = THREE_STAR_DEPTH/2 - SPECIAL_SPECIAL_DEPTH/2
+        const SPECIAL_SPECIAL_Z_OFFSET = THREE_STAR_DEPTH/2 - SPECIAL_SPECIAL_DEPTH/2;
+
         const threeStarRoom = createThreeStar();
         threeStarRoom.position.set(THREE_STAR_X, 0, 0);
         scene.add(threeStarRoom);
 
         const specialSpecialRoom = createSpecialSpecial();
-        specialSpecialRoom.position.set(SPECIAL_SPECIAL_X, 0, 0);
+        // Position Special Special so its NORTH wall aligns with Three Star's north wall (STUDIO corridor)
+        specialSpecialRoom.position.set(SPECIAL_SPECIAL_X, 0, SPECIAL_SPECIAL_Z_OFFSET);
         scene.add(specialSpecialRoom);
 
         // ============================================================
@@ -4431,8 +4465,8 @@
             return sprite;
         }
 
-        labelsGroup.add(createLabel('THREE STAR - PANAFRICAN LIBRARY (WEST)', new THREE.Vector3(THREE_STAR_X, CEILING_HEIGHT + 0.5, 0)));
-        labelsGroup.add(createLabel('SPECIAL SPECIAL - SOUND LIBRARY (EAST)', new THREE.Vector3(SPECIAL_SPECIAL_X, CEILING_HEIGHT + 0.5, 0)));
+        labelsGroup.add(createLabel('S202 THREE STARS — PANAFRICAN LIBRARY', new THREE.Vector3(THREE_STAR_X, CEILING_HEIGHT + 0.5, 0)));
+        labelsGroup.add(createLabel('S202 SPECIAL SPECIAL — SOUND LIBRARY', new THREE.Vector3(SPECIAL_SPECIAL_X, CEILING_HEIGHT + 0.5, 0)));
         scene.add(labelsGroup);
 
         // Lighting
@@ -4455,13 +4489,15 @@
         // Camera controls
         let isMouseDown = false;
         let mouseX = 0, mouseY = 0;
-        // Default view: Overview (bird's eye) - matching the 'overview' preset
-        let targetRotationX = 0, targetRotationY = 0.5;
-        let currentRotationX = 0, currentRotationY = 0.5;
+        // Default view: Overview (bird's eye) from SOUTH looking NORTH
+        // This matches floor plan orientation: THREE STAR on LEFT (west), SPECIAL SPECIAL on RIGHT (east)
+        // rotationX = Math.PI puts camera at -Z (south) looking toward +Z (north)
+        let targetRotationX = Math.PI, targetRotationY = 0.5;
+        let currentRotationX = Math.PI, currentRotationY = 0.5;
         let cameraDistance = 18;
         let cameraTarget = new THREE.Vector3(0, 2, 0);
 
-        // Set initial camera position for overview
+        // Set initial camera position for overview - from SOUTH looking NORTH
         camera.position.set(0, 18 * Math.sin(0.5), -18 * Math.cos(0.5));
         camera.lookAt(cameraTarget);
 
@@ -4503,24 +4539,29 @@
             mouseX = e.touches[0].clientX; mouseY = e.touches[0].clientY;
         });
 
-        // View presets - CORRECTED FOR DOOR ENTRY PERSPECTIVE
-        // Entry views: Camera at BACK (door, -Z) looking FORWARD toward windows (+Z)
-        // rotX=0 means camera is at front looking back, rotX=Math.PI means camera at back looking forward
+        // View presets - CORRECTED FOR FLOOR PLAN ORIENTATION
+        // Floor plan: STUDIO corridor at TOP (NORTH = +Z), Windows at BOTTOM (SOUTH = -Z)
+        // Camera views - Windows at SOUTH (-Z), Entries at NORTH (+Z)
+        // rotX=Math.PI means camera at north (+Z, entry) looking south toward windows (-Z)
+        // rotX=0 means camera at south (-Z, windows) looking north toward entries (+Z)
         const views = {
-            overview: { rotX: 0, rotY: 0.5, dist: 18, target: new THREE.Vector3(0, 2, 0) },
-            floorPlan: { rotX: 0, rotY: 1.5, dist: 14, target: new THREE.Vector3(0, 0, 0) },
-            // Room S202 views - Entry through vestibule door, looking toward windows
-            // rotX=Math.PI puts camera at -Z (door) looking toward +Z (windows)
-            threeStarRoomEntry: { rotX: Math.PI, rotY: 0.15, dist: 3, target: new THREE.Vector3(THREE_STAR_X, 1.5, -THREE_STAR_DEPTH / 2 + 1) },
+            // Overview from SOUTH looking NORTH - matches floor plan orientation
+            // THREE STAR on LEFT (west), SPECIAL SPECIAL on RIGHT (east)
+            overview: { rotX: Math.PI, rotY: 0.5, dist: 18, target: new THREE.Vector3(0, 2, 0) },
+            floorPlan: { rotX: Math.PI, rotY: 1.5, dist: 14, target: new THREE.Vector3(0, 0, 0) },
+            // THREE STAR views - Entry at NORTH (+Z), windows at SOUTH (-Z)
+            // rotX=Math.PI puts camera at north (entry) looking toward south (windows)
+            threeStarRoomEntry: { rotX: Math.PI, rotY: 0.15, dist: 3, target: new THREE.Vector3(THREE_STAR_X, 1.5, THREE_STAR_DEPTH / 2 - 1) },
             threeStarRoomInside: { rotX: Math.PI, rotY: 0.2, dist: 5, target: new THREE.Vector3(THREE_STAR_X, 1.5, 0) },
-            threeStarRoomWindows: { rotX: Math.PI, rotY: 0.15, dist: 4, target: new THREE.Vector3(THREE_STAR_X, 1.5, THREE_STAR_DEPTH / 4) },
+            threeStarRoomWindows: { rotX: Math.PI, rotY: 0.15, dist: 4, target: new THREE.Vector3(THREE_STAR_X, 1.5, -THREE_STAR_DEPTH / 4) },
             threeStarRoomTable: { rotX: Math.PI * 0.8, rotY: 0.25, dist: 4, target: new THREE.Vector3(THREE_STAR_X, 0.8, 0) },
-            // Room S203 views - Entry through corridor door, looking toward arched windows
-            specialSpecialRoomEntry: { rotX: Math.PI, rotY: 0.15, dist: 3, target: new THREE.Vector3(SPECIAL_SPECIAL_X, 1.5, -SPECIAL_SPECIAL_DEPTH / 2 + 1) },
+            // SPECIAL SPECIAL views - Entry corridor at NORTH-CENTER (+Z), windows at SOUTH (-Z)
+            // rotX=Math.PI puts camera at north (entry) looking toward south (windows)
+            specialSpecialRoomEntry: { rotX: Math.PI, rotY: 0.15, dist: 3, target: new THREE.Vector3(SPECIAL_SPECIAL_X, 1.5, SPECIAL_SPECIAL_DEPTH / 2 - 1) },
             specialSpecialRoomInside: { rotX: Math.PI, rotY: 0.2, dist: 6, target: new THREE.Vector3(SPECIAL_SPECIAL_X, 1.5, 0) },
-            specialSpecialRoomWindows: { rotX: Math.PI, rotY: 0.15, dist: 4, target: new THREE.Vector3(SPECIAL_SPECIAL_X, 1.5, SPECIAL_SPECIAL_DEPTH / 4) },
+            specialSpecialRoomWindows: { rotX: Math.PI, rotY: 0.15, dist: 4, target: new THREE.Vector3(SPECIAL_SPECIAL_X, 1.5, -SPECIAL_SPECIAL_DEPTH / 4) },
             specialSpecialRoomSeating: { rotX: Math.PI * 0.7, rotY: 0.2, dist: 4, target: new THREE.Vector3(SPECIAL_SPECIAL_X, 0.5, 0.5) },
-            specialSpecialRoomShelves: { rotX: Math.PI * 1.2, rotY: 0.2, dist: 5, target: new THREE.Vector3(SPECIAL_SPECIAL_X, 1.2, -SPECIAL_SPECIAL_DEPTH / 3) }
+            specialSpecialRoomShelves: { rotX: Math.PI * 1.2, rotY: 0.2, dist: 5, target: new THREE.Vector3(SPECIAL_SPECIAL_X, 1.2, SPECIAL_SPECIAL_DEPTH / 3) }
         };
 
         function animateToView(view, duration = 1500) {
@@ -4927,8 +4968,8 @@
         ];
 
         const defaultFunctions = [
-            { title: 'Three Star — The Pan-African Library', text: 'Curatorial selection of ~50 independent publications (zines, fanzines, essays, archives, catalogues, experimental editions). AABF 10-year archives with posters, visuals, documents, photographs, catalogues, and manifestos. Video space with filmed interviews with publishers, artists, and publishing activists. Mapping African publishing: wall-based or digital installation mapping editorial scenes, networks, and emerging practices.' },
-            { title: 'Special Special — Sound Library', text: 'Audio/radio listening station with speakers, headphones, and listening terminal. DJ table with vinyl. 2-3 screens with media players and headphones (or 4 iPads). Floor cushions (poufs) and woven mats. Sound works from Afrikadaa collective and Station of Commons radio. Collective listening sessions with DJ-led music focused on repair of bodies and narratives. Collective reading space for group readings, performances, and poetry. Public program with roundtables and conversations between AABF × Printed Matter.' },
+            { title: 'S202 Three Stars — Panafrican Library', text: 'Curatorial selection of ~50 independent publications (zines, fanzines, essays, archives, catalogues, experimental editions). AABF 10-year archives with posters, visuals, documents, photographs, catalogues, and manifestos. Video space with filmed interviews with publishers, artists, and publishing activists. Mapping African publishing: wall-based or digital installation mapping editorial scenes, networks, and emerging practices.' },
+            { title: 'S202 Special Special — Sound Library', text: 'Audio/radio listening station with speakers, headphones, and listening terminal. DJ table with vinyl. 2-3 screens with media players and headphones (or 4 iPads). Floor cushions (poufs) and woven mats. Sound works from Afrikadaa collective and Station of Commons radio. Collective listening sessions with DJ-led music focused on repair of bodies and narratives. Collective reading space for group readings, performances, and poetry. Public program with roundtables and conversations between AABF × Printed Matter.' },
             { title: 'The Reading Room Concept', text: 'A space of extended time within the fair: a place to read, listen, watch, exchange, and rest. The project favors a sensory and collective experience, inviting visitors to slow down, immerse themselves in the archives, and activate publications as living objects of transmission and dialogue.' },
             { title: 'Expected Impact', text: 'Creates a unique space for the circulation of transnational knowledge among African, diasporic, and North American publishers, connecting New York, Dakar, and the African continent. Amplifies editorial voices often relegated to the margins. Proposes a critical and active engagement with archives. Affirms the necessity of a decolonial, collective, and self-affirmed ecology of knowledge.' }
         ];
@@ -8552,7 +8593,7 @@
             const camX = camera.position.x;
             const camZ = camera.position.z;
 
-            // Room S202 walls
+            // S202 West (Panafrican Library) walls
             // FRONT wall (windows) - hide when camera is in front (positive Z)
             if (threeStarRoomWalls.front) threeStarRoomWalls.front.visible = camZ < THREE_STAR_DEPTH / 4;
 
@@ -8565,17 +8606,17 @@
             // LEFT wall (Pan-African Library door) - hide when camera is to the left
             if (threeStarRoomWalls.left) threeStarRoomWalls.left.visible = camX > THREE_STAR_X - THREE_STAR_WIDTH / 2;
 
-            // RIGHT wall (solid shared wall with S203) - hide when camera is to the right
+            // RIGHT wall (shared wall with S202 East) - hide when camera is to the right
             if (threeStarRoomWalls.right) threeStarRoomWalls.right.visible = camX < THREE_STAR_X + THREE_STAR_WIDTH / 2;
 
-            // Room S203 walls
+            // S202 East (Sound Library) walls
             // FRONT wall (windows) - hide when camera is in front
             if (specialSpecialRoomWalls.front) specialSpecialRoomWalls.front.visible = camZ < SPECIAL_SPECIAL_DEPTH / 4;
 
             // BACK wall (corridor entry + poster wall) - hide when camera is behind
             if (specialSpecialRoomWalls.back) specialSpecialRoomWalls.back.visible = camZ > -SPECIAL_SPECIAL_DEPTH / 4;
 
-            // LEFT wall (SHARED MIDDLE WALL with S202) - ALWAYS VISIBLE
+            // LEFT wall (SHARED MIDDLE WALL with S202 West) - ALWAYS VISIBLE
             // This is the dividing wall between the two rooms, never hide it
             if (specialSpecialRoomWalls.left) specialSpecialRoomWalls.left.visible = true;
 
