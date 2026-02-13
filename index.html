@@ -4741,7 +4741,23 @@
         });
 
         function saveMoodboardImages() {
-            localStorage.setItem('moodboardImages', JSON.stringify(moodboardImages));
+            try {
+                localStorage.setItem('moodboardImages', JSON.stringify(moodboardImages));
+            } catch (e) {
+                console.error('Failed to save moodboard to localStorage (may be full):', e);
+                // If localStorage is full, try removing old data URLs to free space
+                const trimmed = moodboardImages.map(img => {
+                    if (img.src && img.src.startsWith('data:') && img.src.length > 50000) {
+                        return { ...img, src: img.src.substring(0, 50000) }; // Truncate large data URLs
+                    }
+                    return img;
+                });
+                try {
+                    localStorage.setItem('moodboardImages', JSON.stringify(trimmed));
+                } catch (e2) {
+                    console.error('Still failed after truncation:', e2);
+                }
+            }
         }
 
         function getFilteredImages() {
@@ -5501,27 +5517,36 @@
 
         // Add all queued images to moodboard
         window.addAllQueuedImages = function() {
-            const categorySelect = document.getElementById('new-image-category');
-            const category = categorySelect.value;
+            try {
+                const categorySelect = document.getElementById('new-image-category');
+                const category = (categorySelect && categorySelect.value) ? categorySelect.value : 'reference';
 
-            uploadQueue.forEach(item => {
-                moodboardImages.push({
-                    src: item.src,
-                    title: item.name.replace(/\.[^/.]+$/, ''), // Remove file extension
-                    category: category
+                console.log(`Adding ${uploadQueue.length} images to moodboard with category: ${category}`);
+
+                uploadQueue.forEach(item => {
+                    moodboardImages.push({
+                        src: item.src,
+                        title: item.name.replace(/\.[^/.]+$/, ''),
+                        category: category
+                    });
                 });
-            });
 
-            saveMoodboardImages();
-            renderMoodboardGallery();
+                saveMoodboardImages();
+                renderMoodboardGallery();
 
-            // Clear queue and reset form
-            uploadQueue = [];
-            updateUploadQueueUI();
-            const dropZone = document.getElementById('drop-zone');
-            dropZone.innerHTML = '📷 Drag & drop images here or click to browse<br><span style="font-size: 10px; color: #888;">Select multiple files at once!</span>';
-            dropZone.classList.remove('has-file');
-            toggleAddImageForm();
+                // Clear queue and reset form
+                uploadQueue = [];
+                updateUploadQueueUI();
+                const dropZone = document.getElementById('drop-zone');
+                dropZone.innerHTML = '📷 Drag & drop images here or click to browse<br><span style="font-size: 10px; color: #888;">Select multiple files at once!</span>';
+                dropZone.classList.remove('has-file');
+                toggleAddImageForm();
+
+                console.log(`Moodboard now has ${moodboardImages.length} images total`);
+            } catch (err) {
+                console.error('Error adding queued images:', err);
+                alert('Error adding images: ' + err.message);
+            }
         };
 
         // Multi-file upload handler
@@ -5633,8 +5658,8 @@
                 countEl.textContent = referenceUploadQueue.length;
 
                 // Populate category dropdown
-                if (categorySelect && moodboardCategories) {
-                    categorySelect.innerHTML = moodboardCategories.map(c =>
+                if (categorySelect && imageCategories) {
+                    categorySelect.innerHTML = imageCategories.map(c =>
                         `<option value="${c.value}">${c.label}</option>`
                     ).join('');
                 }
@@ -5673,27 +5698,36 @@
         };
 
         window.addAllReferenceImages = function() {
-            const categorySelect = document.getElementById('reference-category-select');
-            const category = categorySelect ? categorySelect.value : 'reference';
+            try {
+                const categorySelect = document.getElementById('reference-category-select');
+                const category = (categorySelect && categorySelect.value) ? categorySelect.value : 'reference';
 
-            referenceUploadQueue.forEach(item => {
-                moodboardImages.push({
-                    src: item.src,
-                    title: item.name.replace(/\.[^/.]+$/, ''),
-                    category: category
+                console.log(`Adding ${referenceUploadQueue.length} reference images with category: ${category}`);
+
+                referenceUploadQueue.forEach(item => {
+                    moodboardImages.push({
+                        src: item.src,
+                        title: item.name.replace(/\.[^/.]+$/, ''),
+                        category: category
+                    });
                 });
-            });
 
-            saveMoodboardImages();
-            renderMoodboardGallery();
+                saveMoodboardImages();
+                renderMoodboardGallery();
 
-            // Clear queue
-            referenceUploadQueue = [];
-            updateReferenceQueueUI();
-            const dropZone = document.getElementById('reference-drop-zone');
-            dropZone.innerHTML = `<div style="font-size: 24px; margin-bottom: 8px;">📷</div>
-                <div style="color: #aaa; font-size: 13px;">Drag & drop images here or click to browse</div>
-                <div style="color: #666; font-size: 11px; margin-top: 4px;">Select multiple files at once!</div>`;
+                // Clear queue
+                referenceUploadQueue = [];
+                updateReferenceQueueUI();
+                const dropZone = document.getElementById('reference-drop-zone');
+                dropZone.innerHTML = `<div style="font-size: 24px; margin-bottom: 8px;">📷</div>
+                    <div style="color: #aaa; font-size: 13px;">Drag & drop images here or click to browse</div>
+                    <div style="color: #666; font-size: 11px; margin-top: 4px;">Select multiple files at once!</div>`;
+
+                console.log(`Moodboard now has ${moodboardImages.length} images total`);
+            } catch (err) {
+                console.error('Error adding reference images:', err);
+                alert('Error adding images: ' + err.message);
+            }
         };
 
         // Setup reference images drop zone
