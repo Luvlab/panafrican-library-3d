@@ -1499,7 +1499,7 @@
         <button class="toggle-btn active" onclick="toggleGrid()" id="gridBtn">Grid</button>
         <button class="toggle-btn active" onclick="toggleLabels()" id="labelsBtn">Labels</button>
         <button class="toggle-btn active" onclick="toggleCeiling()" id="ceilingBtn">Ceiling</button>
-        <button class="toggle-btn" onclick="toggleNearWall()" id="nearWallBtn">Hide Near Wall</button>
+        <button class="toggle-btn active" onclick="toggleNearWall()" id="nearWallBtn">Hide Near Wall</button>
         <button class="toggle-btn" onclick="toggleWireframe()" id="wireframeBtn">Wireframe</button>
     </div>
 
@@ -4556,7 +4556,7 @@
         };
 
         // Toggle functions
-        let showGrid = true, showLabels = true, showCeiling = true, hideNearWall = false, showWireframe = false;
+        let showGrid = true, showLabels = true, showCeiling = true, hideNearWall = true, showWireframe = false;
 
         window.toggleGrid = function() {
             showGrid = !showGrid;
@@ -4599,9 +4599,17 @@
 
         window.toggleMoodboard = function() {
             const modal = document.getElementById('moodboard-modal');
+            const isOpening = modal.classList.contains('modal-hidden');
             modal.classList.toggle('modal-hidden');
-            if (!modal.classList.contains('modal-hidden')) {
+            if (isOpening) {
                 renderMoodboardGallery();
+                // Close decorator panel if open
+                const decoratorPanel = document.getElementById('decorator-panel');
+                if (decoratorPanel && decoratorPanel.classList.contains('open')) {
+                    decoratorPanel.classList.remove('open');
+                    decoratorMode = false;
+                    deselectAll();
+                }
             }
         };
 
@@ -5852,6 +5860,11 @@
             if (!decoratorMode) {
                 deselectAll();
             } else {
+                // Close mood board if open
+                const moodModal = document.getElementById('moodboard-modal');
+                if (moodModal && !moodModal.classList.contains('modal-hidden')) {
+                    moodModal.classList.add('modal-hidden');
+                }
                 // Setup drag-drop for library items when decorator opens
                 setupLibraryDragDrop();
             }
@@ -8564,6 +8577,7 @@
         };
 
         // Wall visibility based on camera position
+        // Hide the wall nearest to the camera so you can see inside the rooms
         function updateWallVisibility() {
             if (!hideNearWall) {
                 // Show all walls
@@ -8572,39 +8586,53 @@
                 return;
             }
 
-            // Determine which wall is closest to camera
             const camX = camera.position.x;
             const camZ = camera.position.z;
 
-            // S202 West (Panafrican Library) walls
-            // FRONT wall (windows) - hide when camera is in front (positive Z)
-            if (threeStarRoomWalls.front) threeStarRoomWalls.front.visible = camZ < THREE_STAR_DEPTH / 4;
+            // World-space wall positions for THREE STAR (Panafrican Library)
+            const tsSouthZ = 0 - THREE_STAR_DEPTH / 2;           // South/window wall (front)
+            const tsNorthZ = 0 + THREE_STAR_DEPTH / 2;           // North/corridor wall (back)
+            const tsWestX = THREE_STAR_X - THREE_STAR_WIDTH / 2; // West wall (shared wall with connecting door)
+            const tsEastX = THREE_STAR_X + THREE_STAR_WIDTH / 2; // East wall (solid exterior)
+            const tsCenterX = THREE_STAR_X;
+            const tsCenterZ = 0;
 
-            // BACK wall (corridor entry) - hide when camera is behind (negative Z)
-            // Also hide entire vestibule (all corridor walls) when hiding back area
-            const hideBackArea = camZ < -THREE_STAR_DEPTH / 4;
-            if (threeStarRoomWalls.back) threeStarRoomWalls.back.visible = !hideBackArea;
-            if (threeStarRoomWalls.vestibuleGroup) threeStarRoomWalls.vestibuleGroup.visible = !hideBackArea;
+            // World-space wall positions for SPECIAL SPECIAL (Sound Library)
+            const ssZoff = SPECIAL_SPECIAL_Z_OFFSET;
+            const ssSouthZ = ssZoff - SPECIAL_SPECIAL_DEPTH / 2; // South/window wall (front)
+            const ssNorthZ = ssZoff + SPECIAL_SPECIAL_DEPTH / 2; // North/corridor wall (back)
+            const ssWestX = SPECIAL_SPECIAL_X - SPECIAL_SPECIAL_WIDTH / 2; // West wall (solid exterior)
+            const ssEastX = SPECIAL_SPECIAL_X + SPECIAL_SPECIAL_WIDTH / 2; // East wall (shared, built by TS)
+            const ssCenterX = SPECIAL_SPECIAL_X;
+            const ssCenterZ = ssZoff;
 
-            // LEFT wall (Pan-African Library door) - hide when camera is to the left
-            if (threeStarRoomWalls.left) threeStarRoomWalls.left.visible = camX > THREE_STAR_X - THREE_STAR_WIDTH / 2;
+            // THREE STAR walls — hide wall closest to camera
+            // South wall (windows) — hide when camera is south of room center
+            if (threeStarRoomWalls.front) threeStarRoomWalls.front.visible = camZ > tsCenterZ;
 
-            // RIGHT wall (shared wall with S202 East) - hide when camera is to the right
-            if (threeStarRoomWalls.right) threeStarRoomWalls.right.visible = camX < THREE_STAR_X + THREE_STAR_WIDTH / 2;
+            // North wall (corridor entry) — hide when camera is north of room center
+            const tsHideNorth = camZ < tsCenterZ;
+            if (threeStarRoomWalls.back) threeStarRoomWalls.back.visible = !tsHideNorth;
+            if (threeStarRoomWalls.vestibuleGroup) threeStarRoomWalls.vestibuleGroup.visible = !tsHideNorth;
 
-            // S202 East (Sound Library) walls
-            // FRONT wall (windows) - hide when camera is in front
-            if (specialSpecialRoomWalls.front) specialSpecialRoomWalls.front.visible = camZ < SPECIAL_SPECIAL_DEPTH / 4;
+            // East wall (solid exterior) — hide when camera is east of room center
+            if (threeStarRoomWalls.right) threeStarRoomWalls.right.visible = camX < tsCenterX;
 
-            // BACK wall (corridor entry + poster wall) - hide when camera is behind
-            if (specialSpecialRoomWalls.back) specialSpecialRoomWalls.back.visible = camZ > -SPECIAL_SPECIAL_DEPTH / 4;
+            // West/shared wall (connecting door) — hide when camera is west of room center
+            // But only if camera is closer to this room than to Special Special
+            if (threeStarRoomWalls.left) threeStarRoomWalls.left.visible = camX > tsCenterX;
 
-            // LEFT wall (SHARED MIDDLE WALL with S202 West) - ALWAYS VISIBLE
-            // This is the dividing wall between the two rooms, never hide it
-            if (specialSpecialRoomWalls.left) specialSpecialRoomWalls.left.visible = true;
+            // SPECIAL SPECIAL walls — hide wall closest to camera
+            // South wall (windows) — hide when camera is south of room center
+            if (specialSpecialRoomWalls.front) specialSpecialRoomWalls.front.visible = camZ > ssCenterZ;
 
-            // RIGHT wall (solid exterior) - hide when camera is to the right
-            if (specialSpecialRoomWalls.right) specialSpecialRoomWalls.right.visible = camX < SPECIAL_SPECIAL_X + SPECIAL_SPECIAL_WIDTH / 2;
+            // North wall (corridor entry) — hide when camera is north of room center
+            if (specialSpecialRoomWalls.back) specialSpecialRoomWalls.back.visible = camZ < ssCenterZ;
+
+            // West wall (solid exterior) — hide when camera is west of room center
+            if (specialSpecialRoomWalls.left) specialSpecialRoomWalls.left.visible = camX > ssCenterX;
+
+            // East wall (shared with Three Star) — null, handled by Three Star's left wall
         }
 
         // Auto ceiling visibility based on camera height
