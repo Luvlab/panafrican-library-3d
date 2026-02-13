@@ -1,7 +1,7 @@
 // Nano Banana (Gemini) AI Render API
 // Generates photorealistic renders from 3D scene screenshots
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -101,7 +101,7 @@ module.exports = async function handler(req, res) {
     console.error('Render error:', error);
     return res.status(500).json({ error: error.message });
   }
-};
+}
 
 function buildRenderPrompt(customPrompt, style) {
   const basePrompt = `Transform this 3D room visualization into a photorealistic architectural render.

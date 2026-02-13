@@ -1757,8 +1757,9 @@
                 <h3>Saved Views <span id="views-count" style="color:#888; font-weight:normal;"></span></h3>
                 <p style="font-size: 10px; color: #666; margin-bottom: 10px;">Drag to reorder • Click to apply</p>
                 <div class="saved-config-list" id="saved-views-list">
-                    <div style="color: #666; font-size: 12px; padding: 10px;">No views saved yet</div>
+                    <div style="color: #666; font-size: 12px; padding: 10px;">Loading views...</div>
                 </div>
+                <button class="admin-btn admin-btn-secondary" style="margin-top:8px; width:100%;" onclick="resetDefaultViews()">Reset to Default Views</button>
             </div>
 
             <div class="admin-section">
@@ -8853,6 +8854,40 @@
         let draggedConfigIndex = null;
         let draggedConfigType = null;
 
+        // Seed default view presets if no views saved yet
+        if (savedViews.length === 0) {
+            const defaultViewPresets = [
+                { name: 'Overview', description: 'Both rooms from above', rotX: Math.PI, rotY: 0.5, dist: 18, tx: 0, ty: 2, tz: 0 },
+                { name: 'Floor Plan', description: 'Top-down floor plan view', rotX: Math.PI, rotY: 1.5, dist: 14, tx: 0, ty: 0, tz: 0 },
+                { name: 'Panafrican Library - Entry', description: 'Three Star room from entry door', rotX: Math.PI, rotY: 0.15, dist: 3, tx: THREE_STAR_X, ty: 1.5, tz: THREE_STAR_DEPTH / 2 - 1 },
+                { name: 'Panafrican Library - Inside', description: 'Three Star room interior', rotX: Math.PI, rotY: 0.2, dist: 5, tx: THREE_STAR_X, ty: 1.5, tz: 0 },
+                { name: 'Panafrican Library - Windows', description: 'Three Star south windows', rotX: Math.PI, rotY: 0.15, dist: 4, tx: THREE_STAR_X, ty: 1.5, tz: -THREE_STAR_DEPTH / 4 },
+                { name: 'Panafrican Library - Table', description: 'Three Star reading table', rotX: Math.PI * 0.8, rotY: 0.25, dist: 4, tx: THREE_STAR_X, ty: 0.8, tz: 0 },
+                { name: 'Sound Library - Entry', description: 'Special Special entry corridor', rotX: Math.PI, rotY: 0.15, dist: 3, tx: SPECIAL_SPECIAL_X, ty: 1.5, tz: SPECIAL_SPECIAL_DEPTH / 2 - 1 },
+                { name: 'Sound Library - Inside', description: 'Special Special room interior', rotX: Math.PI, rotY: 0.2, dist: 6, tx: SPECIAL_SPECIAL_X, ty: 1.5, tz: 0 },
+                { name: 'Sound Library - Windows', description: 'Special Special south windows', rotX: Math.PI, rotY: 0.15, dist: 4, tx: SPECIAL_SPECIAL_X, ty: 1.5, tz: -SPECIAL_SPECIAL_DEPTH / 4 },
+                { name: 'Sound Library - Seating', description: 'Special Special seating area', rotX: Math.PI * 0.7, rotY: 0.2, dist: 4, tx: SPECIAL_SPECIAL_X, ty: 0.5, tz: 0.5 },
+                { name: 'Sound Library - Shelves', description: 'Special Special bookshelf wall', rotX: Math.PI * 1.2, rotY: 0.2, dist: 5, tx: SPECIAL_SPECIAL_X, ty: 1.2, tz: SPECIAL_SPECIAL_DEPTH / 3 }
+            ];
+
+            savedViews = defaultViewPresets.map((v, i) => ({
+                id: Date.now() + i,
+                name: v.name,
+                description: v.description,
+                data: {
+                    rotationX: v.rotX,
+                    rotationY: v.rotY,
+                    distance: v.dist,
+                    target: { x: v.tx, y: v.ty, z: v.tz },
+                    position: { x: 0, y: 0, z: 0 }
+                },
+                author: 'Default',
+                createdAt: new Date().toISOString(),
+                isDefault: true
+            }));
+            saveViewsToStorage();
+        }
+
         function saveLayoutsToStorage() {
             localStorage.setItem('savedLayouts', JSON.stringify(savedLayouts));
         }
@@ -9178,6 +9213,40 @@
                     RotX: ${currentRotationX.toFixed(3)} | RotY: ${currentRotationY.toFixed(3)}
                 `;
             }
+        };
+
+        window.resetDefaultViews = function() {
+            if (!confirm('Reset views to defaults? This will replace all current views.')) return;
+            const defaultViewPresets = [
+                { name: 'Overview', description: 'Both rooms from above', rotX: Math.PI, rotY: 0.5, dist: 18, tx: 0, ty: 2, tz: 0 },
+                { name: 'Floor Plan', description: 'Top-down floor plan view', rotX: Math.PI, rotY: 1.5, dist: 14, tx: 0, ty: 0, tz: 0 },
+                { name: 'Panafrican Library - Entry', description: 'Three Star room from entry door', rotX: Math.PI, rotY: 0.15, dist: 3, tx: THREE_STAR_X, ty: 1.5, tz: THREE_STAR_DEPTH / 2 - 1 },
+                { name: 'Panafrican Library - Inside', description: 'Three Star room interior', rotX: Math.PI, rotY: 0.2, dist: 5, tx: THREE_STAR_X, ty: 1.5, tz: 0 },
+                { name: 'Panafrican Library - Windows', description: 'Three Star south windows', rotX: Math.PI, rotY: 0.15, dist: 4, tx: THREE_STAR_X, ty: 1.5, tz: -THREE_STAR_DEPTH / 4 },
+                { name: 'Panafrican Library - Table', description: 'Three Star reading table', rotX: Math.PI * 0.8, rotY: 0.25, dist: 4, tx: THREE_STAR_X, ty: 0.8, tz: 0 },
+                { name: 'Sound Library - Entry', description: 'Special Special entry corridor', rotX: Math.PI, rotY: 0.15, dist: 3, tx: SPECIAL_SPECIAL_X, ty: 1.5, tz: SPECIAL_SPECIAL_DEPTH / 2 - 1 },
+                { name: 'Sound Library - Inside', description: 'Special Special room interior', rotX: Math.PI, rotY: 0.2, dist: 6, tx: SPECIAL_SPECIAL_X, ty: 1.5, tz: 0 },
+                { name: 'Sound Library - Windows', description: 'Special Special south windows', rotX: Math.PI, rotY: 0.15, dist: 4, tx: SPECIAL_SPECIAL_X, ty: 1.5, tz: -SPECIAL_SPECIAL_DEPTH / 4 },
+                { name: 'Sound Library - Seating', description: 'Special Special seating area', rotX: Math.PI * 0.7, rotY: 0.2, dist: 4, tx: SPECIAL_SPECIAL_X, ty: 0.5, tz: 0.5 },
+                { name: 'Sound Library - Shelves', description: 'Special Special bookshelf wall', rotX: Math.PI * 1.2, rotY: 0.2, dist: 5, tx: SPECIAL_SPECIAL_X, ty: 1.2, tz: SPECIAL_SPECIAL_DEPTH / 3 }
+            ];
+            savedViews = defaultViewPresets.map((v, i) => ({
+                id: Date.now() + i,
+                name: v.name,
+                description: v.description,
+                data: {
+                    rotationX: v.rotX,
+                    rotationY: v.rotY,
+                    distance: v.dist,
+                    target: { x: v.tx, y: v.ty, z: v.tz },
+                    position: { x: 0, y: 0, z: 0 }
+                },
+                author: 'Default',
+                createdAt: new Date().toISOString(),
+                isDefault: true
+            }));
+            saveViewsToStorage();
+            renderViewsList();
         };
 
         // Initialize lists on admin panel open
