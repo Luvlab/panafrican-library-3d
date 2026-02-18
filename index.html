@@ -1543,6 +1543,7 @@
         <button class="toggle-btn active" onclick="toggleLabels()" id="labelsBtn">Labels</button>
         <button class="toggle-btn active" onclick="toggleCeiling()" id="ceilingBtn">Ceiling</button>
         <button class="toggle-btn active" onclick="toggleNearWall()" id="nearWallBtn">Hide Near Wall</button>
+        <button class="toggle-btn" onclick="toggleSurroundings()" id="surroundingsBtn">Corridor + Exterior</button>
         <button class="toggle-btn" onclick="toggleWireframe()" id="wireframeBtn">Wireframe</button>
     </div>
 
@@ -4693,8 +4694,7 @@
         // ========== NORTH CORRIDOR (STUDIO HALLWAY) ==========
         // The hallway just outside both room doors, running east-west along the north side
         // Both rooms' north walls align at Z = THREE_STAR_DEPTH/2
-        // North corridor walls stored for per-wall visibility (like room walls)
-        const corridorWalls = { north: null, west: null, east: null };
+        // North corridor — open hallway (no east/west end walls per floor plan)
         const northCorridorGroup = (function createNorthCorridor() {
             const corridorGroup = new THREE.Group();
             const corridorDepth = 2.5;   // ~8 feet deep corridor
@@ -4702,13 +4702,12 @@
             const corridorWallMat = new THREE.MeshLambertMaterial({ color: 0xe8e4dc });  // off-white plaster
             const corridorCeilMat = new THREE.MeshLambertMaterial({ color: 0xf0f0f0, side: THREE.DoubleSide });
 
-            // Corridor spans the full width of both rooms
             const corridorWestEdge = SPECIAL_SPECIAL_X - SPECIAL_SPECIAL_WIDTH / 2;
             const corridorEastEdge = THREE_STAR_X + THREE_STAR_WIDTH / 2;
             const corridorCenterX = (corridorWestEdge + corridorEastEdge) / 2;
             const corridorWidth = corridorEastEdge - corridorWestEdge;
 
-            const northWallZ = THREE_STAR_DEPTH / 2;  // Both rooms' north walls
+            const northWallZ = THREE_STAR_DEPTH / 2;
             const farWallZ = northWallZ + corridorDepth;
 
             // Floor
@@ -4730,34 +4729,13 @@
             ceiling.userData.isCeiling = true;
             corridorGroup.add(ceiling);
 
-            // Far (north) corridor wall — the wall across from the room doors
+            // Far (north) corridor wall only — opposite side of hallway from room doors
             const farWall = new THREE.Mesh(
                 new THREE.BoxGeometry(corridorWidth + 0.3, CEILING_HEIGHT, WALL_THICKNESS),
                 corridorWallMat
             );
             farWall.position.set(corridorCenterX, CEILING_HEIGHT / 2, farWallZ);
             corridorGroup.add(farWall);
-            corridorWalls.north = farWall;
-
-            // West end wall (closes off left side of corridor)
-            const westEndWall = new THREE.Mesh(
-                new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, corridorDepth + WALL_THICKNESS),
-                corridorWallMat
-            );
-            westEndWall.position.set(corridorWestEdge - WALL_THICKNESS / 2, CEILING_HEIGHT / 2, northWallZ + corridorDepth / 2);
-            corridorGroup.add(westEndWall);
-            corridorWalls.west = westEndWall;
-
-            // East end wall (closes off right side of corridor)
-            const eastEndWall = new THREE.Mesh(
-                new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, corridorDepth + WALL_THICKNESS),
-                corridorWallMat
-            );
-            eastEndWall.position.set(corridorEastEdge + WALL_THICKNESS / 2, CEILING_HEIGHT / 2, northWallZ + corridorDepth / 2);
-            corridorGroup.add(eastEndWall);
-            corridorWalls.east = eastEndWall;
-
-            // No dedicated corridor lights — ambient + room spotlights spill in naturally
 
             scene.add(corridorGroup);
             return corridorGroup;
@@ -4765,7 +4743,7 @@
 
         // ========== SOUTH EXTERIOR VIEW — JACKSON AVENUE, LONG ISLAND CITY ==========
         // Visible through the south-facing windows: Jackson Ave, buildings, Manhattan skyline
-        (function createExteriorView() {
+        const southExteriorGroup = (function createExteriorView() {
             const extGroup = new THREE.Group();
 
             // The south wall (windows) of Three Star is at Z = -THREE_STAR_DEPTH/2
@@ -4910,7 +4888,10 @@
             ground.position.set(0, -0.01, windowWallZ - 60);
             extGroup.add(ground);
 
+            // MoMA PS1 rooms are on the second floor — drop exterior down one story (~4.5m)
+            extGroup.position.y = -4.5;
             scene.add(extGroup);
+            return extGroup;
         })();
 
         // ============================================================
@@ -5247,7 +5228,7 @@
         };
 
         // Toggle functions
-        let showGrid = true, showLabels = true, showCeiling = true, hideNearWall = true, showWireframe = false;
+        let showGrid = true, showLabels = true, showCeiling = true, hideNearWall = true, showWireframe = false, showSurroundings = false;
 
         window.toggleGrid = function() {
             showGrid = !showGrid;
@@ -5281,6 +5262,17 @@
             document.getElementById('wireframeBtn').classList.toggle('active', showWireframe);
             scene.traverse((obj) => { if (obj.isMesh && obj.material) obj.material.wireframe = showWireframe; });
         };
+
+        window.toggleSurroundings = function() {
+            showSurroundings = !showSurroundings;
+            if (northCorridorGroup) northCorridorGroup.visible = showSurroundings;
+            if (southExteriorGroup) southExteriorGroup.visible = showSurroundings;
+            document.getElementById('surroundingsBtn').classList.toggle('active', showSurroundings);
+        };
+
+        // Apply default: hide surroundings on load
+        if (northCorridorGroup) northCorridorGroup.visible = false;
+        if (southExteriorGroup) southExteriorGroup.visible = false;
 
         window.captureScreenshot = function() {
             const link = document.createElement('a');
@@ -9531,7 +9523,7 @@
                 // Show all walls
                 Object.values(threeStarRoomWalls).forEach(w => { if (w) w.visible = true; });
                 Object.values(specialSpecialRoomWalls).forEach(w => { if (w) w.visible = true; });
-                Object.values(corridorWalls).forEach(w => { if (w) w.visible = true; });
+                if (northCorridorGroup) northCorridorGroup.visible = true;
                 return;
             }
 
@@ -9583,21 +9575,11 @@
             if (specialSpecialRoomWalls[ssHideKey]) specialSpecialRoomWalls[ssHideKey].visible = false;
 
             // === NORTH CORRIDOR ===
-            // Treat corridor walls just like room exterior walls — hide the one behind the camera
-            if (corridorWalls.north) corridorWalls.north.visible = true;
-            if (corridorWalls.west) corridorWalls.west.visible = true;
-            if (corridorWalls.east) corridorWalls.east.visible = true;
-
-            // north (far) wall outward normal = (0,0,+1)
-            // west end wall outward normal = (-1,0,0)
-            // east end wall outward normal = (+1,0,0)
-            const corrCandidates = [
-                { wall: corridorWalls.north, score: camDir.z * 1 },   // dot with (0,0,+1)
-                { wall: corridorWalls.west,  score: camDir.x * -1 },  // dot with (-1,0,0)
-                { wall: corridorWalls.east,  score: camDir.x * 1 }    // dot with (+1,0,0)
-            ];
-            corrCandidates.sort((a, b) => a.score - b.score);
-            if (corrCandidates[0].wall) corrCandidates[0].wall.visible = false;
+            // Only manage corridor visibility when surroundings toggle is on
+            if (northCorridorGroup && showSurroundings) {
+                const hidingNorthSide = (tsHideKey === 'back' || ssHideKey === 'back');
+                northCorridorGroup.visible = !hidingNorthSide;
+            }
         }
 
         // Ceiling objects cache — avoid scene.traverse() every frame
