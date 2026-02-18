@@ -274,15 +274,18 @@
         }
         .toggle-btn {
             padding: 6px 12px;
-            background: transparent;
+            background: rgba(0,0,0,0.6);
             border: 1px solid rgba(255,255,255,0.3);
             color: #fff;
             border-radius: 4px;
             cursor: pointer;
             font-size: 12px;
         }
+        .toggle-btn:hover {
+            background: rgba(0,0,0,0.8);
+        }
         .toggle-btn.active {
-            background: rgba(255,255,255,0.15);
+            background: rgba(0,0,0,0.75);
             border-color: rgba(255,255,255,0.6);
         }
         #capture-btn {
@@ -291,7 +294,7 @@
             left: 50%;
             transform: translateX(-50%);
             padding: 10px 20px;
-            background: transparent;
+            background: rgba(0,0,0,0.6);
             border: 1px solid rgba(255,255,255,0.4);
             color: #fff;
             border-radius: 4px;
@@ -299,7 +302,7 @@
             font-size: 13px;
             z-index: 100;
         }
-        #capture-btn:hover { background: rgba(255,255,255,0.1); }
+        #capture-btn:hover { background: rgba(0,0,0,0.8); }
         .icon { margin-right: 6px; }
         #moodboard-btn {
             position: absolute;
@@ -307,7 +310,7 @@
             left: 50%;
             transform: translateX(calc(-50% - 70px));
             padding: 10px 20px;
-            background: transparent;
+            background: rgba(0,0,0,0.6);
             border: 1px solid rgba(255,255,255,0.4);
             color: #fff;
             border-radius: 4px;
@@ -315,7 +318,7 @@
             font-size: 13px;
             z-index: 100;
         }
-        #moodboard-btn:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
+        #moodboard-btn:hover { background: rgba(0,0,0,0.8); border-color: #fff; }
         #capture-btn { transform: translateX(calc(-50% - 210px)); }
         .modal-hidden { display: none; }
         #moodboard-modal {
@@ -361,7 +364,7 @@
         }
         .moodboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: 1fr;
             gap: 20px;
         }
         .moodboard-section {
@@ -1627,8 +1630,32 @@
                 </div>
             </div>
 
+            <!-- Reference Images Gallery (first, full width) -->
+            <div class="moodboard-section">
+                <h3>📸 Reference Images <span id="image-count" style="color:#888; font-weight:normal;"></span></h3>
+                <div class="reference-upload-zone" id="reference-drop-zone" style="border: 2px dashed #444; border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 15px; cursor: pointer; transition: all 0.3s;">
+                    <div style="font-size: 24px; margin-bottom: 8px;">📷</div>
+                    <div style="color: #aaa; font-size: 13px;">Drag & drop images here or click to browse</div>
+                    <div style="color: #666; font-size: 11px; margin-top: 4px;">Select multiple files at once!</div>
+                    <input type="file" id="reference-file-input" accept="image/*" multiple style="display:none;">
+                </div>
+                <div id="reference-upload-queue" style="display:none; max-height: 120px; overflow-y: auto; margin-bottom: 15px; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 6px;">
+                    <!-- Upload queue preview -->
+                </div>
+                <div id="reference-upload-actions" style="display:none; margin-bottom: 15px;">
+                    <select id="reference-category-select" style="padding: 8px; font-size: 12px; border: 1px solid #444; border-radius: 4px; background: #1a1a1a; color: #fff; margin-right: 10px;">
+                        <!-- Categories rendered by JS -->
+                    </select>
+                    <button class="moodboard-toolbar-btn primary" onclick="addAllReferenceImages()" style="padding: 8px 16px;">➕ Add All (<span id="reference-queue-count">0</span>)</button>
+                    <button class="moodboard-toolbar-btn" onclick="clearReferenceQueue()" style="padding: 8px 16px; margin-left: 5px;">Clear</button>
+                </div>
+                <div class="moodboard-images" id="moodboard-gallery">
+                    <!-- Images will be populated by JavaScript -->
+                </div>
+            </div>
+
             <div class="moodboard-grid">
-                <!-- Color Palette -->
+                <!-- Color Palette & Patterns -->
                 <div class="moodboard-section">
                     <h3>🎨 Color Palette <button class="section-edit-btn" onclick="toggleColorPaletteEdit()" id="color-edit-btn">✏️</button></h3>
                     <p style="font-size: 11px; color: #666; margin-bottom: 8px;">Based on Panafrican reference imagery</p>
@@ -1643,7 +1670,7 @@
 
                     <!-- Patterns (under Color Palette) -->
                     <h4 style="margin-top: 15px; margin-bottom: 8px; color: #fff; font-size: 13px;">🌍 Patterns <button class="section-edit-btn" onclick="togglePatternEdit()" id="pattern-edit-btn">✏️</button></h4>
-                    <div class="pattern-grid" id="pattern-grid-container" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;">
+                    <div class="pattern-grid" id="pattern-grid-container" style="display: grid; grid-template-columns: repeat(auto-fill, 80px); gap: 5px;">
                         <!-- Patterns rendered by JS -->
                     </div>
                     <p style="font-size: 10px; color: #888; margin-top: 6px;">Drag patterns onto furniture • Ankara • Kente • Adinkra</p>
@@ -1659,7 +1686,7 @@
                     </div>
                 </div>
 
-                <!-- Key Furniture -->
+                <!-- Key Furniture & Room Functions -->
                 <div class="moodboard-section">
                     <h3>🛋️ Key Furniture <button class="section-edit-btn" onclick="toggleFurnitureEdit()" id="furniture-edit-btn">✏️</button></h3>
                     <div id="furniture-list-container">
@@ -1681,30 +1708,6 @@
                         <textarea id="new-function-text" placeholder="Description..." style="width:100%; padding:4px; font-size:11px; border:1px solid #444; border-radius:3px; background:#1a1a1a; color:#fff; resize:vertical; min-height:40px;"></textarea>
                         <button class="moodboard-toolbar-btn primary" onclick="addFunctionItem()" style="padding:4px 8px; font-size:10px; width:100%; margin-top:4px;">Add Section</button>
                     </div>
-                </div>
-            </div>
-
-            <!-- Reference Images Gallery (with multi-file upload) -->
-            <div class="moodboard-section" style="margin-top: 20px;">
-                <h3>📸 Reference Images <span id="image-count" style="color:#888; font-weight:normal;"></span></h3>
-                <div class="reference-upload-zone" id="reference-drop-zone" style="border: 2px dashed #444; border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 15px; cursor: pointer; transition: all 0.3s;">
-                    <div style="font-size: 24px; margin-bottom: 8px;">📷</div>
-                    <div style="color: #aaa; font-size: 13px;">Drag & drop images here or click to browse</div>
-                    <div style="color: #666; font-size: 11px; margin-top: 4px;">Select multiple files at once!</div>
-                    <input type="file" id="reference-file-input" accept="image/*" multiple style="display:none;">
-                </div>
-                <div id="reference-upload-queue" style="display:none; max-height: 120px; overflow-y: auto; margin-bottom: 15px; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 6px;">
-                    <!-- Upload queue preview -->
-                </div>
-                <div id="reference-upload-actions" style="display:none; margin-bottom: 15px;">
-                    <select id="reference-category-select" style="padding: 8px; font-size: 12px; border: 1px solid #444; border-radius: 4px; background: #1a1a1a; color: #fff; margin-right: 10px;">
-                        <!-- Categories rendered by JS -->
-                    </select>
-                    <button class="moodboard-toolbar-btn primary" onclick="addAllReferenceImages()" style="padding: 8px 16px;">➕ Add All (<span id="reference-queue-count">0</span>)</button>
-                    <button class="moodboard-toolbar-btn" onclick="clearReferenceQueue()" style="padding: 8px 16px; margin-left: 5px;">Clear</button>
-                </div>
-                <div class="moodboard-images" id="moodboard-gallery">
-                    <!-- Images will be populated by JavaScript -->
                 </div>
             </div>
         </div>
@@ -4418,6 +4421,18 @@
                 group.add(eastCorridorWall);
             }
 
+            // Door header at south entry of vestibule corridor (standard door height opening)
+            const vestibuleDoorHeader = new THREE.Mesh(
+                new THREE.BoxGeometry(SPECIAL_SPECIAL_CORRIDOR_WIDTH, CEILING_HEIGHT - DOOR_HEIGHT, partitionThickness),
+                brickMaterial
+            );
+            vestibuleDoorHeader.position.set(
+                corridorCenterX,
+                DOOR_HEIGHT + (CEILING_HEIGHT - DOOR_HEIGHT) / 2,
+                SPECIAL_SPECIAL_DEPTH / 2 - corridorShaftDepth
+            );
+            group.add(vestibuleDoorHeader);
+
             // ========== SOUTH WALL (-Z) - PS1 Industrial Windows (BOTTOM of floor plan) ==========
             const southWallGroup = new THREE.Group();
 
@@ -4678,7 +4693,9 @@
         // ========== NORTH CORRIDOR (STUDIO HALLWAY) ==========
         // The hallway just outside both room doors, running east-west along the north side
         // Both rooms' north walls align at Z = THREE_STAR_DEPTH/2
-        (function createNorthCorridor() {
+        // North corridor walls stored for per-wall visibility (like room walls)
+        const corridorWalls = { north: null, west: null, east: null };
+        const northCorridorGroup = (function createNorthCorridor() {
             const corridorGroup = new THREE.Group();
             const corridorDepth = 2.5;   // ~8 feet deep corridor
             const corridorFloorMat = new THREE.MeshLambertMaterial({ color: 0xb0b0a8 }); // grey concrete
@@ -4686,7 +4703,6 @@
             const corridorCeilMat = new THREE.MeshLambertMaterial({ color: 0xf0f0f0, side: THREE.DoubleSide });
 
             // Corridor spans the full width of both rooms
-            const totalSpan = THREE_STAR_WIDTH + SPECIAL_SPECIAL_WIDTH;
             const corridorWestEdge = SPECIAL_SPECIAL_X - SPECIAL_SPECIAL_WIDTH / 2;
             const corridorEastEdge = THREE_STAR_X + THREE_STAR_WIDTH / 2;
             const corridorCenterX = (corridorWestEdge + corridorEastEdge) / 2;
@@ -4721,6 +4737,7 @@
             );
             farWall.position.set(corridorCenterX, CEILING_HEIGHT / 2, farWallZ);
             corridorGroup.add(farWall);
+            corridorWalls.north = farWall;
 
             // West end wall (closes off left side of corridor)
             const westEndWall = new THREE.Mesh(
@@ -4729,6 +4746,7 @@
             );
             westEndWall.position.set(corridorWestEdge - WALL_THICKNESS / 2, CEILING_HEIGHT / 2, northWallZ + corridorDepth / 2);
             corridorGroup.add(westEndWall);
+            corridorWalls.west = westEndWall;
 
             // East end wall (closes off right side of corridor)
             const eastEndWall = new THREE.Mesh(
@@ -4737,16 +4755,12 @@
             );
             eastEndWall.position.set(corridorEastEdge + WALL_THICKNESS / 2, CEILING_HEIGHT / 2, northWallZ + corridorDepth / 2);
             corridorGroup.add(eastEndWall);
+            corridorWalls.east = eastEndWall;
 
-            // Corridor lighting — a couple of ceiling lights
-            const corrLight1 = new THREE.PointLight(0xfff8ee, 0.6, 8);
-            corrLight1.position.set(THREE_STAR_X, CEILING_HEIGHT - 0.3, northWallZ + corridorDepth / 2);
-            corridorGroup.add(corrLight1);
-            const corrLight2 = new THREE.PointLight(0xfff8ee, 0.6, 8);
-            corrLight2.position.set(SPECIAL_SPECIAL_X, CEILING_HEIGHT - 0.3, northWallZ + corridorDepth / 2);
-            corridorGroup.add(corrLight2);
+            // No dedicated corridor lights — ambient + room spotlights spill in naturally
 
             scene.add(corridorGroup);
+            return corridorGroup;
         })();
 
         // ========== SOUTH EXTERIOR VIEW — JACKSON AVENUE, LONG ISLAND CITY ==========
@@ -4964,18 +4978,18 @@
             return sprite;
         }
 
-        labelsGroup.add(createLabel('S202 THREE STARS — PANAFRICAN LIBRARY', new THREE.Vector3(THREE_STAR_X, CEILING_HEIGHT + 0.5, 0)));
-        labelsGroup.add(createLabel('S202 SPECIAL SPECIAL — SOUND LIBRARY', new THREE.Vector3(SPECIAL_SPECIAL_X, CEILING_HEIGHT + 0.5, 0)));
+        labelsGroup.add(createLabel('PANAFRICAN LIBRARY', new THREE.Vector3(THREE_STAR_X, CEILING_HEIGHT + 0.5, 0)));
+        labelsGroup.add(createLabel('SOUND LIBRARY', new THREE.Vector3(SPECIAL_SPECIAL_X, CEILING_HEIGHT + 0.5, 0)));
         scene.add(labelsGroup);
 
-        // Lighting — cloudy day: soft diffused window light, strong ceiling spots
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+        // Lighting — overcast day: very soft diffused window light, strong ceiling spots
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
         scene.add(ambientLight);
-        const directionalLight = new THREE.DirectionalLight(0xe8e8f0, 0.35);
+        const directionalLight = new THREE.DirectionalLight(0xdde0e8, 0.2);
         directionalLight.position.set(5, 12, -8); // from south (window side), low angle
         directionalLight.castShadow = true;
         scene.add(directionalLight);
-        const fillLight = new THREE.DirectionalLight(0xe0e0e8, 0.25);
+        const fillLight = new THREE.DirectionalLight(0xdde0e8, 0.15);
         fillLight.position.set(-5, 10, -6);
         scene.add(fillLight);
         const threeStarRoomLight = new THREE.PointLight(0xffffee, 0.4, 12);
@@ -5022,8 +5036,8 @@
             group.userData.isCeiling = true;
             group.traverse(child => { child.userData.isCeiling = true; });
 
-            // Actual SpotLight for illumination — gallery-bright
-            const spotLight = new THREE.SpotLight(0xffffff, 1.4, 10, Math.PI / 5, 0.7, 1.0);
+            // Actual SpotLight for illumination — gallery-bright, wide wash
+            const spotLight = new THREE.SpotLight(0xffffff, 2.0, 12, Math.PI / 4, 0.6, 0.8);
             spotLight.position.set(worldX, CEILING_HEIGHT - 0.13, worldZ);
             spotLight.target.position.set(worldX, 0, worldZ);
             spotLight.userData.isCeiling = true;
@@ -5034,12 +5048,12 @@
             return group;
         }
 
-        // Panafrican Library (Three Star) — 3×4 grid of spotlights
+        // Panafrican Library (Three Star) — 4×5 grid of spotlights
         const tsMinX = THREE_STAR_X - THREE_STAR_WIDTH / 2;
         const tsMaxX = THREE_STAR_X + THREE_STAR_WIDTH / 2;
         const tsMinZ = -THREE_STAR_DEPTH / 2;
         const tsMaxZ = THREE_STAR_DEPTH / 2;
-        const tsCols = 3, tsRows = 4;
+        const tsCols = 4, tsRows = 5;
         for (let c = 0; c < tsCols; c++) {
             for (let r = 0; r < tsRows; r++) {
                 const x = tsMinX + (c + 0.5) * (THREE_STAR_WIDTH / tsCols);
@@ -5048,11 +5062,11 @@
             }
         }
 
-        // Sound Library (Special Special) — 2×4 grid of spotlights
+        // Sound Library (Special Special) — 3×5 grid of spotlights
         const ssZoff = SPECIAL_SPECIAL_Z_OFFSET;
         const ssMinX = SPECIAL_SPECIAL_X - SPECIAL_SPECIAL_WIDTH / 2;
         const ssMinZ = ssZoff - SPECIAL_SPECIAL_DEPTH / 2;
-        const ssCols = 2, ssRows = 4;
+        const ssCols = 3, ssRows = 5;
         for (let c = 0; c < ssCols; c++) {
             for (let r = 0; r < ssRows; r++) {
                 const x = ssMinX + (c + 0.5) * (SPECIAL_SPECIAL_WIDTH / ssCols);
@@ -5774,7 +5788,7 @@
                          draggable="true"
                          data-pattern-type="css"
                          data-pattern-idx="${idx}"
-                         style="background: ${bgStyle}; width: 50px; height: 50px; border-radius: 4px; cursor: grab; ${bgSize}"
+                         style="background: ${bgStyle}; width: 80px; height: 80px; border-radius: 4px; cursor: grab; ${bgSize}"
                          title="${p.name} (drag to furniture)"
                          ondragstart="handlePatternDragStart(event, 'css', ${idx})"
                          onclick="${patternEditMode ? `removePattern(${idx})` : `selectPatternForTexture('css', ${idx})`}">
@@ -5789,7 +5803,7 @@
                          draggable="true"
                          data-pattern-type="db"
                          data-pattern-id="${p.id}"
-                         style="background: url(${p.imageData}); background-size: cover; background-position: center; width: 50px; height: 50px; border-radius: 4px; cursor: grab;"
+                         style="background: url(${p.imageData}); background-size: cover; background-position: center; width: 80px; height: 80px; border-radius: 4px; cursor: grab;"
                          title="${p.name} (drag to furniture)"
                          ondragstart="handlePatternDragStart(event, 'db', '${p.id}')"
                          onclick="${patternEditMode ? `removePatternFromDB('${p.id}')` : `selectPatternForTexture('db', '${p.id}')`}">
@@ -9517,6 +9531,7 @@
                 // Show all walls
                 Object.values(threeStarRoomWalls).forEach(w => { if (w) w.visible = true; });
                 Object.values(specialSpecialRoomWalls).forEach(w => { if (w) w.visible = true; });
+                Object.values(corridorWalls).forEach(w => { if (w) w.visible = true; });
                 return;
             }
 
@@ -9566,6 +9581,23 @@
             if (specialSpecialRoomWalls.back) specialSpecialRoomWalls.back.visible = true;
             if (specialSpecialRoomWalls.left) specialSpecialRoomWalls.left.visible = true;
             if (specialSpecialRoomWalls[ssHideKey]) specialSpecialRoomWalls[ssHideKey].visible = false;
+
+            // === NORTH CORRIDOR ===
+            // Treat corridor walls just like room exterior walls — hide the one behind the camera
+            if (corridorWalls.north) corridorWalls.north.visible = true;
+            if (corridorWalls.west) corridorWalls.west.visible = true;
+            if (corridorWalls.east) corridorWalls.east.visible = true;
+
+            // north (far) wall outward normal = (0,0,+1)
+            // west end wall outward normal = (-1,0,0)
+            // east end wall outward normal = (+1,0,0)
+            const corrCandidates = [
+                { wall: corridorWalls.north, score: camDir.z * 1 },   // dot with (0,0,+1)
+                { wall: corridorWalls.west,  score: camDir.x * -1 },  // dot with (-1,0,0)
+                { wall: corridorWalls.east,  score: camDir.x * 1 }    // dot with (+1,0,0)
+            ];
+            corrCandidates.sort((a, b) => a.score - b.score);
+            if (corrCandidates[0].wall) corrCandidates[0].wall.visible = false;
         }
 
         // Ceiling objects cache — avoid scene.traverse() every frame
