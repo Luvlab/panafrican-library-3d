@@ -119,10 +119,28 @@ let uploadedModels = [];
 let gltfLoader = null;
 let objLoader = null;
 
+// Global Loading Manager
+const loadingManager = new THREE.LoadingManager();
+loadingManager.onProgress = function (url, itemsLoaded, itemsTotal) {
+    const progress = (itemsLoaded / itemsTotal) * 100;
+    const bar = document.getElementById('loading-bar');
+    const text = document.getElementById('loading-text');
+    if (bar) bar.style.width = progress + '%';
+    if (text) text.textContent = `INITIALIZING ${Math.round(progress)}%`;
+};
+loadingManager.onLoad = function () {
+    const screen = document.getElementById('loading-screen');
+    if (screen) {
+        screen.style.opacity = '0';
+        setTimeout(() => screen.style.display = 'none', 500);
+    }
+    console.log('All initial assets loaded');
+};
+
 // Initialize loaders after Three.js is ready
 function initLoaders() {
-    gltfLoader = new GLTFLoader();
-    objLoader = new OBJLoader();
+    gltfLoader = new GLTFLoader(loadingManager);
+    objLoader = new OBJLoader(loadingManager);
 }
 
 // Handle 3D model file upload (supports multiple files)
@@ -444,7 +462,7 @@ function createPosterObject(posterData, heightCm) {
     group.add(frame);
 
     // Poster face with image texture
-    const texture = new THREE.TextureLoader().load(posterData.dataUrl);
+    const texture = new THREE.TextureLoader(loadingManager).load(posterData.dataUrl);
     texture.colorSpace = THREE.SRGBColorSpace;
     const posterGeo = new THREE.PlaneGeometry(posterWidth, posterHeight);
     const posterMat = new THREE.MeshStandardMaterial({ map: texture, side: THREE.DoubleSide });
@@ -500,7 +518,7 @@ window.resizePlacedPoster = function () {
     selectedPlacedItem.add(new THREE.Mesh(frameGeo, frameMat));
 
     // Rebuild poster face
-    const texture = new THREE.TextureLoader().load(posterData.dataUrl);
+    const texture = new THREE.TextureLoader(loadingManager).load(posterData.dataUrl);
     texture.colorSpace = THREE.SRGBColorSpace;
     const posterGeo = new THREE.PlaneGeometry(posterWidth, posterHeight);
     const posterMat = new THREE.MeshStandardMaterial({ map: texture, side: THREE.DoubleSide });
@@ -1503,14 +1521,20 @@ function createWoodenBookshelf(width, height, rows) {
     group.add(backPanel);
 
     const shelfSpacing = height / (rows + 1);
+
+    // Cache geometries and materials to avoid memory leaks
+    const sharedShelfGeo = new THREE.BoxGeometry(width, 0.02, 0.15);
+    const sharedBookGeo = new THREE.BoxGeometry(0.15, 0.2, 0.02);
+    const bookColors = [0x4ecdc4, 0xff6b6b, 0xffd93d, 0x45b7d1, 0x96ceb4, 0xa29bfe, 0xe17055, 0x00b894];
+    const sharedBookMats = bookColors.map(color => new THREE.MeshLambertMaterial({ color }));
+
     for (let i = 1; i <= rows; i++) {
-        const shelf = new THREE.Mesh(new THREE.BoxGeometry(width, 0.02, 0.15), shelfWood);
+        const shelf = new THREE.Mesh(sharedShelfGeo, shelfWood);
         shelf.position.set(0, i * shelfSpacing, 0.08);
         group.add(shelf);
         const bookCount = Math.floor(width / 0.2);
-        const bookColors = [0x4ecdc4, 0xff6b6b, 0xffd93d, 0x45b7d1, 0x96ceb4, 0xa29bfe, 0xe17055, 0x00b894];
         for (let j = 0; j < bookCount; j++) {
-            const book = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.2, 0.02), new THREE.MeshLambertMaterial({ color: bookColors[j % bookColors.length] }));
+            const book = new THREE.Mesh(sharedBookGeo, sharedBookMats[j % sharedBookMats.length]);
             book.position.set(-width / 2 + 0.1 + j * 0.18, i * shelfSpacing + 0.12, 0.14);
             group.add(book);
         }
@@ -1566,26 +1590,34 @@ function createLowCoffeeTable() {
 function createRedBookDisplay() {
     const group = new THREE.Group();
     const bodyWidth = 0.7, bodyHeight = 0.9, bodyDepth = 0.5;
-    const backPanel = new THREE.Mesh(new THREE.BoxGeometry(bodyWidth, bodyHeight, 0.03), redMaterial);
+
+    // Cache
+    const sharedBackPanelGeo = new THREE.BoxGeometry(bodyWidth, bodyHeight, 0.03);
+    const sharedShelfGeo = new THREE.BoxGeometry(bodyWidth - 0.05, 0.02, bodyDepth * 0.6);
+    const sharedBookGeo = new THREE.BoxGeometry(0.08, 0.15, 0.01);
+    const bookColors = [0xffffff, 0x4ecdc4, 0xff6b6b, 0xffd93d, 0x95e1d3];
+    const sharedBookMats = bookColors.map(color => new THREE.MeshLambertMaterial({ color }));
+    const sharedSideGeo = new THREE.BoxGeometry(0.03, bodyHeight, bodyDepth);
+
+    const backPanel = new THREE.Mesh(sharedBackPanelGeo, redMaterial);
     backPanel.position.set(0, bodyHeight / 2, -bodyDepth / 2);
     group.add(backPanel);
     for (let i = 0; i < 4; i++) {
-        const shelf = new THREE.Mesh(new THREE.BoxGeometry(bodyWidth - 0.05, 0.02, bodyDepth * 0.6), redMaterial);
+        const shelf = new THREE.Mesh(sharedShelfGeo, redMaterial);
         shelf.position.set(0, 0.15 + i * 0.2, -0.1);
         shelf.rotation.x = -0.2;
         group.add(shelf);
-        const bookColors = [0xffffff, 0x4ecdc4, 0xff6b6b, 0xffd93d, 0x95e1d3];
         for (let j = 0; j < 5; j++) {
-            const book = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.15, 0.01), new THREE.MeshLambertMaterial({ color: bookColors[j] }));
+            const book = new THREE.Mesh(sharedBookGeo, sharedBookMats[j]);
             book.position.set(-0.25 + j * 0.12, 0.25 + i * 0.2, 0);
             book.rotation.x = -0.3;
             group.add(book);
         }
     }
-    const sideL = new THREE.Mesh(new THREE.BoxGeometry(0.03, bodyHeight, bodyDepth), redMaterial);
+    const sideL = new THREE.Mesh(sharedSideGeo, redMaterial);
     sideL.position.set(-bodyWidth / 2, bodyHeight / 2, 0);
     group.add(sideL);
-    const sideR = new THREE.Mesh(new THREE.BoxGeometry(0.03, bodyHeight, bodyDepth), redMaterial);
+    const sideR = new THREE.Mesh(sharedSideGeo, redMaterial);
     sideR.position.set(bodyWidth / 2, bodyHeight / 2, 0);
     group.add(sideR);
     return group;
@@ -1595,12 +1627,21 @@ function createPosterWall(width, height) {
     const group = new THREE.Group();
     const baseWall = new THREE.Mesh(new THREE.PlaneGeometry(width, height), new THREE.MeshLambertMaterial({ color: 0xf5f0e8 }));
     group.add(baseWall);
+
+    // Cache
     const posterColors = [0xff6b6b, 0xffd93d, 0x4ecdc4, 0x45b7d1, 0x96ceb4, 0xffeaa7, 0xdfe6e9, 0xfd79a8, 0x00b894, 0xe17055, 0x74b9ff, 0xa29bfe, 0x55efc4, 0xfdcb6e, 0xe84393];
-    for (let i = 0; i < 60; i++) {
+    const posterMats = posterColors.map(color => new THREE.MeshLambertMaterial({ color }));
+    const posterGeos = [];
+    for (let i = 0; i < 10; i++) {
         const posterW = 0.15 + Math.random() * 0.3;
         const posterH = 0.2 + Math.random() * 0.35;
-        const poster = new THREE.Mesh(new THREE.PlaneGeometry(posterW, posterH), new THREE.MeshLambertMaterial({ color: posterColors[Math.floor(Math.random() * posterColors.length)] }));
-        poster.position.set((Math.random() - 0.5) * (width - posterW), (Math.random() - 0.5) * (height - posterH), 0.005 + i * 0.001);
+        posterGeos.push({ geo: new THREE.PlaneGeometry(posterW, posterH), w: posterW, h: posterH });
+    }
+
+    for (let i = 0; i < 60; i++) {
+        const randomGeo = posterGeos[Math.floor(Math.random() * posterGeos.length)];
+        const poster = new THREE.Mesh(randomGeo.geo, posterMats[Math.floor(Math.random() * posterMats.length)]);
+        poster.position.set((Math.random() - 0.5) * (width - randomGeo.w), (Math.random() - 0.5) * (height - randomGeo.h), 0.005 + i * 0.001);
         poster.rotation.z = (Math.random() - 0.5) * 0.1;
         group.add(poster);
     }
@@ -3411,7 +3452,7 @@ async function applyPatternToFurniture(type, idOrIdx, surfaceType = 'all') {
     }
 
     if (textureUrl) {
-        const loader = new THREE.TextureLoader();
+        const loader = new THREE.TextureLoader(loadingManager);
         loader.load(textureUrl, (texture) => {
             texture.wrapS = THREE.RepeatWrapping;
             texture.wrapT = THREE.RepeatWrapping;
