@@ -1320,7 +1320,7 @@ const labelsGroup = new THREE.Group();
 const ceilingsGroup = new THREE.Group();
 const wallsGroup = new THREE.Group();
 const threeStarRoomWalls = { front: null, back: null, left: null, right: null, vestibuleLeft: null, vestibuleRight: null };
-const specialSpecialRoomWalls = { front: null, back: null, left: null, right: null };
+const specialSpecialRoomWalls = { front: null, back: null, left: null, right: null, vestibule: null };
 
 const gridHelper = new THREE.GridHelper(20, 40, 0x444444, 0x333333);
 scene.add(gridHelper);
@@ -1676,6 +1676,43 @@ function createThreeStar() {
     group.add(northWallGroup);
     threeStarRoomWalls.back = northWallGroup;  // Entry from STUDIO (north)
 
+    // ========== THREE STAR VESTIBULE - Interior partition walls flanking entry ==========
+    // Per floor plan: two interior partition walls extend ~1.5m south from the north wall
+    // creating a narrow corridor (0.85m wide) centered on the entry door
+    const tsVestibuleDepth = 1.5;   // ~5' partition depth into room
+    const tsVestibuleWidth = 0.85;  // ~2'-9⅝" corridor opening between partitions
+
+    // Left vestibule partition: west side of the narrow corridor
+    const vestibuleLeftX = northDoorOffsetX - tsVestibuleWidth / 2 - WALL_THICKNESS / 2;
+    const tsVestibuleGroup = new THREE.Group();
+
+    const vestibuleLeftWall = new THREE.Mesh(
+        new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, tsVestibuleDepth),
+        wallMaterial
+    );
+    vestibuleLeftWall.position.set(
+        vestibuleLeftX,
+        CEILING_HEIGHT / 2,
+        THREE_STAR_DEPTH / 2 - tsVestibuleDepth / 2
+    );
+    tsVestibuleGroup.add(vestibuleLeftWall);
+
+    // Right vestibule partition: east side of the narrow corridor (toward exterior/east wall)
+    const vestibuleRightX = northDoorOffsetX + tsVestibuleWidth / 2 + WALL_THICKNESS / 2;
+    const vestibuleRightWall = new THREE.Mesh(
+        new THREE.BoxGeometry(WALL_THICKNESS, CEILING_HEIGHT, tsVestibuleDepth),
+        wallMaterial
+    );
+    vestibuleRightWall.position.set(
+        vestibuleRightX,
+        CEILING_HEIGHT / 2,
+        THREE_STAR_DEPTH / 2 - tsVestibuleDepth / 2
+    );
+    tsVestibuleGroup.add(vestibuleRightWall);
+
+    group.add(tsVestibuleGroup);
+    threeStarRoomWalls.vestibuleLeft = tsVestibuleGroup;  // Unified vestibule group
+
     // ========== WEST WALL (-X) - Door to SPECIAL SPECIAL ==========
     // This is the SHARED wall - SPECIAL SPECIAL is to the WEST (left) of THREE STAR
     // Per floor plan: Door is 4'-5 15/16" (1.37m) from THREE STAR's south facade windows
@@ -1863,6 +1900,9 @@ function createSpecialSpecial() {
     const corridorRightEdge = corridorCenterX + SPECIAL_SPECIAL_CORRIDOR_WIDTH / 2;
     const partitionThickness = WALL_THICKNESS;  // Same thickness as room walls (0.152m / 6")
 
+    // Group all vestibule partition walls together so they can be hidden with the north wall
+    const vestibuleGroup = new THREE.Group();
+
     // WEST partition wall — runs from corridor left edge to west exterior wall
     // This wall extends from north wall southward, closing off the west zone
     const westPartitionWidth = SPECIAL_SPECIAL_WIDTH / 2 + corridorLeftEdge;  // distance from west wall to corridor
@@ -1876,7 +1916,7 @@ function createSpecialSpecial() {
             CEILING_HEIGHT / 2,
             SPECIAL_SPECIAL_DEPTH / 2 - corridorShaftDepth  // South end of partition
         );
-        group.add(westPartition);
+        vestibuleGroup.add(westPartition);
 
         // West corridor side wall — thin wall along the corridor's west side
         const westCorridorWall = new THREE.Mesh(
@@ -1888,7 +1928,7 @@ function createSpecialSpecial() {
             CEILING_HEIGHT / 2,
             SPECIAL_SPECIAL_DEPTH / 2 - corridorShaftDepth / 2
         );
-        group.add(westCorridorWall);
+        vestibuleGroup.add(westCorridorWall);
     }
 
     // EAST partition wall — runs from corridor right edge to east shared wall
@@ -1904,7 +1944,7 @@ function createSpecialSpecial() {
             CEILING_HEIGHT / 2,
             SPECIAL_SPECIAL_DEPTH / 2 - corridorShaftDepth  // South end of partition
         );
-        group.add(eastPartition);
+        vestibuleGroup.add(eastPartition);
 
         // East corridor side wall — thin wall along the corridor's east side
         const eastCorridorWall = new THREE.Mesh(
@@ -1916,7 +1956,7 @@ function createSpecialSpecial() {
             CEILING_HEIGHT / 2,
             SPECIAL_SPECIAL_DEPTH / 2 - corridorShaftDepth / 2
         );
-        group.add(eastCorridorWall);
+        vestibuleGroup.add(eastCorridorWall);
     }
 
     // Door header at south entry of vestibule corridor (standard door height opening)
@@ -1929,7 +1969,10 @@ function createSpecialSpecial() {
         DOOR_HEIGHT + (CEILING_HEIGHT - DOOR_HEIGHT) / 2,
         SPECIAL_SPECIAL_DEPTH / 2 - corridorShaftDepth
     );
-    group.add(vestibuleDoorHeader);
+    vestibuleGroup.add(vestibuleDoorHeader);
+
+    group.add(vestibuleGroup);
+    specialSpecialRoomWalls.vestibule = vestibuleGroup;
 
     // ========== SOUTH WALL (-Z) - PS1 Industrial Windows (BOTTOM of floor plan) ==========
     const southWallGroup = new THREE.Group();
@@ -6998,7 +7041,8 @@ function updateWallVisibility() {
         // Show all walls
         Object.values(threeStarRoomWalls).forEach(w => { if (w) w.visible = true; });
         Object.values(specialSpecialRoomWalls).forEach(w => { if (w) w.visible = true; });
-        if (northCorridorGroup) northCorridorGroup.visible = true;
+        // Corridor visibility is controlled by the surroundings toggle, not hideNearWall
+        if (northCorridorGroup) northCorridorGroup.visible = showSurroundings;
         return;
     }
 
@@ -7028,7 +7072,12 @@ function updateWallVisibility() {
     if (threeStarRoomWalls.back) threeStarRoomWalls.back.visible = true;
     if (threeStarRoomWalls.right) threeStarRoomWalls.right.visible = true;
     if (threeStarRoomWalls.left) threeStarRoomWalls.left.visible = true; // shared — always visible
+    if (threeStarRoomWalls.vestibuleLeft) threeStarRoomWalls.vestibuleLeft.visible = true;
     if (threeStarRoomWalls[tsHideKey]) threeStarRoomWalls[tsHideKey].visible = false;
+    // Hide vestibule partitions together with the north (back) wall
+    if (tsHideKey === 'back' && threeStarRoomWalls.vestibuleLeft) {
+        threeStarRoomWalls.vestibuleLeft.visible = false;
+    }
 
     // === SPECIAL SPECIAL (Sound Library) ===
     // Exterior walls only (shared east wall is never hidden)
@@ -7047,7 +7096,12 @@ function updateWallVisibility() {
     if (specialSpecialRoomWalls.front) specialSpecialRoomWalls.front.visible = true;
     if (specialSpecialRoomWalls.back) specialSpecialRoomWalls.back.visible = true;
     if (specialSpecialRoomWalls.left) specialSpecialRoomWalls.left.visible = true;
+    if (specialSpecialRoomWalls.vestibule) specialSpecialRoomWalls.vestibule.visible = true;
     if (specialSpecialRoomWalls[ssHideKey]) specialSpecialRoomWalls[ssHideKey].visible = false;
+    // Hide vestibule partitions together with the north (back) wall
+    if (ssHideKey === 'back' && specialSpecialRoomWalls.vestibule) {
+        specialSpecialRoomWalls.vestibule.visible = false;
+    }
 
     // === NORTH CORRIDOR ===
     // Only manage corridor visibility when surroundings toggle is on
