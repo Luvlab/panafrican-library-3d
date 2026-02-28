@@ -7173,6 +7173,16 @@ function animate() {
 }
 animate();
 
+// Dismiss loading screen — all geometry is procedural (no file loads),
+// so LoadingManager.onLoad never fires. Dismiss directly after first render.
+requestAnimationFrame(() => {
+    const screen = document.getElementById('loading-screen');
+    if (screen && screen.style.display !== 'none') {
+        screen.style.opacity = '0';
+        setTimeout(() => screen.style.display = 'none', 500);
+    }
+});
+
 // Build ceiling cache after scene is fully loaded
 setTimeout(() => { ceilingCacheDirty = true; }, 1000);
 
